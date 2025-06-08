@@ -129,13 +129,13 @@ function handleProfilePicUpload(file) {
     }
 
     // Show loading state
-    profilePicImage.src = './profile-placeholder.svg';
+    profilePicImage.src = 'profile.png';
     saveButton.disabled = true;
 
     // If Firebase Storage is not available, show error
     if (!storage) {
         showProfileMessage("Image upload is not available. Storage not initialized.", true);
-        profilePicImage.src = currentUserData?.profilePicUrl || './profile-placeholder.svg';
+        profilePicImage.src = currentUserData?.profilePicUrl || 'profile.png';
         saveButton.disabled = false;
         return;
     }
@@ -159,7 +159,7 @@ function handleProfilePicUpload(file) {
         })
         .catch(error => {
             console.error('Error uploading profile picture:', error);
-            profilePicImage.src = currentUserData?.profilePicUrl || './profile-placeholder.svg';
+            profilePicImage.src = currentUserData?.profilePicUrl || 'profile.png';
             showProfileMessage(`Error uploading image: ${error.message}`, true);
             saveButton.disabled = false;
         });

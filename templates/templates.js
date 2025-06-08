@@ -62,7 +62,7 @@ window.BINK.templates.templates['classic'] = {
                 </div>
                 <div class="bio-header">
                     <div class="profile-image-container">
-                        <img src="${data.profilePicUrl || './profile-placeholder.svg'}" alt="Profile Image">
+                        <img src="${data.profilePicUrl || 'https://adeledevgit.github.io/bink/profile.png'}" alt="Profile Image">
                     </div>
                     <div class="bio-header-content">
                         <h1>${data.displayName || data.username}</h1>
@@ -121,7 +121,7 @@ window.BINK.templates.templates['neoncard'] = {
                 </div>
                 <div class="neoncard-header">
                     <div class="neoncard-avatar-container">
-                        <img class="neoncard-avatar" src="${data.profilePicUrl || './profile-placeholder.svg'}" alt="Profile">
+                        <img class="neoncard-avatar" src="${data.profilePicUrl || 'https://adeledevgit.github.io/bink/profile.png'}" alt="Profile">
                     </div>
                     <div class="neoncard-username" data-text="${window.BINK.templates.formatUsername(data.displayName || data.username)}">${window.BINK.templates.formatUsername(data.displayName || data.username)}</div>
                     <div class="neoncard-bio">${data.bio || ''}</div>
@@ -176,7 +176,7 @@ window.BINK.templates.templates['glassmorphism'] = {
                     </div>
                 </div>
                 <div class="glass-profile">
-                    <img class="glass-avatar" src="${data.profilePicUrl || './profile-placeholder.svg'}" alt="Profile">
+                    <img class="glass-avatar" src="${data.profilePicUrl || 'https://adeledevgit.github.io/bink/profile.png'}" alt="Profile">
                     <div class="glass-name">${window.BINK.templates.formatUsername(data.displayName || data.username)}</div>
                     <div class="glass-bio">${data.bio || ''}</div>
                 </div>
@@ -230,7 +230,7 @@ window.BINK.templates.templates['purplecard'] = {
                     </div>
                 </div>
                 <div class="purplecard-header">
-                    <img class="purplecard-avatar" src="${data.profilePicUrl || './profile-placeholder.svg'}" alt="Profile">
+                    <img class="purplecard-avatar" src="${data.profilePicUrl || 'https://adeledevgit.github.io/bink/profile.png'}" alt="Profile">
                     <div class="purplecard-username">${window.BINK.templates.formatUsername(data.displayName || data.username)}</div>
                     <div class="purplecard-bio">${data.bio || ''}</div>
                 </div>
@@ -285,7 +285,7 @@ window.BINK.templates.templates['landingprofile'] = {
             <div class="landing-banner">
                 <div class="landing-profile-row">
                     <div class="landing-profile-pic-username">
-                        <img class="landing-profile-pic" src="${data.profilePicUrl || './profile-placeholder.svg'}" alt="Profile">
+                        <img class="landing-profile-pic" src="${data.profilePicUrl || 'https://adeledevgit.github.io/bink/profile.png'}" alt="Profile">
                         <div class="landing-username-inline">${window.BINK.templates.formatUsername(data.displayName || data.username)}</div>
                     </div>
                 </div>
@@ -699,7 +699,7 @@ window.BINK.templates.templates['blacklanding'] = {
             <div class="blacklanding-banner">
                 <div class="blacklanding-profile-row-inline">
                     <div class="blacklanding-profile-pic-username">
-                        <img class="blacklanding-profile-pic" src="${data.profilePicUrl || './profile-placeholder.svg'}" alt="Profile">
+                        <img class="blacklanding-profile-pic" src="${data.profilePicUrl || 'https://adeledevgit.github.io/bink/profile.png'}" alt="Profile">
                         <div class="blacklanding-username-inline">${window.BINK.templates.formatUsername(data.displayName || data.username)}</div>
                     </div>
                 </div>
@@ -757,7 +757,7 @@ window.BINK.templates.templates['gradientflow'] = {
                     </div>
                     <div class="gradientflow-profile">
                         <div class="gradientflow-avatar-container">
-                            <img class="gradientflow-avatar" src="${data.profilePicUrl || './profile-placeholder.svg'}" alt="Profile">
+                            <img class="gradientflow-avatar" src="${data.profilePicUrl || 'https://adeledevgit.github.io/bink/profile.png'}" alt="Profile">
                         </div>
                         <div class="gradientflow-username">${window.BINK.templates.formatUsername(data.displayName || data.username)}</div>
                         <div class="gradientflow-bio">${data.bio || ''}</div>
@@ -815,7 +815,7 @@ window.BINK.templates.templates['darkelegance'] = {
                     </div>
                     <div class="darkelegance-profile">
                         <div class="darkelegance-avatar-container">
-                            <img class="darkelegance-avatar" src="${data.profilePicUrl || './profile-placeholder.svg'}" alt="Profile">
+                            <img class="darkelegance-avatar" src="${data.profilePicUrl || 'https://adeledevgit.github.io/bink/profile.png'}" alt="Profile">
                         </div>
                         <div class="darkelegance-username">${window.BINK.templates.formatUsername(data.displayName || data.username)}</div>
                         <div class="darkelegance-bio">${data.bio || ''}</div>
@@ -873,7 +873,7 @@ window.BINK.templates.templates['neonglow'] = {
                     </div>
                     <div class="neonglow-profile">
                         <div class="neonglow-avatar-container">
-                            <img class="neonglow-avatar" src="${data.profilePicUrl || './profile-placeholder.svg'}" alt="Profile">
+                            <img class="neonglow-avatar" src="${data.profilePicUrl || 'https://adeledevgit.github.io/bink/profile.png'}" alt="Profile">
                         </div>
                         <div class="neonglow-username">${window.BINK.templates.formatUsername(data.displayName || data.username)}</div>
                         <div class="neonglow-bio">${data.bio || ''}</div>
@@ -933,7 +933,7 @@ window.BINK.templates.templates['minimalzen'] = {
                     </div>
                     <div class="minimalzen-profile">
                         <div class="minimalzen-avatar-container">
-                            <img class="minimalzen-avatar" src="${data.profilePicUrl || './profile-placeholder.svg'}" alt="Profile">
+                            <img class="minimalzen-avatar" src="${data.profilePicUrl || 'https://adeledevgit.github.io/bink/profile.png'}" alt="Profile">
                         </div>
                         <div class="minimalzen-username">${window.BINK.templates.formatUsername(data.displayName || data.username)}</div>
                         <div class="minimalzen-bio">${data.bio || ''}</div>
@@ -993,7 +993,7 @@ window.BINK.templates.templates['techwave'] = {
                     </div>
                     <div class="techwave-profile">
                         <div class="techwave-avatar-container">
-                            <img class="techwave-avatar" src="${data.profilePicUrl || './profile-placeholder.svg'}" alt="Profile">
+                            <img class="techwave-avatar" src="${data.profilePicUrl || 'https://adeledevgit.github.io/bink/profile.png'}" alt="Profile">
                         </div>
                         <div class="techwave-username">${window.BINK.templates.formatUsername(data.displayName || data.username)}</div>
                         <div class="techwave-bio">${data.bio || ''}</div>
@@ -1041,7 +1041,7 @@ window.BINK.templates.templates['splitscreen'] = {
                 <div class="splitscreen-sidebar">
                     <div class="splitscreen-profile">
                         <div class="splitscreen-avatar-container">
-                            <img class="splitscreen-avatar" src="${data.profilePicUrl || './profile-placeholder.svg'}" alt="Profile">
+                            <img class="splitscreen-avatar" src="${data.profilePicUrl || 'https://adeledevgit.github.io/bink/profile.png'}" alt="Profile">
                         </div>
                         <div class="splitscreen-username">${window.BINK.templates.formatUsername(data.displayName || data.username)}</div>
                         <div class="splitscreen-bio">${data.bio || ''}</div>
@@ -1113,7 +1113,7 @@ window.BINK.templates.templates['magazine'] = {
                 <div class="magazine-profile-section">
                     <div class="magazine-profile-header">
                         <div class="magazine-avatar-container">
-                            <img class="magazine-avatar" src="${data.profilePicUrl || './profile-placeholder.svg'}" alt="Profile">
+                            <img class="magazine-avatar" src="${data.profilePicUrl || 'https://adeledevgit.github.io/bink/profile.png'}" alt="Profile">
                         </div>
                         <div class="magazine-profile-info">
                             <div class="magazine-username">${window.BINK.templates.formatUsername(data.displayName || data.username)}</div>
@@ -1188,7 +1188,7 @@ window.BINK.templates.templates['retrowave'] = {
                     <!-- Removed RETRO header as requested -->
                     <div class="retrowave-profile">
                         <div class="retrowave-avatar-container">
-                            <img class="retrowave-avatar" src="${data.profilePicUrl || './profile-placeholder.svg'}" alt="Profile">
+                            <img class="retrowave-avatar" src="${data.profilePicUrl || 'https://adeledevgit.github.io/bink/profile.png'}" alt="Profile">
                         </div>
                         <div class="retrowave-username">${window.BINK.templates.formatUsername(data.displayName || data.username)}</div>
                         <div class="retrowave-bio">${data.bio || ''}</div>
@@ -1246,7 +1246,7 @@ window.BINK.templates.templates['nature'] = {
                     </div>
                     <div class="nature-profile">
                         <div class="nature-avatar-container">
-                            <img class="nature-avatar" src="${data.profilePicUrl || './profile-placeholder.svg'}" alt="Profile">
+                            <img class="nature-avatar" src="${data.profilePicUrl || 'https://adeledevgit.github.io/bink/profile.png'}" alt="Profile">
                         </div>
                         <div class="nature-username">@${data.displayName || data.username}</div>
                         <div class="nature-bio">${data.bio || ''}</div>
@@ -1304,7 +1304,7 @@ window.BINK.templates.templates['portfolio'] = {
 
                 <div class="portfolio-profile-section">
                     <div class="portfolio-avatar-container">
-                        <img class="portfolio-avatar" src="${data.profilePicUrl || './profile-placeholder.svg'}" alt="Profile">
+                        <img class="portfolio-avatar" src="${data.profilePicUrl || 'https://adeledevgit.github.io/bink/profile.png'}" alt="Profile">
                     </div>
                     <div class="portfolio-profile-info">
                         <div class="portfolio-username">@${data.displayName || data.username}</div>

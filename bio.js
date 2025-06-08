@@ -219,7 +219,7 @@ function renderClassicTemplate(userData) {
             <div class="bio-container">
                 <div class="bio-header">
                     <div class="profile-image-container">
-                        <img id="profile-image" src="${userData.profilePicUrl || 'profile.png'}" alt="Profile Image">
+                        <img id="profile-image" src="${userData.profilePicUrl || 'https://adeledevgit.github.io/bink/profile.png'}" alt="Profile Image">
                     </div>
                     <div class="bio-header-content">
                         <h1 id="display-name">${userData.displayName || userData.username}</h1>
