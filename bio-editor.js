@@ -88,6 +88,8 @@ if (auth) {
             loadUserLinks(user.uid);
             generateSocialLinksForm();
             updatePreviewFrame(user.uid);
+            initializeProfilePictureUpload();
+            initializePreviewControls();
 
             // Template highlighting code removed
         } else {
@@ -1283,7 +1285,159 @@ document.addEventListener('DOMContentLoaded', () => {
     initTemplatesCarousel();
     initTemplateLabels();
     initializeBackgroundChanger();
+    initializeTabNavigation();
+    initializeCharacterCounter();
+    initializeMessageSystem();
 });
+
+// Tab Navigation System
+function initializeTabNavigation() {
+    const navTabs = document.querySelectorAll('.nav-tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    navTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const targetTab = tab.getAttribute('data-tab');
+
+            // Remove active class from all tabs and contents
+            navTabs.forEach(t => t.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            // Add active class to clicked tab and corresponding content
+            tab.classList.add('active');
+            const targetContent = document.getElementById(`${targetTab}-tab`);
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+
+            // Special handling for templates tab
+            if (targetTab === 'templates') {
+                setTimeout(() => {
+                    initTemplatesCarousel();
+                }, 100);
+            }
+        });
+    });
+}
+
+// Character Counter for Bio
+function initializeCharacterCounter() {
+    const bioTextarea = document.getElementById('bio');
+    const charCounter = document.getElementById('bio-char-count');
+
+    if (bioTextarea && charCounter) {
+        bioTextarea.addEventListener('input', () => {
+            const currentLength = bioTextarea.value.length;
+            charCounter.textContent = currentLength;
+
+            // Change color based on character count
+            if (currentLength > 450) {
+                charCounter.style.color = '#ef4444';
+            } else if (currentLength > 400) {
+                charCounter.style.color = '#f59e0b';
+            } else {
+                charCounter.style.color = 'var(--text-muted)';
+            }
+        });
+
+        // Initialize counter
+        charCounter.textContent = bioTextarea.value.length;
+    }
+}
+
+// Message System
+function initializeMessageSystem() {
+    // Override the existing showMessage function to use the new message system
+    window.showMessage = function(message, isError = false) {
+        const messageContainer = document.getElementById('message-container');
+        const successMessage = document.getElementById('success-message');
+        const errorMessage = document.getElementById('error-message');
+
+        if (!messageContainer || !successMessage || !errorMessage) return;
+
+        // Hide any existing messages
+        successMessage.classList.remove('show');
+        errorMessage.classList.remove('show');
+
+        setTimeout(() => {
+            const targetMessage = isError ? errorMessage : successMessage;
+            const messageText = targetMessage.querySelector('.message-text');
+
+            messageText.textContent = message;
+            targetMessage.style.display = 'flex';
+
+            setTimeout(() => {
+                targetMessage.classList.add('show');
+            }, 10);
+
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                targetMessage.classList.remove('show');
+                setTimeout(() => {
+                    targetMessage.style.display = 'none';
+                }, 300);
+            }, 5000);
+        }, 100);
+    };
+}
+
+// Enhanced Profile Picture Upload
+function initializeProfilePictureUpload() {
+    const profilePicPreview = document.getElementById('profilePicPreview');
+    const profilePicUpload = document.getElementById('profilePicUpload');
+    const profilePicImage = document.getElementById('profilePicImage');
+
+    if (profilePicPreview && profilePicUpload && profilePicImage) {
+        profilePicPreview.addEventListener('click', () => {
+            profilePicUpload.click();
+        });
+
+        profilePicUpload.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                // Show loading state
+                profilePicPreview.style.opacity = '0.7';
+
+                try {
+                    const imageUrl = await uploadProfilePicture(file);
+                    profilePicImage.src = imageUrl;
+                    document.getElementById('profilePicUrl').value = imageUrl;
+                    showMessage('Profile picture updated successfully!');
+                } catch (error) {
+                    console.error('Error uploading profile picture:', error);
+                    showMessage('Error uploading profile picture. Please try again.', true);
+                } finally {
+                    profilePicPreview.style.opacity = '1';
+                }
+            }
+        });
+    }
+}
+
+// Enhanced Preview Controls
+function initializePreviewControls() {
+    const previewControls = document.querySelectorAll('.preview-control');
+    const previewFrame = document.getElementById('preview-frame');
+
+    previewControls.forEach(control => {
+        control.addEventListener('click', () => {
+            const device = control.getAttribute('data-device');
+
+            // Remove active class from all controls
+            previewControls.forEach(c => c.classList.remove('active'));
+            control.classList.add('active');
+
+            // Adjust preview frame size
+            if (device === 'mobile') {
+                previewFrame.style.width = '375px';
+                previewFrame.style.height = '667px';
+            } else {
+                previewFrame.style.width = '100%';
+                previewFrame.style.height = '600px';
+            }
+        });
+    });
+}
 
 // Template selection buttons (now just for preview)
 const templateButtons = document.querySelectorAll('.template-select-btn');

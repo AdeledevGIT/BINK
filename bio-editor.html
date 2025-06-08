@@ -28,15 +28,54 @@
     <div class="dashboard-container">
         <main class="dashboard-main">
             <div class="bio-editor-header">
-                <h2>Customize Your Bio Page</h2>
-                <p>Create and customize your bio page to share with your audience</p>
+                <h2>Bio Page Editor</h2>
+                <p>Create and customize your professional bio page</p>
+                <div class="editor-actions">
+                    <button id="preview-bio-btn" class="action-btn preview-btn">
+                        <i class="fas fa-eye"></i> Preview
+                    </button>
+                    <button id="publish-bio-btn" class="action-btn publish-btn">
+                        <i class="fas fa-globe"></i> Publish
+                    </button>
+                </div>
             </div>
 
-            <!-- Templates Carousel Section -->
-            <div class="dashboard-section templates-section">
-                <h3>Choose a Template</h3>
-                <div class="templates-carousel">
-                    <div class="templates-scroll">
+            <!-- Navigation Tabs -->
+            <div class="editor-navigation">
+                <div class="nav-tabs">
+                    <button class="nav-tab active" data-tab="templates">
+                        <i class="fas fa-palette"></i>
+                        <span>Templates</span>
+                    </button>
+                    <button class="nav-tab" data-tab="profile">
+                        <i class="fas fa-user"></i>
+                        <span>Profile</span>
+                    </button>
+                    <button class="nav-tab" data-tab="links">
+                        <i class="fas fa-link"></i>
+                        <span>Links</span>
+                    </button>
+                    <button class="nav-tab" data-tab="social">
+                        <i class="fas fa-share-alt"></i>
+                        <span>Social</span>
+                    </button>
+                    <button class="nav-tab" data-tab="design">
+                        <i class="fas fa-paint-brush"></i>
+                        <span>Design</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab Content Container -->
+            <div class="tab-content-container">
+                <!-- Templates Tab -->
+                <div class="tab-content active" id="templates-tab">
+                    <div class="tab-header">
+                        <h3>Choose Your Template</h3>
+                        <p>Select a template that best represents your style</p>
+                    </div>
+                    <div class="templates-grid">
+                        <div class="templates-scroll">
                         <!-- NeonCard -->
                         <div class="template-card">
                             <div id="neoncard-label"></div>
@@ -199,171 +238,232 @@
                                 <button class="template-select-btn" data-template="creative">Preview</button>
                             </div>
                         </div>
+                        </div>
+                        <div class="templates-controls">
+                            <button class="template-control prev">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="template-control next">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
                     </div>
-                    <div class="carousel-controls">
-                        <button class="carousel-control prev">
-                            <i class="fas fa-chevron-left"></i>
+                    <div class="template-actions">
+                        <button id="use-template-button" class="action-btn primary-btn">
+                            <i class="fas fa-check"></i> Use Selected Template
                         </button>
-                        <button class="carousel-control next">
-                            <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+
+                <!-- Profile Tab -->
+                <div class="tab-content" id="profile-tab">
+                    <div class="tab-header">
+                        <h3>Profile Information</h3>
+                        <p>Set up your basic profile details</p>
+                    </div>
+                    <div class="profile-editor">
+                        <div class="profile-section">
+                            <div class="profile-image-section">
+                                <div class="profile-pic-container">
+                                    <div class="profile-pic-preview" id="profilePicPreview">
+                                        <img src="profile.png" alt="Profile" id="profilePicImage">
+                                        <div class="profile-pic-overlay">
+                                            <i class="fas fa-camera"></i>
+                                            <span>Change Photo</span>
+                                        </div>
+                                    </div>
+                                    <input type="file" id="profilePicUpload" accept="image/*" style="display: none;">
+                                </div>
+                            </div>
+
+                            <div class="profile-form-section">
+                                <form id="profile-form" class="modern-form">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="displayName">Display Name</label>
+                                            <input type="text" id="displayName" name="displayName" placeholder="Your Name">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="username">Your Unique Link</label>
+                                        <div class="link-preview">
+                                            <span class="link-prefix">bink.com/u/</span>
+                                            <span id="username-display" class="username-value">username</span>
+                                            <div class="link-actions">
+                                                <button type="button" id="copy-link-button" class="icon-btn" title="Copy Link">
+                                                    <i class="fas fa-copy"></i>
+                                                </button>
+                                                <button type="button" id="save-link-button" class="icon-btn" title="Save">
+                                                    <i class="fas fa-bookmark"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="bio">Bio</label>
+                                        <textarea id="bio" name="bio" placeholder="Tell visitors about yourself..." rows="4"></textarea>
+                                        <div class="char-counter">
+                                            <span id="bio-char-count">0</span>/500 characters
+                                        </div>
+                                    </div>
+
+                                    <input type="hidden" id="profilePicUrl" name="profilePicUrl">
+
+                                    <div class="form-actions">
+                                        <button type="submit" id="save-profile-button" class="action-btn primary-btn">
+                                            <i class="fas fa-save"></i> Save Profile
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Links Tab -->
+                <div class="tab-content" id="links-tab">
+                    <div class="tab-header">
+                        <h3>Manage Links</h3>
+                        <p>Add and organize your important links</p>
+                        <button id="add-link-button" class="action-btn primary-btn">
+                            <i class="fas fa-plus"></i> Add New Link
                         </button>
+                    </div>
+                    <div class="links-manager">
+                        <div id="links-container" class="links-grid">
+                            <div class="links-placeholder">
+                                <i class="fas fa-link"></i>
+                                <h4>No links yet</h4>
+                                <p>Add your first link to get started</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Social Tab -->
+                <div class="tab-content" id="social-tab">
+                    <div class="tab-header">
+                        <h3>Social Media</h3>
+                        <p>Connect your social media accounts</p>
+                    </div>
+                    <div class="social-manager">
+                        <div id="social-links-form" class="social-grid">
+                            <!-- Social media inputs will be generated here -->
+                        </div>
+                        <div class="social-actions">
+                            <button type="button" id="save-social-links-button" class="action-btn primary-btn">
+                                <i class="fas fa-save"></i> Save Social Links
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Design Tab -->
+                <div class="tab-content" id="design-tab">
+                    <div class="tab-header">
+                        <h3>Design Customization</h3>
+                        <p>Customize the appearance of your bio page</p>
+                    </div>
+                    <div class="design-manager">
+                        <div class="design-section">
+                            <h4>Background Style</h4>
+                            <div class="background-options">
+                                <div class="background-type-selector">
+                                    <select id="background-type" class="modern-select">
+                                        <option value="default">Default</option>
+                                        <option value="solid">Solid Color</option>
+                                        <option value="gradient">Gradient</option>
+                                        <option value="pattern">Pattern</option>
+                                    </select>
+                                </div>
+
+                                <!-- Solid Color Options -->
+                                <div id="solid-color-options" class="background-option-group" style="display: none;">
+                                    <div class="color-picker-container">
+                                        <input type="color" id="background-color" value="#ffffff">
+                                        <div class="preset-colors">
+                                            <div class="color-preset" data-color="#ffffff" style="background: #ffffff;"></div>
+                                            <div class="color-preset" data-color="#000000" style="background: #000000;"></div>
+                                            <div class="color-preset" data-color="#3b82f6" style="background: #3b82f6;"></div>
+                                            <div class="color-preset" data-color="#ef4444" style="background: #ef4444;"></div>
+                                            <div class="color-preset" data-color="#10b981" style="background: #10b981;"></div>
+                                            <div class="color-preset" data-color="#f59e0b" style="background: #f59e0b;"></div>
+                                            <div class="color-preset" data-color="#8b5cf6" style="background: #8b5cf6;"></div>
+                                            <div class="color-preset" data-color="#ec4899" style="background: #ec4899;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Gradient Options -->
+                                <div id="gradient-options" class="background-option-group" style="display: none;">
+                                    <div class="gradient-presets">
+                                        <div class="gradient-preset" data-gradient="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"></div>
+                                        <div class="gradient-preset" data-gradient="linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"></div>
+                                        <div class="gradient-preset" data-gradient="linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"></div>
+                                        <div class="gradient-preset" data-gradient="linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)"></div>
+                                        <div class="gradient-preset" data-gradient="linear-gradient(135deg, #fa709a 0%, #fee140 100%)"></div>
+                                        <div class="gradient-preset" data-gradient="linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)"></div>
+                                        <div class="gradient-preset" data-gradient="linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)"></div>
+                                        <div class="gradient-preset" data-gradient="linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Pattern Options -->
+                                <div id="pattern-options" class="background-option-group" style="display: none;">
+                                    <div class="pattern-presets">
+                                        <div class="pattern-preset" data-pattern="dots" title="Dots"></div>
+                                        <div class="pattern-preset" data-pattern="grid" title="Grid"></div>
+                                        <div class="pattern-preset" data-pattern="diagonal" title="Diagonal Lines"></div>
+                                        <div class="pattern-preset" data-pattern="waves" title="Waves"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="background-actions">
+                                <button id="apply-background" class="action-btn primary-btn">Apply Background</button>
+                                <button id="reset-background" class="action-btn secondary-btn">Reset to Default</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="bio-editor-layout">
-                <!-- Left Column -->
-                <div class="bio-editor-column">
-                    <div class="dashboard-section">
-                        <h3>Profile Information</h3>
-                        <p id="profile-message" class="auth-success" style="display: none;"></p>
-                        <p id="profile-error" class="auth-error" style="display: none;"></p>
-                        <form id="profile-form" class="profile-form">
-                            <!-- Profile Picture Upload Section - Moved to top -->
-                            <div class="profile-image-container">
-                                <div class="profile-pic-preview" id="profilePicPreview">
-                                    <img src="profile.png" alt="Profile" id="profilePicImage">
-                                </div>
-                                <input type="file" id="profilePicUpload" accept="image/*" style="display: none;">
-                            </div>
-                            <p class="text-center profile-pic-hint">Click on the image to change your profile picture</p>
-
-                            <div class="form-group">
-                                <label for="username">Your Unique Link</label>
-                                <div class="unique-link-display">
-                                    <span class="link-prefix">bink.com/u/</span>
-                                    <span id="username-display" class="username-value">username</span>
-                                    <div class="link-actions">
-                                        <button type="button" id="copy-link-button" class="copy-button" title="Copy Link">
-                                            <i class="fas fa-copy"></i>
-                                        </button>
-                                        <button type="button" id="save-link-button" class="save-button" title="Save to Dashboard">
-                                            <i class="fas fa-bookmark"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="displayName">Display Name</label>
-                                <input type="text" id="displayName" name="displayName" placeholder="Your Name">
-                            </div>
-                            <div class="form-group">
-                                <label for="bio">Bio</label>
-                                <textarea id="bio" name="bio" placeholder="Tell visitors about yourself..."></textarea>
-                            </div>
-                            <!-- Hidden field to store the profile picture URL -->
-                            <input type="hidden" id="profilePicUrl" name="profilePicUrl">
-
-                            <button type="submit" id="save-profile-button" class="auth-button">Save Profile</button>
-                        </form>
-                    </div>
-
-                    <div class="dashboard-section">
-                        <h3>Manage Links</h3>
-                        <div id="links-container" class="links-editor-container">
-                            <!-- Links will be loaded here -->
-                            <div class="links-placeholder">Loading your links...</div>
-                        </div>
-                        <button id="add-link-button" class="add-button">
-                            <i class="fas fa-plus"></i> Add New Link
+            <!-- Live Preview Sidebar -->
+            <div class="preview-sidebar">
+                <div class="preview-header">
+                    <h4>Live Preview</h4>
+                    <div class="preview-controls">
+                        <button class="preview-control" data-device="mobile" title="Mobile View">
+                            <i class="fas fa-mobile-alt"></i>
+                        </button>
+                        <button class="preview-control active" data-device="desktop" title="Desktop View">
+                            <i class="fas fa-desktop"></i>
                         </button>
                     </div>
-
-                    <div class="dashboard-section">
-                        <h3>Social Media Icons</h3>
-                        <div id="social-links-form" class="social-links-form">
-                            <!-- Social media inputs will be generated here -->
-                        </div>
-                        <button type="button" id="save-social-links-button" class="auth-button">Save Social Links</button>
-                    </div>
-
-                    <!-- Background Customization Section -->
-                    <div class="dashboard-section">
-                        <h3>Background Customization</h3>
-                        <p>Customize the background of your bio page</p>
-
-                        <div class="background-options">
-                            <div class="background-type-selector">
-                                <label>Background Type:</label>
-                                <select id="background-type" class="form-control">
-                                    <option value="default">Default</option>
-                                    <option value="solid">Solid Color</option>
-                                    <option value="gradient">Gradient</option>
-                                    <option value="pattern">Pattern</option>
-                                </select>
-                            </div>
-
-                            <!-- Solid Color Options -->
-                            <div id="solid-color-options" class="background-option-group" style="display: none;">
-                                <label>Choose Color:</label>
-                                <div class="color-picker-container">
-                                    <input type="color" id="background-color" value="#ffffff">
-                                    <div class="preset-colors">
-                                        <div class="color-preset" data-color="#ffffff" style="background: #ffffff;"></div>
-                                        <div class="color-preset" data-color="#000000" style="background: #000000;"></div>
-                                        <div class="color-preset" data-color="#3b82f6" style="background: #3b82f6;"></div>
-                                        <div class="color-preset" data-color="#ef4444" style="background: #ef4444;"></div>
-                                        <div class="color-preset" data-color="#10b981" style="background: #10b981;"></div>
-                                        <div class="color-preset" data-color="#f59e0b" style="background: #f59e0b;"></div>
-                                        <div class="color-preset" data-color="#8b5cf6" style="background: #8b5cf6;"></div>
-                                        <div class="color-preset" data-color="#ec4899" style="background: #ec4899;"></div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Gradient Options -->
-                            <div id="gradient-options" class="background-option-group" style="display: none;">
-                                <label>Choose Gradient:</label>
-                                <div class="gradient-presets">
-                                    <div class="gradient-preset" data-gradient="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"></div>
-                                    <div class="gradient-preset" data-gradient="linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"></div>
-                                    <div class="gradient-preset" data-gradient="linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"></div>
-                                    <div class="gradient-preset" data-gradient="linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)"></div>
-                                    <div class="gradient-preset" data-gradient="linear-gradient(135deg, #fa709a 0%, #fee140 100%)"></div>
-                                    <div class="gradient-preset" data-gradient="linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)"></div>
-                                    <div class="gradient-preset" data-gradient="linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)"></div>
-                                    <div class="gradient-preset" data-gradient="linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)"></div>
-                                </div>
-                            </div>
-
-                            <!-- Pattern Options -->
-                            <div id="pattern-options" class="background-option-group" style="display: none;">
-                                <label>Choose Pattern:</label>
-                                <div class="pattern-presets">
-                                    <div class="pattern-preset" data-pattern="dots" title="Dots"></div>
-                                    <div class="pattern-preset" data-pattern="grid" title="Grid"></div>
-                                    <div class="pattern-preset" data-pattern="diagonal" title="Diagonal Lines"></div>
-                                    <div class="pattern-preset" data-pattern="waves" title="Waves"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="background-actions">
-                            <button id="apply-background" class="auth-button">Apply Background</button>
-                            <button id="reset-background" class="auth-button secondary-button">Reset to Default</button>
-                        </div>
-                    </div>
                 </div>
-
-                <!-- Right Column -->
-                <div class="bio-editor-column">
-                    <div class="dashboard-section">
-                        <div class="preview-header">
-                            <h3>Preview Your Bio Page</h3>
-                            <button id="use-template-button" class="auth-button primary-button">
-                                <i class="fas fa-check"></i> Use This Template
-                            </button>
-                        </div>
-                        <div class="preview-container">
-                            <div class="preview-frame-container">
-                                <iframe id="preview-frame" src="about:blank" title="Bio Page Preview"></iframe>
-                            </div>
-                        </div>
+                <div class="preview-container">
+                    <div class="preview-frame-container">
+                        <iframe id="preview-frame" src="about:blank" title="Bio Page Preview"></iframe>
                     </div>
                 </div>
             </div>
         </main>
     </div>
+
+    <!-- Success/Error Messages -->
+    <div id="message-container" class="message-container">
+        <div id="success-message" class="message success-message" style="display: none;">
+            <i class="fas fa-check-circle"></i>
+            <span class="message-text"></span>
+        </div>
+        <div id="error-message" class="message error-message" style="display: none;">
+            <i class="fas fa-exclamation-circle"></i>
+            <span class="message-text"></span>
+        </div>
+    </div>
+
 
     <!-- Link Editor Modal -->
     <div id="link-editor-modal" class="modal">
