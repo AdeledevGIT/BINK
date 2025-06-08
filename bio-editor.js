@@ -1282,6 +1282,7 @@ if (saveSocialLinksButton) {
 document.addEventListener('DOMContentLoaded', () => {
     initTemplatesCarousel();
     initTemplateLabels();
+    initializeBackgroundChanger();
 });
 
 // Template selection buttons (now just for preview)
@@ -1461,4 +1462,249 @@ function selectTemplate(templateId) {
 
     // Save the template selection to database
     saveTemplateSelection(templateId);
+}
+
+// Background Changer Functionality
+let currentBackgroundSettings = {
+    type: 'default',
+    color: '#ffffff',
+    gradient: '',
+    pattern: ''
+};
+
+// Initialize background changer
+function initializeBackgroundChanger() {
+    const backgroundTypeSelect = document.getElementById('background-type');
+    const solidColorOptions = document.getElementById('solid-color-options');
+    const gradientOptions = document.getElementById('gradient-options');
+    const patternOptions = document.getElementById('pattern-options');
+    const backgroundColorInput = document.getElementById('background-color');
+    const applyBackgroundBtn = document.getElementById('apply-background');
+    const resetBackgroundBtn = document.getElementById('reset-background');
+
+    if (!backgroundTypeSelect) return;
+
+    // Handle background type change
+    backgroundTypeSelect.addEventListener('change', function() {
+        const selectedType = this.value;
+
+        // Hide all option groups
+        solidColorOptions.style.display = 'none';
+        gradientOptions.style.display = 'none';
+        patternOptions.style.display = 'none';
+
+        // Show relevant option group
+        switch(selectedType) {
+            case 'solid':
+                solidColorOptions.style.display = 'block';
+                break;
+            case 'gradient':
+                gradientOptions.style.display = 'block';
+                break;
+            case 'pattern':
+                patternOptions.style.display = 'block';
+                break;
+        }
+
+        currentBackgroundSettings.type = selectedType;
+    });
+
+    // Handle color picker change
+    if (backgroundColorInput) {
+        backgroundColorInput.addEventListener('change', function() {
+            currentBackgroundSettings.color = this.value;
+        });
+    }
+
+    // Handle color preset clicks
+    const colorPresets = document.querySelectorAll('.color-preset');
+    colorPresets.forEach(preset => {
+        preset.addEventListener('click', function() {
+            const color = this.getAttribute('data-color');
+            currentBackgroundSettings.color = color;
+            backgroundColorInput.value = color;
+
+            // Update selection
+            colorPresets.forEach(p => p.classList.remove('selected'));
+            this.classList.add('selected');
+        });
+    });
+
+    // Handle gradient preset clicks
+    const gradientPresets = document.querySelectorAll('.gradient-preset');
+    gradientPresets.forEach(preset => {
+        const gradient = preset.getAttribute('data-gradient');
+        preset.style.background = gradient;
+
+        preset.addEventListener('click', function() {
+            currentBackgroundSettings.gradient = gradient;
+
+            // Update selection
+            gradientPresets.forEach(p => p.classList.remove('selected'));
+            this.classList.add('selected');
+        });
+    });
+
+    // Handle pattern preset clicks
+    const patternPresets = document.querySelectorAll('.pattern-preset');
+    patternPresets.forEach(preset => {
+        preset.addEventListener('click', function() {
+            const pattern = this.getAttribute('data-pattern');
+            currentBackgroundSettings.pattern = pattern;
+
+            // Update selection
+            patternPresets.forEach(p => p.classList.remove('selected'));
+            this.classList.add('selected');
+        });
+    });
+
+    // Apply background button
+    if (applyBackgroundBtn) {
+        applyBackgroundBtn.addEventListener('click', applyBackgroundSettings);
+    }
+
+    // Reset background button
+    if (resetBackgroundBtn) {
+        resetBackgroundBtn.addEventListener('click', resetBackgroundSettings);
+    }
+
+    // Load existing background settings
+    loadBackgroundSettings();
+}
+
+// Apply background settings
+async function applyBackgroundSettings() {
+    if (!currentUser) {
+        showMessage("Please log in to save background settings.", true);
+        return;
+    }
+
+    try {
+        const db = firebase.firestore();
+        const userRef = db.collection('users').doc(currentUser.uid);
+
+        await userRef.update({
+            backgroundSettings: currentBackgroundSettings,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        // Also update bio page document
+        const bioPageRef = db.collection('bioPages').doc(currentUser.uid);
+        await bioPageRef.update({
+            backgroundSettings: currentBackgroundSettings,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        showMessage("Background settings applied successfully!");
+
+        // Update preview
+        updatePreviewWithBackground();
+
+    } catch (error) {
+        console.error('Error saving background settings:', error);
+        showMessage("Error saving background settings. Please try again.", true);
+    }
+}
+
+// Reset background settings
+async function resetBackgroundSettings() {
+    currentBackgroundSettings = {
+        type: 'default',
+        color: '#ffffff',
+        gradient: '',
+        pattern: ''
+    };
+
+    // Reset UI
+    document.getElementById('background-type').value = 'default';
+    document.getElementById('solid-color-options').style.display = 'none';
+    document.getElementById('gradient-options').style.display = 'none';
+    document.getElementById('pattern-options').style.display = 'none';
+
+    // Clear selections
+    document.querySelectorAll('.color-preset.selected').forEach(el => el.classList.remove('selected'));
+    document.querySelectorAll('.gradient-preset.selected').forEach(el => el.classList.remove('selected'));
+    document.querySelectorAll('.pattern-preset.selected').forEach(el => el.classList.remove('selected'));
+
+    // Apply reset settings
+    await applyBackgroundSettings();
+}
+
+// Load existing background settings
+async function loadBackgroundSettings() {
+    if (!currentUser) return;
+
+    try {
+        const db = firebase.firestore();
+        const userRef = db.collection('users').doc(currentUser.uid);
+        const doc = await userRef.get();
+
+        if (doc.exists && doc.data().backgroundSettings) {
+            currentBackgroundSettings = doc.data().backgroundSettings;
+
+            // Update UI to reflect loaded settings
+            const backgroundTypeSelect = document.getElementById('background-type');
+            if (backgroundTypeSelect) {
+                backgroundTypeSelect.value = currentBackgroundSettings.type;
+                backgroundTypeSelect.dispatchEvent(new Event('change'));
+            }
+
+            // Set color if applicable
+            if (currentBackgroundSettings.color) {
+                const colorInput = document.getElementById('background-color');
+                if (colorInput) {
+                    colorInput.value = currentBackgroundSettings.color;
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Error loading background settings:', error);
+    }
+}
+
+// Update preview with background
+function updatePreviewWithBackground() {
+    const previewFrame = document.getElementById('preview-frame');
+    if (!previewFrame || !previewFrame.contentWindow) return;
+
+    try {
+        const previewDoc = previewFrame.contentDocument || previewFrame.contentWindow.document;
+        const body = previewDoc.body;
+
+        if (!body) return;
+
+        // Apply background based on type
+        switch(currentBackgroundSettings.type) {
+            case 'solid':
+                body.style.background = currentBackgroundSettings.color;
+                break;
+            case 'gradient':
+                body.style.background = currentBackgroundSettings.gradient;
+                break;
+            case 'pattern':
+                body.style.background = getPatternBackground(currentBackgroundSettings.pattern);
+                break;
+            default:
+                body.style.background = '';
+                break;
+        }
+    } catch (error) {
+        console.error('Error updating preview background:', error);
+    }
+}
+
+// Get pattern background CSS
+function getPatternBackground(pattern) {
+    switch(pattern) {
+        case 'dots':
+            return 'radial-gradient(circle, #666 2px, transparent 2px), #f0f0f0';
+        case 'grid':
+            return 'linear-gradient(#666 1px, transparent 1px), linear-gradient(90deg, #666 1px, transparent 1px), #f0f0f0';
+        case 'diagonal':
+            return 'repeating-linear-gradient(45deg, #666, #666 1px, transparent 1px, transparent 10px), #f0f0f0';
+        case 'waves':
+            return 'radial-gradient(circle at 50% 0, transparent 20%, #666 21%, #666 22%, transparent 23%), #f0f0f0';
+        default:
+            return '';
+    }
 }

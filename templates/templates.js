@@ -1345,3 +1345,126 @@ window.BINK.templates.templates['portfolio'] = {
         `;
     }
 };
+
+// Corporate Professional Template
+window.BINK.templates.templates['corporate'] = {
+    id: 'corporate',
+    name: 'Corporate Professional',
+    description: 'Clean, professional template perfect for business professionals and executives.',
+    css: 'templates/corporate.css',
+    isPremium: false,
+    render: function(data) {
+        return `
+        <div class="corporate-bio-page">
+            <div class="corporate-container">
+                <div class="corporate-header-actions">
+                    <div class="corporate-join-link">
+                        <a href="index.html"><i class="fas fa-user-plus"></i> Join BINK</a>
+                    </div>
+                    <button class="corporate-share-btn" onclick="window.BINK.templates.shareProfile(event, '${data.username}')">
+                        <i class="fas fa-share-alt"></i>
+                    </button>
+                </div>
+
+                <div class="corporate-header">
+                    <div class="corporate-avatar-container">
+                        <img class="corporate-avatar" src="${data.profilePicUrl || 'https://adeledevgit.github.io/bink/profile.png'}" alt="Profile">
+                    </div>
+                    <div class="corporate-name">${window.BINK.templates.formatUsername(data.displayName || data.username)}</div>
+                    <div class="corporate-title">Professional</div>
+                    <div class="corporate-bio">${data.bio || ''}</div>
+                </div>
+
+                <div class="corporate-content">
+                    <div class="corporate-links">
+                        <div class="corporate-section-title">Professional Links</div>
+                        ${(data.links || []).map(link => `
+                            <div class="corporate-link-container">
+                                <a class="corporate-link" href="${link.url}" onclick="window.BINK.templates.trackLinkClick(event, '${link.id}')" target="_blank">
+                                    <i class="${window.BINK.templates.getPlatformIcon(link.platform)}"></i>
+                                    <span class="corporate-link-text">${link.title}</span>
+                                    <button class="corporate-link-share-btn" onclick="window.BINK.templates.shareLink(event, '${link.url}', '${link.title}')">
+                                        <i class="fas fa-share-alt"></i>
+                                    </button>
+                                </a>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="corporate-socials">
+                        ${Object.entries(data.socialLinks || {}).map(([platform, url]) => `
+                            <a href="${url}" target="_blank"><i class="${window.BINK.templates.getPlatformIcon(platform)}"></i></a>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="corporate-footer">
+                    Powered by <a href="index.html" target="_blank">BINK</a>
+                </div>
+            </div>
+        </div>
+        `;
+    }
+};
+
+// Creative Artist Template
+window.BINK.templates.templates['creative'] = {
+    id: 'creative',
+    name: 'Creative Artist',
+    description: 'Vibrant, artistic template perfect for creatives, artists, and designers.',
+    css: 'templates/creative.css',
+    isPremium: true,
+    tokenPrice: 180,
+    render: function(data) {
+        return `
+        <div class="creative-bio-page">
+            <div class="creative-container">
+                <div class="creative-header-actions">
+                    <div class="creative-join-link">
+                        <a href="index.html"><i class="fas fa-user-plus"></i> Join BINK</a>
+                    </div>
+                    <button class="creative-share-btn" onclick="window.BINK.templates.shareProfile(event, '${data.username}')">
+                        <i class="fas fa-share-alt"></i>
+                    </button>
+                </div>
+
+                <div class="creative-header">
+                    <div class="creative-avatar-container">
+                        <img class="creative-avatar" src="${data.profilePicUrl || 'https://adeledevgit.github.io/bink/profile.png'}" alt="Profile">
+                    </div>
+                    <div class="creative-name">${window.BINK.templates.formatUsername(data.displayName || data.username)}</div>
+                    <div class="creative-title">Creative Artist</div>
+                    <div class="creative-bio">${data.bio || ''}</div>
+                </div>
+
+                <div class="creative-content">
+                    <div class="creative-links">
+                        <div class="creative-section-title">My Creative Work</div>
+                        ${(data.links || []).map(link => `
+                            <div class="creative-link-container">
+                                <a class="creative-link" href="${link.url}" onclick="window.BINK.templates.trackLinkClick(event, '${link.id}')" target="_blank">
+                                    <i class="${window.BINK.templates.getPlatformIcon(link.platform)}"></i>
+                                    <span class="creative-link-text">${link.title}</span>
+                                    <button class="creative-link-share-btn" onclick="window.BINK.templates.shareLink(event, '${link.url}', '${link.title}')">
+                                        <i class="fas fa-share-alt"></i>
+                                    </button>
+                                </a>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="creative-socials">
+                        ${Object.entries(data.socialLinks || {}).map(([platform, url]) => `
+                            <a href="${url}" target="_blank"><i class="${window.BINK.templates.getPlatformIcon(platform)}"></i></a>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="creative-footer">
+                    Powered by <a href="index.html" target="_blank">BINK</a>
+                </div>
+            </div>
+        </div>
+        `;
+    }
+};

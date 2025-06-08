@@ -181,6 +181,24 @@
                                 <button class="template-select-btn" data-template="portfolio">Preview</button>
                             </div>
                         </div>
+                        <!-- Corporate Professional -->
+                        <div class="template-card">
+                            <div id="corporate-label"></div>
+                            <iframe src="templates/corporate-preview.html" class="template-preview"></iframe>
+                            <div class="template-info">
+                                <div class="template-title">Corporate Professional</div>
+                                <button class="template-select-btn" data-template="corporate">Preview</button>
+                            </div>
+                        </div>
+                        <!-- Creative Artist -->
+                        <div class="template-card">
+                            <div id="creative-label"></div>
+                            <iframe src="templates/creative-preview.html" class="template-preview"></iframe>
+                            <div class="template-info">
+                                <div class="template-title">Creative Artist</div>
+                                <button class="template-select-btn" data-template="creative">Preview</button>
+                            </div>
+                        </div>
                     </div>
                     <div class="carousel-controls">
                         <button class="carousel-control prev">
@@ -257,6 +275,73 @@
                             <!-- Social media inputs will be generated here -->
                         </div>
                         <button type="button" id="save-social-links-button" class="auth-button">Save Social Links</button>
+                    </div>
+
+                    <!-- Background Customization Section -->
+                    <div class="dashboard-section">
+                        <h3>Background Customization</h3>
+                        <p>Customize the background of your bio page</p>
+
+                        <div class="background-options">
+                            <div class="background-type-selector">
+                                <label>Background Type:</label>
+                                <select id="background-type" class="form-control">
+                                    <option value="default">Default</option>
+                                    <option value="solid">Solid Color</option>
+                                    <option value="gradient">Gradient</option>
+                                    <option value="pattern">Pattern</option>
+                                </select>
+                            </div>
+
+                            <!-- Solid Color Options -->
+                            <div id="solid-color-options" class="background-option-group" style="display: none;">
+                                <label>Choose Color:</label>
+                                <div class="color-picker-container">
+                                    <input type="color" id="background-color" value="#ffffff">
+                                    <div class="preset-colors">
+                                        <div class="color-preset" data-color="#ffffff" style="background: #ffffff;"></div>
+                                        <div class="color-preset" data-color="#000000" style="background: #000000;"></div>
+                                        <div class="color-preset" data-color="#3b82f6" style="background: #3b82f6;"></div>
+                                        <div class="color-preset" data-color="#ef4444" style="background: #ef4444;"></div>
+                                        <div class="color-preset" data-color="#10b981" style="background: #10b981;"></div>
+                                        <div class="color-preset" data-color="#f59e0b" style="background: #f59e0b;"></div>
+                                        <div class="color-preset" data-color="#8b5cf6" style="background: #8b5cf6;"></div>
+                                        <div class="color-preset" data-color="#ec4899" style="background: #ec4899;"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Gradient Options -->
+                            <div id="gradient-options" class="background-option-group" style="display: none;">
+                                <label>Choose Gradient:</label>
+                                <div class="gradient-presets">
+                                    <div class="gradient-preset" data-gradient="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"></div>
+                                    <div class="gradient-preset" data-gradient="linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"></div>
+                                    <div class="gradient-preset" data-gradient="linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"></div>
+                                    <div class="gradient-preset" data-gradient="linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)"></div>
+                                    <div class="gradient-preset" data-gradient="linear-gradient(135deg, #fa709a 0%, #fee140 100%)"></div>
+                                    <div class="gradient-preset" data-gradient="linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)"></div>
+                                    <div class="gradient-preset" data-gradient="linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)"></div>
+                                    <div class="gradient-preset" data-gradient="linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)"></div>
+                                </div>
+                            </div>
+
+                            <!-- Pattern Options -->
+                            <div id="pattern-options" class="background-option-group" style="display: none;">
+                                <label>Choose Pattern:</label>
+                                <div class="pattern-presets">
+                                    <div class="pattern-preset" data-pattern="dots" title="Dots"></div>
+                                    <div class="pattern-preset" data-pattern="grid" title="Grid"></div>
+                                    <div class="pattern-preset" data-pattern="diagonal" title="Diagonal Lines"></div>
+                                    <div class="pattern-preset" data-pattern="waves" title="Waves"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="background-actions">
+                            <button id="apply-background" class="auth-button">Apply Background</button>
+                            <button id="reset-background" class="auth-button secondary-button">Reset to Default</button>
+                        </div>
                     </div>
                 </div>
 
