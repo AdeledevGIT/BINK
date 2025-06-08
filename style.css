@@ -862,6 +862,29 @@ textarea {
   opacity: 0.7;
 }
 
+.terms-notice {
+  margin: 20px 0 10px 0;
+  text-align: center;
+}
+
+.terms-notice p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.terms-notice a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.terms-notice a:hover {
+  color: var(--accent-color);
+  text-decoration: underline;
+}
+
 .auth-button {
   width: 100%;
   padding: 16px 20px;
