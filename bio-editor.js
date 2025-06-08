@@ -1159,14 +1159,14 @@ function updateLinkOrder() {
 
 // Templates Carousel Navigation
 function initTemplatesCarousel() {
-    const prevButton = document.querySelector('.carousel-control.prev');
-    const nextButton = document.querySelector('.carousel-control.next');
+    const prevButton = document.querySelector('.template-control.prev');
+    const nextButton = document.querySelector('.template-control.next');
     const templatesScroll = document.querySelector('.templates-scroll');
 
     if (!prevButton || !nextButton || !templatesScroll) return;
 
     // Scroll amount (width of one template card + gap)
-    const scrollAmount = 240; // 220px card width + 20px gap
+    const scrollAmount = 300; // 280px card width + 20px gap
 
     prevButton.addEventListener('click', () => {
         templatesScroll.scrollBy({
