@@ -62,7 +62,6 @@
     scrollbar-width: none;
     -ms-overflow-style: none;
     width: 100%;
-    justify-content: space-between;
 }
 
 .nav-tabs::-webkit-scrollbar {
@@ -82,7 +81,7 @@
     transition: all 0.3s ease;
     white-space: nowrap;
     font-weight: 500;
-    flex: 1;
+    min-width: 120px;
     justify-content: center;
     flex-shrink: 0;
 }
@@ -242,11 +241,10 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
     border: 2px solid transparent;
-    flex: 0 0 320px;
-    height: 480px;
+    flex: 0 0 280px;
+    height: 350px;
     display: flex;
     flex-direction: column;
-    position: relative;
 }
 
 .template-card:hover {
@@ -1311,7 +1309,7 @@
         overflow-x: auto;
         scrollbar-width: none;
         -ms-overflow-style: none;
-        justify-content: space-between;
+        justify-content: space-around;
     }
 
     .nav-tabs::-webkit-scrollbar {
@@ -1321,7 +1319,7 @@
     .nav-tab {
         flex-direction: column;
         padding: 12px 8px;
-        flex: 1;
+        min-width: 80px;
         flex-shrink: 0;
         gap: 6px;
         text-align: center;
@@ -1427,13 +1425,13 @@
     .nav-tabs {
         padding: 3px;
         gap: 2px;
-        justify-content: space-between;
+        justify-content: space-around;
     }
 
     .nav-tab {
         flex-direction: column;
         padding: 8px 4px;
-        flex: 1;
+        min-width: 70px;
         font-size: 0.8rem;
         gap: 4px;
         min-height: 55px;
@@ -1547,7 +1545,7 @@
     .nav-tab {
         flex-direction: column;
         padding: 6px 2px;
-        flex: 1;
+        min-width: 65px;
         gap: 3px;
         min-height: 50px;
         justify-content: center;
