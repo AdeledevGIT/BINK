@@ -16,6 +16,8 @@ const username = urlParams.get('u');
 const templateOverride = urlParams.get('t');
 const isPreview = urlParams.get('preview') === 'true';
 
+
+
 // DOM elements
 const bioRoot = document.getElementById('bio-root');
 
@@ -75,6 +77,8 @@ async function loadUserProfile() {
 
         // Update profile information (now dynamic)
         updateProfileInfo(userData);
+
+
 
         // Track page view in Firestore and analytics (only if not in preview mode)
         if (!isPreview) {
@@ -398,6 +402,8 @@ function trackLinkClick(linkId, url, userId) {
     // Open the URL
     window.open(url, '_blank');
 }
+
+
 
 // Load user profile when page loads
 document.addEventListener('DOMContentLoaded', loadUserProfile);
