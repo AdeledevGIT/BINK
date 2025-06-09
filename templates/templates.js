@@ -32,11 +32,20 @@ window.BINK.templates.getPlatformIcon = function(platform) {
     return icons[platform] || icons.other;
 };
 
-// Helper to format username (remove @ if present)
+// Helper to format username (remove @ if present, don't add it)
 window.BINK.templates.formatUsername = function(username) {
     if (!username) return '';
-    // Remove @ symbol if it's at the beginning of the username
+    // Remove @ symbol if it's at the beginning of the username, don't add it back
     return username.startsWith('@') ? username.substring(1) : username;
+};
+
+// Helper to render social links
+window.BINK.templates.renderSocialLinks = function(socialLinks) {
+    if (!socialLinks || typeof socialLinks !== 'object') return '';
+    return Object.entries(socialLinks).map(([platform, url]) => {
+        if (!url) return '';
+        return `<a href="${url}" target="_blank"><i class="${window.BINK.templates.getPlatformIcon(platform)}"></i></a>`;
+    }).join('');
 };
 
 // Classic Template (fallback, no extra CSS)
@@ -1462,6 +1471,345 @@ window.BINK.templates.templates['creative'] = {
 
                 <div class="creative-footer">
                     Powered by <a href="index.html" target="_blank">BINK</a>
+                </div>
+            </div>
+        </div>
+        `;
+    }
+};
+
+// Gradient Card Template (Premium)
+window.BINK.templates.templates['gradientcard'] = {
+    id: 'gradientcard',
+    name: 'Gradient Card',
+    description: 'Modern gradient background with card-style layout and smooth animations.',
+    css: 'templates/gradientcard.css',
+    isPremium: true,
+    tokenPrice: 140,
+    render: function(data) {
+        return `
+        <div class="gradientcard-bio-bg">
+            <div class="gradientcard-container">
+                <div class="gradientcard-header-actions">
+                    <a href="index.html" class="gradientcard-join-btn">
+                        <i class="fas fa-user-plus"></i> Join BINK
+                    </a>
+                    <button class="gradientcard-share-btn" onclick="window.BINK.templates.shareProfile(event, '${data.username}')">
+                        <i class="fas fa-share-alt"></i>
+                    </button>
+                </div>
+
+                <div class="gradientcard-profile">
+                    <div class="gradientcard-avatar-container">
+                        <img class="gradientcard-avatar" src="${data.profilePicUrl || 'https://adeledevgit.github.io/bink/profile.png'}" alt="Profile">
+                    </div>
+                    <div class="gradientcard-username">${window.BINK.templates.formatUsername(data.displayName || data.username)}</div>
+                    <div class="gradientcard-bio">${data.bio || ''}</div>
+                </div>
+
+                <div class="gradientcard-links">
+                    ${(data.links || []).map(link => `
+                        <div class="gradientcard-link-container">
+                            <a class="gradientcard-link" href="${link.url}" onclick="window.BINK.templates.trackLinkClick(event, '${link.id}')" target="_blank">
+                                <i class="${window.BINK.templates.getPlatformIcon(link.platform)}"></i>
+                                <span>${link.title}</span>
+                            </a>
+                            <button class="gradientcard-link-share-btn" onclick="window.BINK.templates.shareLink(event, '${link.url}', '${link.title}')">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="gradientcard-socials">
+                    ${window.BINK.templates.renderSocialLinks(data.socialLinks)}
+                </div>
+
+                <div class="gradientcard-footer">
+                    Powered by <a href="index.html" target="_blank">BINK</a>
+                </div>
+            </div>
+        </div>
+        `;
+    }
+};
+
+// Neon Minimal Template (Premium)
+window.BINK.templates.templates['neonminimal'] = {
+    id: 'neonminimal',
+    name: 'Neon Minimal',
+    description: 'Clean minimal design with neon accents and cyberpunk aesthetics.',
+    css: 'templates/neonminimal.css',
+    isPremium: true,
+    tokenPrice: 150,
+    render: function(data) {
+        return `
+        <div class="neonminimal-bio-bg">
+            <div class="neonminimal-container">
+                <div class="neonminimal-header-actions">
+                    <a href="index.html" class="neonminimal-join-btn">
+                        <i class="fas fa-user-plus"></i> Join BINK
+                    </a>
+                    <button class="neonminimal-share-btn" onclick="window.BINK.templates.shareProfile(event, '${data.username}')">
+                        <i class="fas fa-share-alt"></i>
+                    </button>
+                </div>
+
+                <div class="neonminimal-profile">
+                    <div class="neonminimal-avatar-container">
+                        <img class="neonminimal-avatar" src="${data.profilePicUrl || 'https://adeledevgit.github.io/bink/profile.png'}" alt="Profile">
+                    </div>
+                    <div class="neonminimal-username">${window.BINK.templates.formatUsername(data.displayName || data.username)}</div>
+                    <div class="neonminimal-bio">${data.bio || ''}</div>
+                </div>
+
+                <div class="neonminimal-links">
+                    ${(data.links || []).map(link => `
+                        <div class="neonminimal-link-container">
+                            <a class="neonminimal-link" href="${link.url}" onclick="window.BINK.templates.trackLinkClick(event, '${link.id}')" target="_blank">
+                                <i class="${window.BINK.templates.getPlatformIcon(link.platform)}"></i>
+                                <span>${link.title}</span>
+                            </a>
+                            <button class="neonminimal-link-share-btn" onclick="window.BINK.templates.shareLink(event, '${link.url}', '${link.title}')">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="neonminimal-socials">
+                    ${window.BINK.templates.renderSocialLinks(data.socialLinks)}
+                </div>
+
+                <div class="neonminimal-footer">
+                    Powered by <a href="index.html" target="_blank">BINK</a>
+                </div>
+            </div>
+        </div>
+        `;
+    }
+};
+
+// Soft Pastel Template (Premium)
+window.BINK.templates.templates['softpastel'] = {
+    id: 'softpastel',
+    name: 'Soft Pastel',
+    description: 'Dreamy pastel colors with soft rounded elements and whimsical design.',
+    css: 'templates/softpastel.css',
+    isPremium: true,
+    tokenPrice: 160,
+    render: function(data) {
+        return `
+        <div class="softpastel-bio-bg">
+            <div class="softpastel-container">
+                <div class="softpastel-header-actions">
+                    <a href="index.html" class="softpastel-join-btn">
+                        <i class="fas fa-user-plus"></i> Join BINK
+                    </a>
+                    <button class="softpastel-share-btn" onclick="window.BINK.templates.shareProfile(event, '${data.username}')">
+                        <i class="fas fa-share-alt"></i>
+                    </button>
+                </div>
+
+                <div class="softpastel-profile">
+                    <div class="softpastel-avatar-container">
+                        <img class="softpastel-avatar" src="${data.profilePicUrl || 'https://adeledevgit.github.io/bink/profile.png'}" alt="Profile">
+                    </div>
+                    <div class="softpastel-username">${window.BINK.templates.formatUsername(data.displayName || data.username)}</div>
+                    <div class="softpastel-bio">${data.bio || ''}</div>
+                </div>
+
+                <div class="softpastel-links">
+                    ${(data.links || []).map(link => `
+                        <div class="softpastel-link-container">
+                            <a class="softpastel-link" href="${link.url}" onclick="window.BINK.templates.trackLinkClick(event, '${link.id}')" target="_blank">
+                                <i class="${window.BINK.templates.getPlatformIcon(link.platform)}"></i>
+                                <span>${link.title}</span>
+                            </a>
+                            <button class="softpastel-link-share-btn" onclick="window.BINK.templates.shareLink(event, '${link.url}', '${link.title}')">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="softpastel-socials">
+                    ${window.BINK.templates.renderSocialLinks(data.socialLinks)}
+                </div>
+
+                <div class="softpastel-footer">
+                    Powered by <a href="index.html" target="_blank">BINK</a>
+                </div>
+            </div>
+        </div>
+        `;
+    }
+};
+
+// Cover Story Template (Premium)
+window.BINK.templates.templates['coverstory'] = {
+    id: 'coverstory',
+    name: 'Cover Story',
+    description: 'Profile picture as background cover with overlay text and modern card design.',
+    css: 'templates/coverstory.css',
+    isPremium: true,
+    tokenPrice: 130,
+    render: function(data) {
+        const profileImageUrl = data.profilePicUrl || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=280&fit=crop&crop=face';
+        return `
+        <div class="coverstory-bio-bg">
+            <div class="coverstory-container">
+                <div class="coverstory-header" style="background-image: url('${profileImageUrl}');">
+                    <div class="coverstory-header-actions">
+                        <a href="index.html" class="coverstory-join-btn">
+                            <i class="fas fa-user-plus"></i> Join BINK
+                        </a>
+                        <button class="coverstory-share-btn" onclick="window.BINK.templates.shareProfile(event, '${data.username}')">
+                            <i class="fas fa-share-alt"></i>
+                        </button>
+                    </div>
+
+                    <div class="coverstory-profile-info">
+                        <div class="coverstory-username">${window.BINK.templates.formatUsername(data.displayName || data.username)}</div>
+                        <div class="coverstory-bio">${data.bio || ''}</div>
+                    </div>
+                </div>
+
+                <div class="coverstory-content">
+                    <div class="coverstory-links">
+                        ${(data.links || []).map(link => `
+                            <div class="coverstory-link-container">
+                                <a class="coverstory-link" href="${link.url}" onclick="window.BINK.templates.trackLinkClick(event, '${link.id}')" target="_blank">
+                                    <i class="${window.BINK.templates.getPlatformIcon(link.platform)}"></i>
+                                    <span>${link.title}</span>
+                                </a>
+                                <button class="coverstory-link-share-btn" onclick="window.BINK.templates.shareLink(event, '${link.url}', '${link.title}')">
+                                    <i class="fas fa-share-alt"></i>
+                                </button>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="coverstory-socials">
+                        ${window.BINK.templates.renderSocialLinks(data.socialLinks)}
+                    </div>
+
+                    <div class="coverstory-footer">
+                        Powered by <a href="index.html" target="_blank">BINK</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+    }
+};
+
+// Aurora Glow Template (Premium)
+window.BINK.templates.templates['auroraglow'] = {
+    id: 'auroraglow',
+    name: 'Aurora Glow',
+    description: 'Dynamic aurora background with glowing elements and mesmerizing animations.',
+    css: 'templates/auroraglow.css',
+    isPremium: true,
+    tokenPrice: 200,
+    render: function(data) {
+        return `
+        <div class="auroraglow-bio-bg">
+            <div class="auroraglow-container">
+                <div class="auroraglow-header-actions">
+                    <a href="index.html" class="auroraglow-join-btn">
+                        <i class="fas fa-user-plus"></i> Join BINK
+                    </a>
+                    <button class="auroraglow-share-btn" onclick="window.BINK.templates.shareProfile(event, '${data.username}')">
+                        <i class="fas fa-share-alt"></i>
+                    </button>
+                </div>
+
+                <div class="auroraglow-profile">
+                    <div class="auroraglow-avatar-container">
+                        <img class="auroraglow-avatar" src="${data.profilePicUrl || 'https://adeledevgit.github.io/bink/profile.png'}" alt="Profile">
+                    </div>
+                    <div class="auroraglow-username">${window.BINK.templates.formatUsername(data.displayName || data.username)}</div>
+                    <div class="auroraglow-bio">${data.bio || ''}</div>
+                </div>
+
+                <div class="auroraglow-links">
+                    ${(data.links || []).map(link => `
+                        <div class="auroraglow-link-container">
+                            <a class="auroraglow-link" href="${link.url}" onclick="window.BINK.templates.trackLinkClick(event, '${link.id}')" target="_blank">
+                                <i class="${window.BINK.templates.getPlatformIcon(link.platform)}"></i>
+                                <span>${link.title}</span>
+                            </a>
+                            <button class="auroraglow-link-share-btn" onclick="window.BINK.templates.shareLink(event, '${link.url}', '${link.title}')">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="auroraglow-socials">
+                    ${window.BINK.templates.renderSocialLinks(data.socialLinks)}
+                </div>
+
+                <div class="auroraglow-footer">
+                    Powered by <a href="index.html" target="_blank">BINK</a>
+                </div>
+            </div>
+        </div>
+        `;
+    }
+};
+
+// Hero Banner Template (Premium)
+window.BINK.templates.templates['herobanner'] = {
+    id: 'herobanner',
+    name: 'Hero Banner',
+    description: 'Clean hero banner with profile picture as background and content below.',
+    css: 'templates/herobanner.css',
+    isPremium: true,
+    tokenPrice: 160,
+    render: function(data) {
+        return `
+        <div class="herobanner-bio-bg">
+            <div class="herobanner-container">
+                <div class="herobanner-header" style="background-image: url('${data.profilePicUrl || 'https://adeledevgit.github.io/bink/profile.png'}');">
+                    <div class="herobanner-header-actions">
+                        <a href="index.html" class="herobanner-join-btn">
+                            <i class="fas fa-user-plus"></i> Join BINK
+                        </a>
+                        <button class="herobanner-share-btn" onclick="window.BINK.templates.shareProfile(event, '${data.username}')">
+                            <i class="fas fa-share-alt"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="herobanner-content">
+                    <div class="herobanner-profile">
+                        <div class="herobanner-username">${window.BINK.templates.formatUsername(data.displayName || data.username)}</div>
+                        <div class="herobanner-bio">${data.bio || ''}</div>
+                    </div>
+
+                    <div class="herobanner-links">
+                        ${(data.links || []).map(link => `
+                            <div class="herobanner-link-container">
+                                <a class="herobanner-link" href="${link.url}" onclick="window.BINK.templates.trackLinkClick(event, '${link.id}')" target="_blank">
+                                    <i class="${window.BINK.templates.getPlatformIcon(link.platform)}"></i>
+                                    <span>${link.title}</span>
+                                </a>
+                                <button class="herobanner-link-share-btn" onclick="window.BINK.templates.shareLink(event, '${link.url}', '${link.title}')">
+                                    <i class="fas fa-share-alt"></i>
+                                </button>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="herobanner-socials">
+                        ${window.BINK.templates.renderSocialLinks(data.socialLinks)}
+                    </div>
+
+                    <div class="herobanner-footer">
+                        Powered by <a href="index.html" target="_blank">BINK</a>
+                    </div>
                 </div>
             </div>
         </div>

@@ -135,9 +135,7 @@ function loadUserProfile(userId) {
             }
 
             // Check if user is premium or creator and update UI accordingly
-            const isPremiumUser = currentUserData.subscriptionTier === 'premium' ||
-                                 currentUserData.subscriptionTier === 'creator' ||
-                                 currentUserData.isPremium;
+            const isPremiumUser = checkPremiumStatus(currentUserData);
 
             if (isPremiumUser) {
                 console.log("User has premium access - enabling all templates");
@@ -145,6 +143,12 @@ function loadUserProfile(userId) {
                 document.querySelectorAll('.template-label.premium').forEach(label => {
                     label.style.display = 'none';
                 });
+            } else {
+                // Show premium labels for non-premium users
+                updatePremiumLabels();
+
+                // Check if user is currently using a premium template they shouldn't have access to
+                enforceTemplateAccess(currentUserData);
             }
 
             // Update token balance display
@@ -462,16 +466,16 @@ function handleTemplateSelection(templateId) {
     // Check if template is premium
     if (template.isPremium) {
         // Check if user has premium access
-        const isPremiumUser = currentUserData?.subscriptionTier === 'premium' ||
-                             currentUserData?.subscriptionTier === 'creator' ||
-                             currentUserData?.isPremium;
+        const isPremiumUser = checkPremiumStatus(currentUserData);
 
         // Check if user has already purchased this template
         const usedTemplates = currentUserData?.usedTemplates || [];
         const hasUsedTemplate = usedTemplates.includes(templateId);
 
         if (!isPremiumUser && !hasUsedTemplate) {
-            // Show premium template modal
+            // User doesn't have access to this premium template
+            console.log(`User attempted to select premium template ${templateId} without access`);
+            showMessage(`This is a premium template. You need an active premium subscription or purchase it with tokens.`, true);
             window.BINK.templates.showPremiumTemplateModal(templateId);
             return;
         }
@@ -566,6 +570,176 @@ function recordTokenUsage(templateId, tokenAmount, templateName) {
 
 // Make the function available to iframe content
 window.handleTemplateSelection = handleTemplateSelection;
+
+// Check if user has valid premium status (use global enforcement)
+function checkPremiumStatus(userData) {
+    if (!window.PremiumEnforcement) return false;
+
+    const isPremium = window.PremiumEnforcement.checkPremiumStatus(userData);
+
+    // If premium has expired, trigger revert to free tier
+    if (!isPremium && userData && (userData.subscriptionTier === 'premium' || userData.subscriptionTier === 'creator' || userData.isPremium)) {
+        revertToFreeTier(userData);
+    }
+
+    return isPremium;
+}
+
+// Revert user to free tier when premium expires (legacy function - now uses PremiumEnforcement)
+function revertToFreeTier(userData) {
+    if (!currentUser) return;
+
+    console.log("Reverting user to free tier due to expired premium (legacy function)");
+
+    // Use the new premium enforcement system if available
+    if (window.PremiumEnforcement && typeof window.PremiumEnforcement.autoDowngradeExpiredSubscription === 'function') {
+        window.PremiumEnforcement.autoDowngradeExpiredSubscription(currentUser.uid, userData);
+        return;
+    }
+
+    // Fallback to legacy implementation
+    const currentTemplate = userData.template || 'classic';
+    const template = window.BINK.templates.getTemplateById(currentTemplate);
+    const usedTemplates = userData.usedTemplates || [];
+    const hasUsedCurrentTemplate = usedTemplates.includes(currentTemplate);
+
+    let updateData = {
+        subscriptionTier: 'free',
+        isPremium: false,
+        subscriptionExpired: true,
+        lastSubscriptionTier: userData.subscriptionTier,
+        lastSubscriptionExpiration: userData.subscriptionExpiration,
+        premiumExpiredAt: firebase.firestore.FieldValue.serverTimestamp(),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    // If user is using a premium template they haven't purchased, revert to classic
+    if (template && template.isPremium && !hasUsedCurrentTemplate) {
+        updateData.template = 'classic';
+        console.log("Reverting template to classic due to expired premium");
+    }
+
+    // Update user document
+    db.collection('users').doc(currentUser.uid).update(updateData).then(() => {
+        console.log("User reverted to free tier");
+        // Update local data
+        currentUserData.subscriptionTier = 'free';
+        currentUserData.isPremium = false;
+
+        // If template was changed, update local data and UI
+        if (updateData.template) {
+            currentUserData.template = updateData.template;
+            // Highlight the new template
+            highlightSelectedTemplate('classic');
+            // Update preview
+            updatePreviewFrameWithTemplate('classic');
+        }
+
+        // Update premium labels
+        updatePremiumLabels();
+
+        // Show message to user
+        if (updateData.template) {
+            showMessage("Your premium subscription has expired. Template reverted to Classic. You can still use previously unlocked premium templates.", false);
+        } else {
+            showMessage("Your premium subscription has expired. You can still use previously unlocked templates.", false);
+        }
+    }).catch(error => {
+        console.error("Error reverting to free tier:", error);
+    });
+}
+
+// Enforce template access - check if user should have access to their current template
+function enforceTemplateAccess(userData) {
+    if (!userData || !currentUser) return;
+
+    const currentTemplate = userData.template || 'classic';
+    const template = window.BINK.templates.getTemplateById(currentTemplate);
+
+    // If current template is free, no enforcement needed
+    if (!template || !template.isPremium) {
+        return;
+    }
+
+    // Check if user has premium access
+    const isPremiumUser = checkPremiumStatus(userData);
+
+    // Check if user has purchased this template
+    const usedTemplates = userData.usedTemplates || [];
+    const hasUsedTemplate = usedTemplates.includes(currentTemplate);
+
+    // If user doesn't have premium and hasn't purchased the template, revert to classic
+    if (!isPremiumUser && !hasUsedTemplate) {
+        console.log(`User doesn't have access to premium template ${currentTemplate}, reverting to classic`);
+
+        // Update user document to revert to classic
+        db.collection('users').doc(currentUser.uid).update({
+            template: 'classic',
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(() => {
+            console.log("Template reverted to classic due to lack of access");
+
+            // Update local data
+            currentUserData.template = 'classic';
+
+            // Update UI
+            highlightSelectedTemplate('classic');
+            updatePreviewFrameWithTemplate('classic');
+
+            // Show message to user
+            showMessage(`Access to ${template.name} template expired. Reverted to Classic template. You can purchase premium templates with tokens.`, true);
+        }).catch(error => {
+            console.error("Error reverting template:", error);
+        });
+    }
+}
+
+// Update premium labels on templates
+function updatePremiumLabels() {
+    // Get all templates and add premium labels where needed
+    Object.values(window.BINK.templates.templates).forEach(template => {
+        const templateCard = document.querySelector(`[data-template="${template.id}"]`)?.closest('.template-card');
+        if (templateCard) {
+            const labelContainer = templateCard.querySelector(`#${template.id}-label`);
+            if (labelContainer) {
+                if (template.isPremium) {
+                    // Check if user has already used this template
+                    const usedTemplates = currentUserData?.usedTemplates || [];
+                    const hasUsedTemplate = usedTemplates.includes(template.id);
+
+                    if (!hasUsedTemplate) {
+                        // Show premium label with token price
+                        labelContainer.innerHTML = `
+                            <div class="template-label premium">
+                                <i class="fas fa-crown"></i>
+                                <span>PREMIUM</span>
+                            </div>
+                        `;
+                        labelContainer.style.display = 'block';
+                    } else {
+                        // User has already unlocked this template
+                        labelContainer.innerHTML = `
+                            <div class="template-label unlocked">
+                                <i class="fas fa-check"></i>
+                                <span>Unlocked</span>
+                            </div>
+                        `;
+                        labelContainer.style.display = 'block';
+                    }
+                } else {
+                    // Show free label for free templates
+                    labelContainer.innerHTML = `
+                        <div class="template-label free">
+                            <i class="fas fa-check-circle"></i>
+                            <span>FREE</span>
+                        </div>
+                    `;
+                    labelContainer.style.display = 'block';
+                }
+            }
+        }
+    });
+}
 
 // Save template selection to database
 function saveTemplateSelection(templateId) {
@@ -1287,6 +1461,21 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeTabNavigation();
     initializeCharacterCounter();
     initializeMessageSystem();
+
+    // Initialize premium labels for non-logged in users
+    setTimeout(() => {
+        updatePremiumLabels();
+    }, 500);
+
+    // Set up periodic check for premium access (every 30 seconds)
+    setInterval(() => {
+        if (currentUser && currentUserData) {
+            const isPremiumUser = checkPremiumStatus(currentUserData);
+            if (!isPremiumUser) {
+                enforceTemplateAccess(currentUserData);
+            }
+        }
+    }, 30000);
 });
 
 // Tab Navigation System
@@ -1416,7 +1605,7 @@ function initializeProfilePictureUpload() {
 // Enhanced Preview Controls
 function initializePreviewControls() {
     const previewControls = document.querySelectorAll('.preview-control');
-    const previewFrame = document.getElementById('preview-frame');
+    const previewFrameContainer = document.querySelector('.preview-frame-container');
 
     previewControls.forEach(control => {
         control.addEventListener('click', () => {
@@ -1426,13 +1615,11 @@ function initializePreviewControls() {
             previewControls.forEach(c => c.classList.remove('active'));
             control.classList.add('active');
 
-            // Adjust preview frame size
+            // Adjust preview frame container appearance
             if (device === 'mobile') {
-                previewFrame.style.width = '375px';
-                previewFrame.style.height = '667px';
+                previewFrameContainer.classList.add('mobile-view');
             } else {
-                previewFrame.style.width = '100%';
-                previewFrame.style.height = '600px';
+                previewFrameContainer.classList.remove('mobile-view');
             }
         });
     });
@@ -1481,14 +1668,21 @@ if (useTemplateButton) {
         }
 
         // Check if it's a premium template and user is not premium or creator
-        const isPremiumUser = currentUserData?.subscriptionTier === 'premium' ||
-                             currentUserData?.subscriptionTier === 'creator' ||
-                             currentUserData?.isPremium;
+        const isPremiumUser = checkPremiumStatus(currentUserData);
 
         if (template.isPremium && !isPremiumUser) {
-            // Show premium template modal
-            window.BINK.templates.showPremiumTemplateModal(templateId);
-            return;
+            // For premium templates, user must either be premium or have purchased the template
+            const usedTemplates = currentUserData?.usedTemplates || [];
+            const hasUsedTemplate = usedTemplates.includes(templateId);
+
+            if (!hasUsedTemplate) {
+                // User doesn't have access to this premium template
+                console.log(`User attempted to save premium template ${templateId} without access`);
+                showMessage(`You don't have access to this premium template. Please purchase it with tokens or upgrade to premium.`, true);
+                window.BINK.templates.showPremiumTemplateModal(templateId);
+                return;
+            }
+            // If user has purchased the template, they can still use it even after premium expires
         }
 
         // Save the template selection to the database

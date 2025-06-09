@@ -181,12 +181,18 @@ function renderTemplate(userData) {
     // Check if template is premium and if user has access
     // Only check if not in preview mode (templateOverride)
     if (templateObj.isPremium && !templateOverride) {
-        // Check if user has premium access or has purchased this template
-        const userHasPremiumAccess = userData.plan === 'premium' || userData.plan === 'creator';
+        // Check if user has valid premium access
+        const isPremiumUser = checkPremiumStatus(userData);
         const userHasPurchasedTemplate = Array.isArray(userData.usedTemplates) && userData.usedTemplates.includes(templateId);
 
-        if (!userHasPremiumAccess && !userHasPurchasedTemplate) {
-            console.log("User doesn't have access to premium template. Using classic template instead.");
+        if (!isPremiumUser && !userHasPurchasedTemplate) {
+            console.log(`User doesn't have access to premium template ${templateId}. Using classic template instead.`);
+
+            // Update user's template to classic in database to prevent future access
+            if (userData.id) {
+                updateUserTemplateToClassic(userData.id, templateId);
+            }
+
             renderClassicTemplate(userData);
             return;
         }
@@ -322,6 +328,20 @@ async function loadUserLinks(userId, templateObj = null, userData = null) {
 // Function to display error message
 function displayError(message) {
     bioRoot.innerHTML = `<div class="link-placeholder">${message}</div>`;
+}
+
+// Check if user has valid premium status (use global enforcement)
+function checkPremiumStatus(userData) {
+    return window.PremiumEnforcement ?
+           window.PremiumEnforcement.checkPremiumStatus(userData) :
+           false;
+}
+
+// Update user's template to classic when they lose access to premium template
+function updateUserTemplateToClassic(userId, templateId) {
+    if (window.PremiumEnforcement) {
+        window.PremiumEnforcement.revertToClassicTemplate(userId, templateId);
+    }
 }
 
 // Function to get visitor's location using IP geolocation API

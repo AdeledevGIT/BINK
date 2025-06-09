@@ -146,6 +146,11 @@ async function initDashboard() {
         // Load analytics
         loadAnalytics();
 
+        // Check subscription status and auto-downgrade if expired
+        if (userProfile) {
+            checkAndHandleSubscriptionStatus(userProfile);
+        }
+
         // Update UI based on premium status
         updatePremiumUI();
 
@@ -1489,6 +1494,75 @@ function showNotification(type, message) {
             notification.remove();
         }, 300); // Wait for fade out animation
     }, 3000);
+}
+
+// Check and handle subscription status
+function checkAndHandleSubscriptionStatus(userData) {
+    if (!userData || !currentUser) return;
+
+    // Use premium enforcement system if available
+    if (window.PremiumEnforcement && typeof window.PremiumEnforcement.checkPremiumStatus === 'function') {
+        const isValid = window.PremiumEnforcement.checkPremiumStatus(userData, currentUser.uid);
+
+        if (!isValid && (userData.subscriptionTier === 'premium' || userData.subscriptionTier === 'creator')) {
+            console.log("Dashboard detected expired subscription");
+
+            // Update local user profile to reflect the change
+            if (userProfile) {
+                userProfile.subscriptionTier = 'free';
+                userProfile.isPremium = false;
+            }
+
+            // Update sidebar if function is available
+            if (typeof updateSidebarUserProfile === 'function') {
+                setTimeout(updateSidebarUserProfile, 1000);
+            }
+        }
+        return;
+    }
+
+    // Fallback manual check if premium enforcement is not available
+    if (userData && userData.subscriptionTier &&
+        userData.subscriptionTier !== 'free' &&
+        userData.subscriptionDuration !== 'lifetime' &&
+        userData.subscriptionExpiration) {
+
+        const expiryDate = userData.subscriptionExpiration.toDate();
+        const now = new Date();
+
+        if (expiryDate < now) {
+            console.log("Dashboard detected expired subscription (fallback check)");
+
+            // Update user document to free plan
+            db.collection('users').doc(currentUser.uid).update({
+                subscriptionTier: 'free',
+                subscriptionExpired: true,
+                lastSubscriptionTier: userData.subscriptionTier,
+                lastSubscriptionExpiration: userData.subscriptionExpiration,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                console.log("User subscription downgraded to free");
+
+                // Update local data
+                if (userProfile) {
+                    userProfile.subscriptionTier = 'free';
+                    userProfile.isPremium = false;
+                }
+
+                // Update sidebar
+                if (typeof updateSidebarUserProfile === 'function') {
+                    updateSidebarUserProfile();
+                }
+
+                // Show notification if function exists
+                if (typeof showNotification === 'function') {
+                    showNotification("Your premium subscription has expired and you've been moved to the free tier.", "warning");
+                }
+            }).catch(error => {
+                console.error("Error downgrading subscription:", error);
+            });
+        }
+    }
 }
 
 // Initialize dashboard when the page loads

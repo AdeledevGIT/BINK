@@ -172,3 +172,38 @@ if (signupForm) {
         }
     });
 }
+
+// --- Auth State Listener with Subscription Checking ---
+if (auth) {
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            console.log('User authenticated:', user.uid);
+
+            // Start periodic subscription checking if premium enforcement is available
+            if (window.PremiumEnforcement && typeof window.PremiumEnforcement.startPeriodicSubscriptionCheck === 'function') {
+                // Small delay to ensure other scripts are loaded
+                setTimeout(() => {
+                    window.PremiumEnforcement.startPeriodicSubscriptionCheck(user.uid);
+                }, 1000);
+            }
+
+            // Check subscription status immediately on auth
+            if (db && window.PremiumEnforcement) {
+                db.collection('users').doc(user.uid).get()
+                    .then(doc => {
+                        if (doc.exists) {
+                            const userData = doc.data();
+
+                            // Check if subscription has expired and auto-downgrade
+                            window.PremiumEnforcement.checkPremiumStatus(userData, user.uid);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error checking user subscription on auth:", error);
+                    });
+            }
+        } else {
+            console.log('User not authenticated');
+        }
+    });
+}

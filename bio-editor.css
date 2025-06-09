@@ -46,7 +46,7 @@
     margin-bottom: 30px;
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 50;
     background: var(--background-color);
     padding: 10px 0;
     margin: -10px 0 20px 0;
@@ -169,7 +169,7 @@
 /* Templates Grid */
 .templates-grid {
     margin-bottom: 30px;
-    height: 400px;
+    height: 650px;
     overflow: hidden;
     border-radius: 12px;
     border: 1px solid var(--border-color);
@@ -242,7 +242,7 @@
     transition: all 0.3s ease;
     border: 2px solid transparent;
     flex: 0 0 280px;
-    height: 350px;
+    height: 600px;
     display: flex;
     flex-direction: column;
 }
@@ -258,7 +258,7 @@
     flex: 1;
     border: none;
     display: block;
-    min-height: 250px;
+    min-height: 500px;
 }
 
 .template-info {
@@ -753,19 +753,61 @@
 
 .preview-frame-container {
     width: 100%;
-    max-width: 350px;
-    height: 600px;
+    max-width: 500px;
+    height: 700px;
     border: 2px solid var(--border-color);
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     background: white;
+    transition: all 0.3s ease;
+}
+
+.preview-frame-container.mobile-view {
+    max-width: 375px;
+    height: 667px;
+    border-radius: 25px;
+    border: 8px solid #333;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    background: #333;
+    position: relative;
+}
+
+.preview-frame-container.mobile-view::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: #333;
+    border-radius: 0 0 8px 8px;
+    z-index: 10;
+}
+
+.preview-frame-container.mobile-view::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 40px;
+    background: #333;
+    border-radius: 50%;
+    z-index: 10;
 }
 
 #preview-frame {
     width: 100%;
     height: 100%;
     border: none;
+    border-radius: 8px;
+}
+
+.preview-frame-container.mobile-view #preview-frame {
+    border-radius: 17px;
 }
 
 /* Message Container */
@@ -1359,7 +1401,7 @@
     }
 
     .templates-grid {
-        height: 350px;
+        height: 550px;
     }
 
     .templates-scroll {
@@ -1369,7 +1411,7 @@
 
     .template-card {
         flex: 0 0 250px;
-        height: 320px;
+        height: 520px;
     }
 
     .templates-controls::before {
@@ -1387,6 +1429,11 @@
     }
 
     .preview-frame-container {
+        max-width: 350px;
+        height: 500px;
+    }
+
+    .preview-frame-container.mobile-view {
         max-width: 280px;
         height: 450px;
     }
@@ -1469,7 +1516,7 @@
     }
 
     .templates-grid {
-        height: 300px;
+        height: 480px;
     }
 
     .templates-scroll {
@@ -1479,11 +1526,11 @@
 
     .template-card {
         flex: 0 0 220px;
-        height: 280px;
+        height: 460px;
     }
 
     .template-preview {
-        min-height: 200px;
+        min-height: 380px;
     }
 
     .template-card {
@@ -1572,7 +1619,7 @@
     }
 
     .templates-grid {
-        height: 280px;
+        height: 420px;
     }
 
     .templates-scroll {
@@ -1582,11 +1629,11 @@
 
     .template-card {
         flex: 0 0 200px;
-        height: 260px;
+        height: 400px;
     }
 
     .template-preview {
-        min-height: 180px;
+        min-height: 320px;
     }
 
     .templates-controls::before {
@@ -1624,6 +1671,11 @@
     }
 
     .preview-frame-container {
+        max-width: 300px;
+        height: 450px;
+    }
+
+    .preview-frame-container.mobile-view {
         max-width: 240px;
         height: 380px;
     }
@@ -1664,6 +1716,12 @@
     background-color: rgba(245, 158, 11, 0.2);
     color: #f59e0b;
     border: 1px solid rgba(245, 158, 11, 0.4);
+}
+
+.template-label.unlocked {
+    background-color: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.4);
 }
 
 .template-label i {
@@ -1709,7 +1767,7 @@
 }
 
 .template-card {
-    flex: 0 0 220px;
+    flex: 0 0 280px;
     background: #222;
     border-radius: 16px;
     box-shadow: 0 0 12px #00fff7;
@@ -1728,8 +1786,8 @@
 }
 
 .template-preview {
-    width: 220px;
-    height: 400px;
+    width: 100%;
+    height: 500px;
     border: none;
     background: #111;
 }
@@ -1786,6 +1844,11 @@
 
 .template-label.premium {
     background-color: #f59e0b;
+    color: white;
+}
+
+.template-label.unlocked {
+    background-color: #10b981;
     color: white;
 }
 

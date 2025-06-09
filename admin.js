@@ -602,37 +602,47 @@ function loadUsers() {
             snapshot.forEach((doc) => {
                 const userData = doc.data();
 
-                // Check for expired subscriptions (except lifetime)
-                if (userData.subscriptionTier &&
-                    userData.subscriptionTier !== 'free' &&
-                    userData.subscriptionDuration !== 'lifetime' &&
-                    userData.subscriptionExpiration) {
-
-                    const expiryDate = userData.subscriptionExpiration.toDate();
-                    const now = new Date();
-
-                    // If subscription has expired, revert to free plan
-                    if (expiryDate < now) {
-                        console.log(`User ${doc.id} subscription has expired. Reverting to free plan.`);
-
-                        // Update user document to free plan
-                        db.collection('users').doc(doc.id).update({
-                            subscriptionTier: 'free',
-                            subscriptionExpired: true,
-                            lastSubscriptionTier: userData.subscriptionTier,
-                            lastSubscriptionExpiration: userData.subscriptionExpiration,
-                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                        }).then(() => {
-                            console.log(`User ${doc.id} reverted to free plan.`);
-                        }).catch(error => {
-                            console.error(`Error reverting user ${doc.id} to free plan:`, error);
-                        });
-
+                // Check for expired subscriptions using premium enforcement if available
+                if (window.PremiumEnforcement && typeof window.PremiumEnforcement.checkPremiumStatus === 'function') {
+                    const isValid = window.PremiumEnforcement.checkPremiumStatus(userData, doc.id);
+                    if (!isValid && (userData.subscriptionTier === 'premium' || userData.subscriptionTier === 'creator')) {
                         // Update local data to reflect the change
                         userData.subscriptionTier = 'free';
                         userData.subscriptionExpired = true;
-                        userData.lastSubscriptionTier = userData.subscriptionTier;
-                        userData.lastSubscriptionExpiration = userData.subscriptionExpiration;
+                    }
+                } else {
+                    // Fallback to legacy check for expired subscriptions (except lifetime)
+                    if (userData.subscriptionTier &&
+                        userData.subscriptionTier !== 'free' &&
+                        userData.subscriptionDuration !== 'lifetime' &&
+                        userData.subscriptionExpiration) {
+
+                        const expiryDate = userData.subscriptionExpiration.toDate();
+                        const now = new Date();
+
+                        // If subscription has expired, revert to free plan
+                        if (expiryDate < now) {
+                            console.log(`User ${doc.id} subscription has expired. Reverting to free plan.`);
+
+                            // Update user document to free plan
+                            db.collection('users').doc(doc.id).update({
+                                subscriptionTier: 'free',
+                                subscriptionExpired: true,
+                                lastSubscriptionTier: userData.subscriptionTier,
+                                lastSubscriptionExpiration: userData.subscriptionExpiration,
+                                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                            }).then(() => {
+                                console.log(`User ${doc.id} reverted to free plan.`);
+                            }).catch(error => {
+                                console.error(`Error reverting user ${doc.id} to free plan:`, error);
+                            });
+
+                            // Update local data to reflect the change
+                            userData.subscriptionTier = 'free';
+                            userData.subscriptionExpired = true;
+                            userData.lastSubscriptionTier = userData.subscriptionTier;
+                            userData.lastSubscriptionExpiration = userData.subscriptionExpiration;
+                        }
                     }
                 }
 
@@ -2086,3 +2096,41 @@ function upgradeUserToPremium(userId) {
             showError(`Error upgrading user: ${error.message}`);
         });
 }
+
+// Bulk check expired subscriptions
+function bulkCheckExpiredSubscriptions() {
+    if (window.PremiumEnforcement && typeof window.PremiumEnforcement.checkAllExpiredSubscriptions === 'function') {
+        console.log("Triggering bulk subscription check...");
+        window.PremiumEnforcement.checkAllExpiredSubscriptions();
+
+        // Reload data after a short delay
+        setTimeout(() => {
+            loadUsers();
+            loadSubscriptions();
+        }, 3000);
+
+        alert("Bulk subscription check initiated. Data will refresh in a few seconds.");
+    } else {
+        alert("Premium enforcement system not available. Please refresh the page and try again.");
+    }
+}
+
+// Add bulk check button to admin interface if it doesn't exist
+document.addEventListener('DOMContentLoaded', function() {
+    // Add bulk check button to subscriptions section
+    const subscriptionsSection = document.querySelector('.subscriptions-section');
+    if (subscriptionsSection && !document.getElementById('bulk-check-btn')) {
+        const bulkCheckButton = document.createElement('button');
+        bulkCheckButton.id = 'bulk-check-btn';
+        bulkCheckButton.className = 'action-button';
+        bulkCheckButton.innerHTML = '<i class="fas fa-sync-alt"></i> Check All Expired Subscriptions';
+        bulkCheckButton.style.marginLeft = '10px';
+        bulkCheckButton.addEventListener('click', bulkCheckExpiredSubscriptions);
+
+        // Find the subscriptions header and add the button
+        const subscriptionsHeader = subscriptionsSection.querySelector('h2');
+        if (subscriptionsHeader) {
+            subscriptionsHeader.appendChild(bulkCheckButton);
+        }
+    }
+});
