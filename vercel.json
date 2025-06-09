@@ -9,9 +9,12 @@
     { "src": "*.jpeg", "use": "@vercel/static" },
     { "src": "*.gif", "use": "@vercel/static" },
     { "src": "*.svg", "use": "@vercel/static" },
-    { "src": "profile-placeholder.svg", "use": "@vercel/static" },
     { "src": "*.ico", "use": "@vercel/static" },
     { "src": "*.mp4", "use": "@vercel/static" },
+    { "src": "logo.png", "use": "@vercel/static" },
+    { "src": "logo1.png", "use": "@vercel/static" },
+    { "src": "profile.png", "use": "@vercel/static" },
+    { "src": "profile-placeholder.svg", "use": "@vercel/static" },
     { "src": "templates/**/*", "use": "@vercel/static" },
     { "src": "api/**/*.js", "use": "@vercel/node" },
     { "src": "images/**/*", "use": "@vercel/static" }
