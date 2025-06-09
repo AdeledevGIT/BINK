@@ -128,13 +128,21 @@ async function initDashboard() {
             }
 
             // Create a user profile if it doesn't exist
-            await db.collection('users').doc(currentUser.uid).set({
+            const newUserProfile = {
                 email: currentUser.email,
                 username: currentUser.displayName || currentUser.email.split('@')[0],
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 isPremium: false,
                 linkCount: 0
-            });
+            };
+
+            await db.collection('users').doc(currentUser.uid).set(newUserProfile);
+
+            // Set userProfile for immediate use
+            userProfile = {
+                ...newUserProfile,
+                username: currentUser.displayName || currentUser.email.split('@')[0]
+            };
         }
 
         // Load bio page data
@@ -356,9 +364,15 @@ async function loadLinks() {
 
 // Format bio link URL for display
 function formatBioLinkForDisplay(linkData, username) {
-    if (linkData.isBioLink && username) {
-        return `bink/${username}`;
+    if (linkData.isBioLink) {
+        // Use provided username, or fallback to userProfile username, or email prefix
+        const displayUsername = username ||
+                               userProfile?.username ||
+                               (currentUser?.email ? currentUser.email.split('@')[0] : 'user');
+
+        return `bink/${displayUsername}`;
     }
+
     return linkData.url;
 }
 

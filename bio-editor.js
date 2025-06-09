@@ -303,9 +303,15 @@ function getPlatformIcon(platform) {
 
 // Format bio link URL for display
 function formatBioLinkForDisplay(linkData, username) {
-    if (linkData.isBioLink && username) {
-        return `bink/${username}`;
+    if (linkData.isBioLink) {
+        // Use provided username, or fallback to currentUserData username, or email prefix
+        const displayUsername = username ||
+                               currentUserData?.username ||
+                               (currentUser?.email ? currentUser.email.split('@')[0] : 'user');
+
+        return `bink/${displayUsername}`;
     }
+
     return linkData.url;
 }
 
