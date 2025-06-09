@@ -3,7 +3,7 @@
 This guide explains how to fix favicon (browser icon) issues when deploying BINK to Vercel.
 
 ## Problem
-The BINK logo doesn't appear as the browser icon (favicon) when the site is hosted on Vercel, even though it works locally.
+The BINK logo (logo1.png) doesn't appear as the browser icon (favicon) when the site is hosted on Vercel, even though it works locally.
 
 ## Root Causes
 1. **File deployment issues** - PNG files not properly deployed to Vercel
@@ -34,18 +34,18 @@ The BINK logo doesn't appear as the browser icon (favicon) when the site is host
 **After:**
 ```html
 <!-- Favicon configuration for better browser compatibility -->
-<link rel="icon" type="image/png" sizes="32x32" href="/logo.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/logo.png">
-<link rel="shortcut icon" href="/logo.png">
-<link rel="apple-touch-icon" href="/logo.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/logo1.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/logo1.png">
+<link rel="shortcut icon" href="/logo1.png">
+<link rel="apple-touch-icon" href="/logo1.png">
 <!-- Fallback favicon from GitHub Pages -->
-<link rel="icon" type="image/png" href="https://adeledevgit.github.io/bink/logo.png">
+<link rel="icon" type="image/png" href="https://adeledevgit.github.io/bink/logo1.png">
 ```
 
 ### 3. Path Changes
-- **Changed from relative paths** (`./logo.png`) **to absolute paths** (`/logo.png`)
+- **Changed from relative paths** (`./logo.png`) **to absolute paths** (`/logo1.png`)
 - **Added fallback URL** using GitHub Pages as backup
-- **Fixed template paths** (`../logo.png` for template files)
+- **Fixed template paths** (`../logo1.png` for template files)
 
 ## Files Updated
 - ✅ `index.html`
@@ -58,6 +58,9 @@ The BINK logo doesn't appear as the browser icon (favicon) when the site is host
 - ✅ `templates/retrowave-preview.html`
 - ✅ `templates/blacklanding-preview.html`
 - ✅ `templates/minimalzen-preview.html`
+- ✅ `analytics.html`
+- ✅ `admin.html`
+- ✅ `tokens.html`
 - ✅ `vercel.json`
 
 ## Testing
