@@ -3,7 +3,11 @@
 This guide explains how to fix favicon (browser icon) issues when deploying BINK to Vercel.
 
 ## Problem
-The BINK logo (logo1.png) doesn't appear as the browser icon (favicon) when the site is hosted on Vercel, even though it works locally.
+The BINK favicon (logo1.png) doesn't appear as the browser icon when the site is hosted on Vercel, even though it works locally.
+
+**Note**:
+- **logo.png** = Visible logo in headers/banners
+- **logo1.png** = Browser favicon (tab icon)
 
 ## Root Causes
 1. **File deployment issues** - PNG files not properly deployed to Vercel
@@ -43,25 +47,40 @@ The BINK logo (logo1.png) doesn't appear as the browser icon (favicon) when the 
 ```
 
 ### 3. Path Changes
-- **Changed from relative paths** (`./logo.png`) **to absolute paths** (`/logo1.png`)
+- **Favicon**: Changed from relative paths (`./logo.png`) to absolute paths (`/logo1.png`)
+- **Visible logos**: Keep using `./logo.png` for header/banner displays
 - **Added fallback URL** using GitHub Pages as backup
-- **Fixed template paths** (`../logo1.png` for template files)
+- **Fixed template paths** (`../logo1.png` for template favicon files)
 
 ## Files Updated
-- ✅ `index.html`
-- ✅ `dashboard.html`
-- ✅ `bio-editor.html`
-- ✅ `bio.html`
-- ✅ `login.html`
-- ✅ `signup.html`
-- ✅ `pricing.html`
-- ✅ `templates/retrowave-preview.html`
-- ✅ `templates/blacklanding-preview.html`
-- ✅ `templates/minimalzen-preview.html`
-- ✅ `analytics.html`
-- ✅ `admin.html`
-- ✅ `tokens.html`
-- ✅ `vercel.json`
+
+### Favicon References (Browser Icon - Updated to logo1.png):
+- ✅ `index.html` - Favicon uses `/logo1.png`
+- ✅ `dashboard.html` - Favicon uses `/logo1.png`
+- ✅ `bio-editor.html` - Favicon uses `/logo1.png`
+- ✅ `bio.html` - Favicon uses `/logo1.png`
+- ✅ `login.html` - Favicon uses `/logo1.png`
+- ✅ `signup.html` - Favicon uses `/logo1.png`
+- ✅ `pricing.html` - Favicon uses `/logo1.png`
+- ✅ `analytics.html` - Favicon uses `/logo1.png`
+- ✅ `admin.html` - Favicon uses `/logo1.png`
+- ✅ `templates/retrowave-preview.html` - Favicon uses `../logo1.png`
+- ✅ `templates/blacklanding-preview.html` - Favicon uses `../logo1.png`
+- ✅ `templates/minimalzen-preview.html` - Favicon uses `../logo1.png`
+
+### Logo Display References (Visible Logo - Kept as logo.png):
+- ✅ `index.html` - Header logo uses `./logo.png`
+- ✅ `dashboard.html` - Header logo uses `./logo.png`
+- ✅ `login.html` - Header logo uses `./logo.png`
+- ✅ `signup.html` - Header logo uses `./logo.png`
+- ✅ `pricing.html` - Header logo uses `./logo.png`
+- ✅ `bio-editor.html` - Header logo uses `./logo.png`
+- ✅ `analytics.html` - Header logo uses `./logo.png`
+- ✅ `admin.html` - Header logo uses `./logo.png`
+- ✅ `tokens.html` - Header logo uses `./logo.png`
+
+### Configuration Files:
+- ✅ `vercel.json` - Includes both `logo.png` and `logo1.png`
 
 ## Testing
 
@@ -88,14 +107,14 @@ The BINK logo (logo1.png) doesn't appear as the browser icon (favicon) when the 
 
 #### 2. Check Vercel Deployment
 ```bash
-# Check if logo.png is deployed
-curl -I https://your-vercel-url.vercel.app/logo.png
+# Check if logo1.png is deployed
+curl -I https://your-vercel-url.vercel.app/logo1.png
 
 # Should return 200 OK, not 404
 ```
 
 #### 3. Verify File Size and Format
-- Ensure `logo.png` is less than 1MB
+- Ensure `logo1.png` is less than 1MB
 - Verify it's a valid PNG file
 - Check dimensions (recommended: 32x32 or 64x64 pixels)
 
@@ -108,7 +127,7 @@ curl -I https://your-vercel-url.vercel.app/logo.png
 1. Go to Vercel Dashboard
 2. Select your project
 3. Check Functions tab for any errors
-4. Look for 404 errors related to logo.png
+4. Look for 404 errors related to logo1.png
 
 ### Alternative Solutions
 
@@ -132,7 +151,7 @@ Convert `logo.png` to `favicon.ico` and add:
 
 After deployment, verify:
 - [ ] Favicon appears in browser tab
-- [ ] Logo loads at `/logo.png` URL
+- [ ] Favicon loads at `/logo1.png` URL
 - [ ] No 404 errors in browser console
 - [ ] Works across different browsers
 - [ ] Works on mobile devices
@@ -150,8 +169,8 @@ After deployment, verify:
 - Added `apple-touch-icon` for iOS devices
 - Consider adding more sizes for better mobile support:
 ```html
-<link rel="apple-touch-icon" sizes="180x180" href="/logo.png">
-<link rel="icon" type="image/png" sizes="192x192" href="/logo.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/logo1.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/logo1.png">
 ```
 
 ### SEO Benefits
