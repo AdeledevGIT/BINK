@@ -354,6 +354,14 @@ async function loadLinks() {
     }
 }
 
+// Format bio link URL for display
+function formatBioLinkForDisplay(linkData, username) {
+    if (linkData.isBioLink && username) {
+        return `bink/${username}`;
+    }
+    return linkData.url;
+}
+
 // Render links
 function renderLinks() {
     try {
@@ -390,6 +398,9 @@ function renderLinks() {
             const platformIcon = getPlatformIcon(link.platform);
             const platformColor = getPlatformColor(link.platform);
 
+            // Format bio link URL to show as bink/username
+            const displayUrl = formatBioLinkForDisplay(link, userProfile?.username);
+
             html += `
                 <div class="link-item bio-link-item" data-id="${link.id}">
                     <div class="link-info">
@@ -398,7 +409,7 @@ function renderLinks() {
                         </div>
                         <div class="link-details">
                             <h3>${link.title}</h3>
-                            <div class="link-url">${link.url}</div>
+                            <div class="link-url">${displayUrl}</div>
                             <div class="bio-link-badge">
                                 <i class="fas fa-star"></i> Your Bio Link
                             </div>

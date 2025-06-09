@@ -228,9 +228,9 @@ function addLinkToUI(linkId, linkData) {
     // Get icon for platform
     const platformIcon = getPlatformIcon(linkData.platform || 'other');
 
-    // Truncate URL if it's too long
-    let displayUrl = linkData.url;
-    if (displayUrl.length > 40) {
+    // Format URL display - show shortened format for bio links
+    let displayUrl = formatBioLinkForDisplay(linkData, currentUserData?.username);
+    if (!linkData.isBioLink && displayUrl.length > 40) {
         displayUrl = displayUrl.substring(0, 37) + '...';
     }
 
@@ -299,6 +299,14 @@ function getPlatformIcon(platform) {
     };
 
     return icons[platform] || icons.other;
+}
+
+// Format bio link URL for display
+function formatBioLinkForDisplay(linkData, username) {
+    if (linkData.isBioLink && username) {
+        return `bink/${username}`;
+    }
+    return linkData.url;
 }
 
 // Open link editor modal
