@@ -52,6 +52,10 @@
                         <i class="fas fa-share-alt"></i>
                         <span>Social</span>
                     </button>
+                    <button class="nav-tab" data-tab="media">
+                        <i class="fas fa-photo-video"></i>
+                        <span>Media</span>
+                    </button>
                 </div>
             </div>
 
@@ -403,6 +407,89 @@
                     </div>
                 </div>
 
+                <!-- Media Tab -->
+                <div class="tab-content" id="media">
+                    <div class="tab-header">
+                        <h3>Media Content</h3>
+                        <p>Add YouTube videos, pictures, and music from all platforms</p>
+                    </div>
+
+                    <div class="media-manager">
+                        <!-- Media Type Selector -->
+                        <div class="media-type-selector">
+                            <button class="media-type-btn active" data-type="youtube">
+                                <i class="fab fa-youtube"></i>
+                                <span>YouTube Videos</span>
+                            </button>
+                            <button class="media-type-btn" data-type="images">
+                                <i class="fas fa-images"></i>
+                                <span>Pictures</span>
+                            </button>
+                            <button class="media-type-btn" data-type="music">
+                                <i class="fas fa-music"></i>
+                                <span>Music</span>
+                            </button>
+                        </div>
+
+                        <!-- YouTube Videos Section -->
+                        <div class="media-section active" id="youtube-section">
+                            <div class="section-header">
+                                <h4>YouTube Videos</h4>
+                                <button id="add-youtube-button" class="action-btn primary-btn">
+                                    <i class="fas fa-plus"></i> Add YouTube Video
+                                </button>
+                            </div>
+                            <div id="youtube-container" class="media-grid">
+                                <div class="media-placeholder">
+                                    <i class="fab fa-youtube"></i>
+                                    <h4>No YouTube videos yet</h4>
+                                    <p>Add your first YouTube video to get started</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Images Section -->
+                        <div class="media-section" id="images-section">
+                            <div class="section-header">
+                                <h4>Picture Gallery</h4>
+                                <button id="add-image-button" class="action-btn primary-btn">
+                                    <i class="fas fa-plus"></i> Add Picture
+                                </button>
+                            </div>
+                            <div id="images-container" class="media-grid">
+                                <div class="media-placeholder">
+                                    <i class="fas fa-images"></i>
+                                    <h4>No pictures yet</h4>
+                                    <p>Add your first picture to get started</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Music Section -->
+                        <div class="media-section" id="music-section">
+                            <div class="section-header">
+                                <h4>Music Links</h4>
+                                <button id="add-music-button" class="action-btn primary-btn">
+                                    <i class="fas fa-plus"></i> Add Music Link
+                                </button>
+                            </div>
+                            <div id="music-container" class="media-grid">
+                                <div class="media-placeholder">
+                                    <i class="fas fa-music"></i>
+                                    <h4>No music links yet</h4>
+                                    <p>Add your first music link to get started</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="media-actions">
+                            <button type="button" id="save-media-button" class="action-btn primary-btn">
+                                <i class="fas fa-save"></i> Save Media Content
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
 
             </div>
 
@@ -477,7 +564,14 @@
                         <option value="telegram">Telegram</option>
                         <option value="medium">Medium</option>
                         <option value="spotify">Spotify</option>
+                        <option value="apple-music">Apple Music</option>
+                        <option value="youtube-music">YouTube Music</option>
+                        <option value="audiomack">AudioMack</option>
                         <option value="soundcloud">SoundCloud</option>
+                        <option value="bandcamp">Bandcamp</option>
+                        <option value="tidal">Tidal</option>
+                        <option value="deezer">Deezer</option>
+                        <option value="amazon-music">Amazon Music</option>
                         <option value="behance">Behance</option>
                         <option value="dribbble">Dribbble</option>
                         <option value="email">Email</option>
@@ -509,6 +603,109 @@
                 <button id="buy-tokens-btn" class="auth-button secondary-button">Buy Tokens</button>
                 <button id="close-premium-modal-btn" class="auth-button secondary-button">Cancel</button>
             </div>
+        </div>
+    </div>
+
+    <!-- YouTube Video Modal -->
+    <div id="youtube-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 id="youtube-modal-title">Add YouTube Video</h3>
+            <form id="youtube-form">
+                <input type="hidden" id="youtube-id" name="youtube-id">
+                <div class="form-group">
+                    <label for="youtube-title">Video Title</label>
+                    <input type="text" id="youtube-title" name="youtube-title" required placeholder="e.g., My Latest Video">
+                </div>
+                <div class="form-group">
+                    <label for="youtube-url">YouTube URL</label>
+                    <input type="url" id="youtube-url" name="youtube-url" required placeholder="https://www.youtube.com/watch?v=...">
+                    <small>Paste the full YouTube video URL</small>
+                </div>
+                <div class="form-group">
+                    <label for="youtube-description">Description (Optional)</label>
+                    <textarea id="youtube-description" name="youtube-description" placeholder="Brief description of the video..." rows="3"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" id="save-youtube-button" class="auth-button">Save Video</button>
+                    <button type="button" id="delete-youtube-button" class="delete-button" style="display: none;">Delete Video</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Image Upload Modal -->
+    <div id="image-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 id="image-modal-title">Add Picture</h3>
+            <form id="image-form">
+                <input type="hidden" id="image-id" name="image-id">
+                <div class="form-group">
+                    <label for="image-title">Picture Title</label>
+                    <input type="text" id="image-title" name="image-title" required placeholder="e.g., My Artwork">
+                </div>
+                <div class="form-group">
+                    <label for="image-upload">Upload Image</label>
+                    <input type="file" id="image-upload" name="image-upload" accept="image/*" required>
+                    <small>Supported formats: JPG, PNG, GIF (Max 5MB)</small>
+                </div>
+                <div class="form-group">
+                    <label for="image-description">Description (Optional)</label>
+                    <textarea id="image-description" name="image-description" placeholder="Brief description of the image..." rows="3"></textarea>
+                </div>
+                <div class="image-preview-container" id="image-preview-container" style="display: none;">
+                    <img id="image-preview" src="" alt="Preview">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" id="save-image-button" class="auth-button">Save Picture</button>
+                    <button type="button" id="delete-image-button" class="delete-button" style="display: none;">Delete Picture</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Music Link Modal -->
+    <div id="music-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 id="music-modal-title">Add Music Link</h3>
+            <form id="music-form">
+                <input type="hidden" id="music-id" name="music-id">
+                <div class="form-group">
+                    <label for="music-title">Song/Album Title</label>
+                    <input type="text" id="music-title" name="music-title" required placeholder="e.g., My Latest Track">
+                </div>
+                <div class="form-group">
+                    <label for="music-artist">Artist Name</label>
+                    <input type="text" id="music-artist" name="music-artist" placeholder="e.g., Your Artist Name">
+                </div>
+                <div class="form-group">
+                    <label for="music-platform">Music Platform</label>
+                    <select id="music-platform" name="music-platform" required>
+                        <option value="">Select Platform</option>
+                        <option value="spotify">Spotify</option>
+                        <option value="apple-music">Apple Music</option>
+                        <option value="youtube-music">YouTube Music</option>
+                        <option value="audiomack">AudioMack</option>
+                        <option value="soundcloud">SoundCloud</option>
+                        <option value="bandcamp">Bandcamp</option>
+                        <option value="tidal">Tidal</option>
+                        <option value="deezer">Deezer</option>
+                        <option value="amazon-music">Amazon Music</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="music-url">Music URL</label>
+                    <input type="url" id="music-url" name="music-url" required placeholder="https://...">
+                    <small>Paste the link to your song/album on the selected platform</small>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" id="save-music-button" class="auth-button">Save Music Link</button>
+                    <button type="button" id="delete-music-button" class="delete-button" style="display: none;">Delete Music Link</button>
+                </div>
+            </form>
         </div>
     </div>
 

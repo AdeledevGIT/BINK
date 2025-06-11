@@ -494,3 +494,284 @@
 .neoncard-save-btn:hover::before {
     opacity: 1;
 }
+
+/* NeonCard Media Styles */
+.neoncard-container .media-section {
+    margin: 25px 0;
+    padding: 20px 0;
+    border-top: 1px solid rgba(0, 255, 247, 0.2);
+    background: linear-gradient(135deg, rgba(15, 5, 36, 0.3) 0%, rgba(30, 11, 69, 0.3) 100%);
+    border-radius: 12px;
+}
+
+.neoncard-container .media-section:first-child {
+    border-top: none;
+    margin-top: 0;
+}
+
+.neoncard-container .media-section-title {
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+    justify-content: center;
+    text-shadow: 0 0 10px rgba(0, 255, 247, 0.5);
+    font-family: 'Poppins', Arial, sans-serif;
+}
+
+.neoncard-container .media-section-title i {
+    color: #00fff7;
+    text-shadow: 0 0 8px rgba(0, 255, 247, 0.5);
+}
+
+.neoncard-container .media-grid {
+    display: grid;
+    gap: 15px;
+}
+
+.neoncard-container .videos-grid {
+    grid-template-columns: 1fr;
+}
+
+.neoncard-container .images-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+
+.neoncard-container .music-grid {
+    grid-template-columns: 1fr;
+}
+
+.neoncard-container .media-item {
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid #00fff7;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+    box-shadow: 0 0 15px rgba(0, 255, 247, 0.5);
+}
+
+.neoncard-container .media-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #00fff7, #0bccf9);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+}
+
+.neoncard-container .media-item:hover::before {
+    opacity: 1;
+}
+
+.neoncard-container .media-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 20px rgba(0, 255, 247, 0.7);
+}
+
+/* Video Items */
+.neoncard-container .video-item {
+    padding: 15px;
+    position: relative;
+    z-index: 2;
+}
+
+.neoncard-container .video-thumbnail {
+    width: 100%;
+    height: 180px;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 12px;
+}
+
+.neoncard-container .video-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.neoncard-container .video-play-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid #00fff7;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #00fff7;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(0, 255, 247, 0.5);
+}
+
+.neoncard-container .video-play-overlay:hover {
+    background: linear-gradient(45deg, #00fff7, #0bccf9);
+    color: #0f0524;
+    box-shadow: 0 7px 20px rgba(0, 255, 247, 0.7);
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+/* Image Items */
+.neoncard-container .image-item {
+    aspect-ratio: 1;
+    position: relative;
+    z-index: 2;
+}
+
+.neoncard-container .image-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.neoncard-container .image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.neoncard-container .image-container:hover img {
+    transform: scale(1.05);
+}
+
+/* Music Items */
+.neoncard-container .media-container .music-item,
+.neoncard-container .music-item {
+    padding: 15px;
+    position: relative;
+    z-index: 2;
+}
+
+.neoncard-container .media-container .music-player,
+.neoncard-container .music-player {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: rgba(30, 30, 30, 0.9);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+}
+
+.neoncard-container .media-container .music-player:hover,
+.neoncard-container .music-player:hover {
+    border-color: rgba(0, 255, 255, 0.4);
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.4), 0 0 15px rgba(255, 0, 128, 0.2);
+    transform: translateY(-2px);
+}
+
+.neoncard-container .music-platform-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: white;
+    position: relative;
+}
+
+.neoncard-container .music-platform-icon::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #00fff7, #ff0080);
+    border-radius: 14px;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.neoncard-container .music-item:hover .music-platform-icon::before {
+    opacity: 1;
+}
+
+.neoncard-container .music-info {
+    flex: 1;
+}
+
+.neoncard-container .music-title {
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+    text-shadow: 0 0 8px rgba(0, 255, 247, 0.3);
+    font-family: 'Poppins', Arial, sans-serif;
+}
+
+.neoncard-container .music-artist {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.85rem;
+    margin: 0;
+    font-family: 'Poppins', Arial, sans-serif;
+}
+
+.neoncard-container .play-button {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid #00fff7;
+    color: #00fff7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(0, 255, 247, 0.5);
+}
+
+.neoncard-container .play-button:hover {
+    background: linear-gradient(45deg, #00fff7, #0bccf9);
+    color: #0f0524;
+    box-shadow: 0 7px 20px rgba(0, 255, 247, 0.7);
+    transform: scale(1.1);
+}
+
+/* Media Info */
+.neoncard-container .media-info {
+    padding: 12px 15px;
+    position: relative;
+    z-index: 2;
+}
+
+.neoncard-container .media-title {
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 0 0 6px 0;
+    text-shadow: 0 0 8px rgba(0, 255, 247, 0.3);
+    font-family: 'Poppins', Arial, sans-serif;
+}
+
+.neoncard-container .media-description {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.8rem;
+    line-height: 1.4;
+    margin: 0;
+    font-family: 'Poppins', Arial, sans-serif;
+}

@@ -391,3 +391,235 @@
     transform: translateY(-3px) scale(1.1);
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
 }
+
+/* Minimal Zen Media Styles */
+.minimalzen-container .media-section {
+    margin: 30px 0;
+    padding: 25px 0;
+    border-top: 1px solid #f0f0f0;
+    background: #fafafa;
+    border-radius: 12px;
+}
+
+.minimalzen-container .media-section:first-child {
+    border-top: none;
+    margin-top: 0;
+}
+
+.minimalzen-container .media-section-title {
+    color: #333;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+    justify-content: center;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.minimalzen-container .media-section-title i {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.minimalzen-container .media-grid {
+    display: grid;
+    gap: 20px;
+}
+
+.minimalzen-container .videos-grid {
+    grid-template-columns: 1fr;
+}
+
+.minimalzen-container .images-grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+.minimalzen-container .music-grid {
+    grid-template-columns: 1fr;
+}
+
+.minimalzen-container .media-item {
+    background: #fff;
+    border: 1px solid #f0f0f0;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.minimalzen-container .media-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    border-color: #e0e0e0;
+}
+
+/* Video Items */
+.minimalzen-container .video-item {
+    padding: 0;
+}
+
+.minimalzen-container .video-thumbnail {
+    width: 100%;
+    height: 200px;
+    position: relative;
+    overflow: hidden;
+}
+
+.minimalzen-container .video-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.minimalzen-container .video-play-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.minimalzen-container .video-play-overlay:hover {
+    background: #fff;
+    transform: translate(-50%, -50%) scale(1.1);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Image Items */
+.minimalzen-container .image-item {
+    aspect-ratio: 1;
+}
+
+.minimalzen-container .image-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.minimalzen-container .image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.minimalzen-container .image-container:hover img {
+    transform: scale(1.05);
+}
+
+/* Music Items */
+.minimalzen-container .media-container .music-item,
+.minimalzen-container .music-item {
+    padding: 20px;
+}
+
+.minimalzen-container .media-container .music-player,
+.minimalzen-container .music-player {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.minimalzen-container .media-container .music-player:hover,
+.minimalzen-container .music-player:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.minimalzen-container .music-platform-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: white;
+    background: #333;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.minimalzen-container .music-info {
+    flex: 1;
+}
+
+.minimalzen-container .music-title {
+    color: #333;
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin: 0 0 4px 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.minimalzen-container .music-artist {
+    color: #888;
+    font-size: 0.85rem;
+    margin: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.minimalzen-container .play-button {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: #f8f8f8;
+    border: 1px solid #f0f0f0;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.minimalzen-container .play-button:hover {
+    background: #fff;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Media Info */
+.minimalzen-container .media-info {
+    padding: 15px 20px;
+}
+
+.minimalzen-container .media-title {
+    color: #333;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin: 0 0 6px 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.minimalzen-container .media-description {
+    color: #888;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    margin: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}

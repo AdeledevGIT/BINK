@@ -38,11 +38,37 @@ const saveSocialLinksButton = document.getElementById('save-social-links-button'
 const previewFrame = document.getElementById('preview-frame');
 const openPreviewButton = document.getElementById('open-preview-button');
 
+// Media Tab DOM Elements
+const mediaTypeButtons = document.querySelectorAll('.media-type-btn');
+const mediaSections = document.querySelectorAll('.media-section');
+const addYouTubeButton = document.getElementById('add-youtube-button');
+const addImageButton = document.getElementById('add-image-button');
+const addMusicButton = document.getElementById('add-music-button');
+const saveMediaButton = document.getElementById('save-media-button');
+const youtubeContainer = document.getElementById('youtube-container');
+const imagesContainer = document.getElementById('images-container');
+const musicContainer = document.getElementById('music-container');
+
+// Media Modals
+const youtubeModal = document.getElementById('youtube-modal');
+const imageModal = document.getElementById('image-modal');
+const musicModal = document.getElementById('music-modal');
+const youtubeForm = document.getElementById('youtube-form');
+const imageForm = document.getElementById('image-form');
+const musicForm = document.getElementById('music-form');
+
 // Global variables
 let currentUser = null;
 let currentUserData = null;
 let userLinks = [];
 let linkOrderChanged = false;
+let userMedia = {
+    youtube: [],
+    images: [],
+    music: []
+};
+let currentMediaType = 'youtube';
+let editingMediaId = null;
 
 // Social media platforms for the form
 const socialPlatforms = [
@@ -87,6 +113,8 @@ if (auth) {
             loadUserProfile(user.uid);
             loadUserLinks(user.uid);
             generateSocialLinksForm();
+            loadUserMedia(user.uid);
+            initializeMediaTab();
             updatePreviewFrame(user.uid);
             initializeProfilePictureUpload();
             initializePreviewControls();
@@ -289,7 +317,14 @@ function getPlatformIcon(platform) {
         'telegram': 'fab fa-telegram',
         'medium': 'fab fa-medium',
         'spotify': 'fab fa-spotify',
+        'apple-music': 'fab fa-apple',
+        'youtube-music': 'fab fa-youtube',
+        'audiomack': 'fas fa-music',
         'soundcloud': 'fab fa-soundcloud',
+        'bandcamp': 'fab fa-bandcamp',
+        'tidal': 'fas fa-music',
+        'deezer': 'fas fa-music',
+        'amazon-music': 'fab fa-amazon',
         'behance': 'fab fa-behance',
         'dribbble': 'fab fa-dribbble',
         'website': 'fas fa-globe',
@@ -1078,6 +1113,598 @@ function handleSocialLinksSubmit() {
         saveSocialLinksButton.disabled = false;
         saveSocialLinksButton.textContent = 'Save Social Links';
     });
+}
+
+// Media Tab Functions
+function initializeMediaTab() {
+    // Initialize media type selector
+    if (mediaTypeButtons.length > 0) {
+        mediaTypeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const mediaType = button.getAttribute('data-type');
+                switchMediaType(mediaType);
+            });
+        });
+    }
+
+    // Initialize add buttons
+    if (addYouTubeButton) {
+        addYouTubeButton.addEventListener('click', () => openYouTubeModal());
+    }
+    if (addImageButton) {
+        addImageButton.addEventListener('click', () => openImageModal());
+    }
+    if (addMusicButton) {
+        addMusicButton.addEventListener('click', () => openMusicModal());
+    }
+    if (saveMediaButton) {
+        saveMediaButton.addEventListener('click', handleMediaSave);
+    }
+
+    // Initialize modal close buttons
+    document.querySelectorAll('#youtube-modal .close-modal, #image-modal .close-modal, #music-modal .close-modal').forEach(closeBtn => {
+        closeBtn.addEventListener('click', closeMediaModals);
+    });
+
+    // Initialize forms
+    if (youtubeForm) {
+        youtubeForm.addEventListener('submit', handleYouTubeSubmit);
+    }
+    if (imageForm) {
+        imageForm.addEventListener('submit', handleImageSubmit);
+    }
+    if (musicForm) {
+        musicForm.addEventListener('submit', handleMusicSubmit);
+    }
+
+    // Initialize image preview
+    const imageUpload = document.getElementById('image-upload');
+    if (imageUpload) {
+        imageUpload.addEventListener('change', handleImagePreview);
+    }
+}
+
+function switchMediaType(mediaType) {
+    currentMediaType = mediaType;
+
+    // Update buttons
+    mediaTypeButtons.forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('data-type') === mediaType) {
+            btn.classList.add('active');
+        }
+    });
+
+    // Update sections
+    mediaSections.forEach(section => {
+        section.classList.remove('active');
+        if (section.id === `${mediaType}-section`) {
+            section.classList.add('active');
+        }
+    });
+}
+
+function loadUserMedia(userId) {
+    if (!userId) return;
+
+    const mediaRef = db.collection('users').doc(userId).collection('media');
+    mediaRef.get().then((querySnapshot) => {
+        // Reset media data
+        userMedia = {
+            youtube: [],
+            images: [],
+            music: []
+        };
+
+        querySnapshot.forEach((doc) => {
+            const mediaData = { id: doc.id, ...doc.data() };
+            const type = mediaData.type;
+            if (userMedia[type]) {
+                userMedia[type].push(mediaData);
+            }
+        });
+
+        // Update UI
+        updateMediaUI();
+    }).catch((error) => {
+        console.error("Error loading media:", error);
+        showMessage("Error loading media content.", true);
+    });
+}
+
+function updateMediaUI() {
+    updateYouTubeUI();
+    updateImagesUI();
+    updateMusicUI();
+}
+
+function updateYouTubeUI() {
+    if (!youtubeContainer) return;
+
+    if (userMedia.youtube.length === 0) {
+        youtubeContainer.innerHTML = `
+            <div class="media-placeholder">
+                <i class="fab fa-youtube"></i>
+                <h4>No YouTube videos yet</h4>
+                <p>Add your first YouTube video to get started</p>
+            </div>
+        `;
+        return;
+    }
+
+    youtubeContainer.innerHTML = userMedia.youtube.map(video => `
+        <div class="media-item" data-id="${video.id}">
+            <div class="media-item-header">
+                <h5 class="media-item-title">${video.title}</h5>
+                <div class="media-item-actions">
+                    <button class="media-item-btn edit" onclick="editYouTubeVideo('${video.id}')" title="Edit">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="media-item-btn delete" onclick="deleteMediaItem('${video.id}', 'youtube')" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            <iframe class="youtube-embed" src="https://www.youtube.com/embed/${getYouTubeVideoId(video.url)}" frameborder="0" allowfullscreen></iframe>
+            ${video.description ? `<p class="media-description">${video.description}</p>` : ''}
+        </div>
+    `).join('');
+}
+
+function updateImagesUI() {
+    if (!imagesContainer) return;
+
+    if (userMedia.images.length === 0) {
+        imagesContainer.innerHTML = `
+            <div class="media-placeholder">
+                <i class="fas fa-images"></i>
+                <h4>No pictures yet</h4>
+                <p>Add your first picture to get started</p>
+            </div>
+        `;
+        return;
+    }
+
+    imagesContainer.innerHTML = userMedia.images.map(image => `
+        <div class="media-item" data-id="${image.id}">
+            <div class="media-item-header">
+                <h5 class="media-item-title">${image.title}</h5>
+                <div class="media-item-actions">
+                    <button class="media-item-btn edit" onclick="editImage('${image.id}')" title="Edit">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="media-item-btn delete" onclick="deleteMediaItem('${image.id}', 'images')" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            <img class="image-preview" src="${image.url}" alt="${image.title}">
+            ${image.description ? `<p class="media-description">${image.description}</p>` : ''}
+        </div>
+    `).join('');
+}
+
+function updateMusicUI() {
+    if (!musicContainer) return;
+
+    if (userMedia.music.length === 0) {
+        musicContainer.innerHTML = `
+            <div class="media-placeholder">
+                <i class="fas fa-music"></i>
+                <h4>No music links yet</h4>
+                <p>Add your first music link to get started</p>
+            </div>
+        `;
+        return;
+    }
+
+    musicContainer.innerHTML = userMedia.music.map(music => `
+        <div class="media-item" data-id="${music.id}">
+            <div class="media-item-header">
+                <h5 class="media-item-title">${music.title}</h5>
+                <div class="media-item-actions">
+                    <button class="media-item-btn edit" onclick="editMusic('${music.id}')" title="Edit">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="media-item-btn delete" onclick="deleteMediaItem('${music.id}', 'music')" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="music-item">
+                <div class="music-platform-icon ${music.platform}">
+                    <i class="${getMusicPlatformIcon(music.platform)}"></i>
+                </div>
+                <div class="music-info">
+                    <div class="music-title">${music.title}</div>
+                    ${music.artist ? `<div class="music-artist">by ${music.artist}</div>` : ''}
+                </div>
+                <a href="${music.url}" target="_blank" class="media-item-btn">
+                    <i class="fas fa-external-link-alt"></i>
+                </a>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Helper Functions
+function getYouTubeVideoId(url) {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+}
+
+function getMusicPlatformIcon(platform) {
+    const icons = {
+        'spotify': 'fab fa-spotify',
+        'apple-music': 'fab fa-apple',
+        'youtube-music': 'fab fa-youtube',
+        'audiomack': 'fas fa-music',
+        'soundcloud': 'fab fa-soundcloud',
+        'bandcamp': 'fab fa-bandcamp',
+        'tidal': 'fas fa-music',
+        'deezer': 'fas fa-music',
+        'amazon-music': 'fab fa-amazon',
+        'other': 'fas fa-music'
+    };
+    return icons[platform] || icons.other;
+}
+
+// Modal Functions
+function openYouTubeModal(videoId = null) {
+    if (youtubeModal) {
+        youtubeForm.reset();
+        editingMediaId = videoId;
+
+        if (videoId) {
+            const video = userMedia.youtube.find(v => v.id === videoId);
+            if (video) {
+                document.getElementById('youtube-modal-title').textContent = 'Edit YouTube Video';
+                document.getElementById('youtube-title').value = video.title;
+                document.getElementById('youtube-url').value = video.url;
+                document.getElementById('youtube-description').value = video.description || '';
+                document.getElementById('delete-youtube-button').style.display = 'block';
+            }
+        } else {
+            document.getElementById('youtube-modal-title').textContent = 'Add YouTube Video';
+            document.getElementById('delete-youtube-button').style.display = 'none';
+        }
+
+        youtubeModal.style.display = 'block';
+    }
+}
+
+function openImageModal(imageId = null) {
+    if (imageModal) {
+        imageForm.reset();
+        editingMediaId = imageId;
+
+        if (imageId) {
+            const image = userMedia.images.find(img => img.id === imageId);
+            if (image) {
+                document.getElementById('image-modal-title').textContent = 'Edit Picture';
+                document.getElementById('image-title').value = image.title;
+                document.getElementById('image-description').value = image.description || '';
+                document.getElementById('delete-image-button').style.display = 'block';
+                // Remove required attribute for editing
+                document.getElementById('image-upload').removeAttribute('required');
+            }
+        } else {
+            document.getElementById('image-modal-title').textContent = 'Add Picture';
+            document.getElementById('delete-image-button').style.display = 'none';
+            // Add required attribute for new images
+            document.getElementById('image-upload').setAttribute('required', 'required');
+        }
+
+        imageModal.style.display = 'block';
+    }
+}
+
+function openMusicModal(musicId = null) {
+    if (musicModal) {
+        musicForm.reset();
+        editingMediaId = musicId;
+
+        if (musicId) {
+            const music = userMedia.music.find(m => m.id === musicId);
+            if (music) {
+                document.getElementById('music-modal-title').textContent = 'Edit Music Link';
+                document.getElementById('music-title').value = music.title;
+                document.getElementById('music-artist').value = music.artist || '';
+                document.getElementById('music-platform').value = music.platform;
+                document.getElementById('music-url').value = music.url;
+                document.getElementById('delete-music-button').style.display = 'block';
+            }
+        } else {
+            document.getElementById('music-modal-title').textContent = 'Add Music Link';
+            document.getElementById('delete-music-button').style.display = 'none';
+        }
+
+        musicModal.style.display = 'block';
+    }
+}
+
+function closeMediaModals() {
+    if (youtubeModal) youtubeModal.style.display = 'none';
+    if (imageModal) imageModal.style.display = 'none';
+    if (musicModal) musicModal.style.display = 'none';
+    editingMediaId = null;
+}
+
+// Global functions for onclick handlers
+window.editYouTubeVideo = function(videoId) {
+    openYouTubeModal(videoId);
+};
+
+window.editImage = function(imageId) {
+    openImageModal(imageId);
+};
+
+window.editMusic = function(musicId) {
+    openMusicModal(musicId);
+};
+
+window.deleteMediaItem = function(mediaId, mediaType) {
+    const item = userMedia[mediaType].find(item => item.id === mediaId);
+    if (item && confirm(`Are you sure you want to delete "${item.title}"?`)) {
+        deleteMedia(mediaId, mediaType);
+    }
+};
+
+// Form Submission Handlers
+function handleYouTubeSubmit(e) {
+    e.preventDefault();
+
+    const title = document.getElementById('youtube-title').value.trim();
+    const url = document.getElementById('youtube-url').value.trim();
+    const description = document.getElementById('youtube-description').value.trim();
+
+    if (!title || !url) {
+        showMessage("Please fill in all required fields.", true);
+        return;
+    }
+
+    const videoId = getYouTubeVideoId(url);
+    if (!videoId) {
+        showMessage("Please enter a valid YouTube URL.", true);
+        return;
+    }
+
+    const videoData = {
+        type: 'youtube',
+        title,
+        url,
+        description,
+        videoId,
+        createdAt: editingMediaId ? undefined : firebase.firestore.FieldValue.serverTimestamp(),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    saveMediaItem(videoData, 'youtube');
+}
+
+function handleImageSubmit(e) {
+    e.preventDefault();
+
+    const title = document.getElementById('image-title').value.trim();
+    const description = document.getElementById('image-description').value.trim();
+    const fileInput = document.getElementById('image-upload');
+
+    if (!title) {
+        showMessage("Please enter a title for the image.", true);
+        return;
+    }
+
+    if (!editingMediaId && !fileInput.files[0]) {
+        showMessage("Please select an image file.", true);
+        return;
+    }
+
+    if (fileInput.files[0]) {
+        // Upload new image
+        uploadImageAndSave(fileInput.files[0], title, description);
+    } else {
+        // Update existing image without changing the file
+        const imageData = {
+            type: 'images',
+            title,
+            description,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        saveMediaItem(imageData, 'images');
+    }
+}
+
+function handleMusicSubmit(e) {
+    e.preventDefault();
+
+    const title = document.getElementById('music-title').value.trim();
+    const artist = document.getElementById('music-artist').value.trim();
+    const platform = document.getElementById('music-platform').value;
+    const url = document.getElementById('music-url').value.trim();
+
+    if (!title || !platform || !url) {
+        showMessage("Please fill in all required fields.", true);
+        return;
+    }
+
+    const musicData = {
+        type: 'music',
+        title,
+        artist,
+        platform,
+        url,
+        createdAt: editingMediaId ? undefined : firebase.firestore.FieldValue.serverTimestamp(),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    saveMediaItem(musicData, 'music');
+}
+
+function handleImagePreview(e) {
+    const file = e.target.files[0];
+    const previewContainer = document.getElementById('image-preview-container');
+    const previewImg = document.getElementById('image-preview');
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            previewImg.src = e.target.result;
+            previewContainer.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    } else {
+        previewContainer.style.display = 'none';
+    }
+}
+
+function uploadImageAndSave(file, title, description) {
+    if (!currentUser) return;
+
+    // Check file size (5MB limit)
+    if (file.size > 5 * 1024 * 1024) {
+        showMessage("Image file size must be less than 5MB.", true);
+        return;
+    }
+
+    const saveButton = document.getElementById('save-image-button');
+    saveButton.disabled = true;
+    saveButton.textContent = 'Uploading...';
+
+    // Create a unique filename
+    const timestamp = Date.now();
+    const filename = `images/${currentUser.uid}/${timestamp}_${file.name}`;
+
+    // Upload to Firebase Storage
+    const storageRef = storage.ref(filename);
+    const uploadTask = storageRef.put(file);
+
+    uploadTask.on('state_changed',
+        (snapshot) => {
+            // Progress function
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            saveButton.textContent = `Uploading... ${Math.round(progress)}%`;
+        },
+        (error) => {
+            // Error function
+            console.error('Upload error:', error);
+            showMessage(`Upload failed: ${error.message}`, true);
+            saveButton.disabled = false;
+            saveButton.textContent = 'Save Picture';
+        },
+        () => {
+            // Complete function
+            uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                const imageData = {
+                    type: 'images',
+                    title,
+                    description,
+                    url: downloadURL,
+                    filename,
+                    createdAt: editingMediaId ? undefined : firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                saveMediaItem(imageData, 'images');
+            });
+        }
+    );
+}
+
+function saveMediaItem(mediaData, mediaType) {
+    if (!currentUser) return;
+
+    const mediaRef = db.collection('users').doc(currentUser.uid).collection('media');
+
+    let savePromise;
+    if (editingMediaId) {
+        // Update existing item
+        savePromise = mediaRef.doc(editingMediaId).update(mediaData);
+    } else {
+        // Add new item
+        savePromise = mediaRef.add(mediaData);
+    }
+
+    savePromise.then((docRef) => {
+        console.log("Media item saved successfully");
+        showMessage(`${mediaType === 'youtube' ? 'Video' : mediaType === 'images' ? 'Picture' : 'Music'} saved successfully!`);
+
+        // Update local data
+        if (editingMediaId) {
+            const index = userMedia[mediaType].findIndex(item => item.id === editingMediaId);
+            if (index !== -1) {
+                userMedia[mediaType][index] = { id: editingMediaId, ...mediaData };
+            }
+        } else {
+            const newId = docRef ? docRef.id : editingMediaId;
+            userMedia[mediaType].push({ id: newId, ...mediaData });
+        }
+
+        // Update UI
+        updateMediaUI();
+        closeMediaModals();
+
+        // Reset save button
+        const saveButtons = document.querySelectorAll('#save-youtube-button, #save-image-button, #save-music-button');
+        saveButtons.forEach(btn => {
+            btn.disabled = false;
+            btn.textContent = btn.id.includes('youtube') ? 'Save Video' :
+                             btn.id.includes('image') ? 'Save Picture' : 'Save Music Link';
+        });
+
+    }).catch((error) => {
+        console.error("Error saving media item:", error);
+        showMessage(`Error saving ${mediaType}: ${error.message}`, true);
+
+        // Reset save button
+        const saveButtons = document.querySelectorAll('#save-youtube-button, #save-image-button, #save-music-button');
+        saveButtons.forEach(btn => {
+            btn.disabled = false;
+            btn.textContent = btn.id.includes('youtube') ? 'Save Video' :
+                             btn.id.includes('image') ? 'Save Picture' : 'Save Music Link';
+        });
+    });
+}
+
+function deleteMedia(mediaId, mediaType) {
+    if (!currentUser) return;
+
+    const mediaRef = db.collection('users').doc(currentUser.uid).collection('media').doc(mediaId);
+
+    // Get the media item to check if it's an image (for storage cleanup)
+    const mediaItem = userMedia[mediaType].find(item => item.id === mediaId);
+
+    mediaRef.delete().then(() => {
+        console.log("Media item deleted successfully");
+        showMessage(`${mediaType === 'youtube' ? 'Video' : mediaType === 'images' ? 'Picture' : 'Music'} deleted successfully!`);
+
+        // If it's an image, also delete from storage
+        if (mediaType === 'images' && mediaItem && mediaItem.filename) {
+            storage.ref(mediaItem.filename).delete().catch((error) => {
+                console.warn("Could not delete image file from storage:", error);
+            });
+        }
+
+        // Remove from local data
+        userMedia[mediaType] = userMedia[mediaType].filter(item => item.id !== mediaId);
+
+        // Update UI
+        updateMediaUI();
+
+    }).catch((error) => {
+        console.error("Error deleting media item:", error);
+        showMessage(`Error deleting ${mediaType}: ${error.message}`, true);
+    });
+}
+
+function handleMediaSave() {
+    if (!currentUser) {
+        showMessage("Not authenticated. Cannot save.", true);
+        return;
+    }
+
+    // This function could be used for bulk operations or just show a success message
+    showMessage("All media content is automatically saved!");
 }
 
 // Create a hidden textarea element for clipboard operations

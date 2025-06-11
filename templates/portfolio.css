@@ -458,3 +458,250 @@
         font-size: 0.9rem;
     }
 }
+
+/* Portfolio Media Styles */
+.portfolio-content .media-section {
+    margin: 30px 0;
+    padding: 25px 0;
+    border-top: 1px solid #e5e7eb;
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.portfolio-content .media-section:first-child {
+    border-top: none;
+    margin-top: 0;
+}
+
+.portfolio-content .media-section-title {
+    color: #1f2937;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+    justify-content: center;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    position: relative;
+}
+
+.portfolio-content .media-section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 3px;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+    border-radius: 2px;
+}
+
+.portfolio-content .media-section-title i {
+    color: #3b82f6;
+    font-size: 1.1rem;
+}
+
+.portfolio-content .media-grid {
+    display: grid;
+    gap: 20px;
+}
+
+.portfolio-content .videos-grid {
+    grid-template-columns: 1fr;
+}
+
+.portfolio-content .images-grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+.portfolio-content .music-grid {
+    grid-template-columns: 1fr;
+}
+
+.portfolio-content .media-item {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.portfolio-content .media-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.portfolio-content .media-item:hover::before {
+    left: 100%;
+}
+
+.portfolio-content .media-item:hover {
+    transform: translateY(-3px);
+    border-color: #3b82f6;
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+    background: #ffffff;
+}
+
+/* Video Items */
+.portfolio-content .video-item {
+    padding: 15px;
+}
+
+.portfolio-content .video-thumbnail {
+    width: 100%;
+    height: 200px;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 12px;
+}
+
+.portfolio-content .video-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.portfolio-content .video-play-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: #3b82f6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.4rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+
+.portfolio-content .video-play-overlay:hover {
+    background: #2563eb;
+    transform: translate(-50%, -50%) scale(1.1);
+    box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+}
+
+/* Image Items */
+.portfolio-content .image-item {
+    aspect-ratio: 1;
+}
+
+.portfolio-content .image-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.portfolio-content .image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.portfolio-content .image-container:hover img {
+    transform: scale(1.05);
+}
+
+/* Music Items */
+.portfolio-content .music-item {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    cursor: pointer;
+}
+
+.portfolio-content .music-platform-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    color: white;
+    background: #3b82f6;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+}
+
+.portfolio-content .music-info {
+    flex: 1;
+}
+
+.portfolio-content .music-title {
+    color: #1f2937;
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+
+.portfolio-content .music-artist {
+    color: #6b7280;
+    font-size: 0.9rem;
+    margin: 0;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+
+.portfolio-content .play-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #3b82f6;
+    border: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+}
+
+.portfolio-content .play-button:hover {
+    background: #2563eb;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+/* Media Info */
+.portfolio-content .media-info {
+    padding: 15px 20px;
+}
+
+.portfolio-content .media-title {
+    color: #1f2937;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0 0 6px 0;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+
+.portfolio-content .media-description {
+    color: #6b7280;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin: 0;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}

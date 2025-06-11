@@ -469,3 +469,279 @@
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
     border-color: rgba(100, 255, 218, 0.3);
 }
+
+/* Tech Wave Media Styles */
+.techwave-container .media-section {
+    margin: 25px 0;
+    padding: 20px 0;
+    border-top: 1px solid rgba(100, 255, 218, 0.2);
+    background: rgba(17, 34, 64, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 16px;
+    border: 1px solid rgba(100, 255, 218, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.techwave-container .media-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #64ffda, #0a192f, #64ffda);
+    background-size: 200% 200%;
+    animation: shimmer 3s linear infinite;
+}
+
+.techwave-container .media-section:first-child {
+    border-top: none;
+    margin-top: 0;
+}
+
+.techwave-container .media-section-title {
+    color: #64ffda;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+    justify-content: center;
+    font-family: 'Space Grotesk', monospace;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.techwave-container .media-section-title i {
+    color: #64ffda;
+    font-size: 1rem;
+    animation: float-icon 2s ease-in-out infinite;
+}
+
+.techwave-container .media-grid {
+    display: grid;
+    gap: 15px;
+}
+
+.techwave-container .videos-grid {
+    grid-template-columns: 1fr;
+}
+
+.techwave-container .images-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+
+.techwave-container .music-grid {
+    grid-template-columns: 1fr;
+}
+
+.techwave-container .media-item {
+    background: rgba(17, 34, 64, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(100, 255, 218, 0.2);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.techwave-container .media-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, rgba(100, 255, 218, 0.05), rgba(17, 34, 64, 0.05));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+}
+
+.techwave-container .media-item:hover::before {
+    opacity: 1;
+}
+
+.techwave-container .media-item:hover {
+    transform: translateY(-5px);
+    border-color: rgba(100, 255, 218, 0.4);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Video Items */
+.techwave-container .video-item {
+    padding: 15px;
+}
+
+.techwave-container .video-thumbnail {
+    width: 100%;
+    height: 180px;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 12px;
+}
+
+.techwave-container .video-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.techwave-container .video-play-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    background: rgba(17, 34, 64, 0.8);
+    border: 1px solid rgba(100, 255, 218, 0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64ffda;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.techwave-container .video-play-overlay:hover {
+    background: rgba(100, 255, 218, 0.1);
+    transform: translate(-50%, -50%) scale(1.1);
+    border-color: rgba(100, 255, 218, 0.5);
+}
+
+/* Image Items */
+.techwave-container .image-item {
+    aspect-ratio: 1;
+}
+
+.techwave-container .image-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.techwave-container .image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.techwave-container .image-container:hover img {
+    transform: scale(1.05);
+}
+
+/* Music Items */
+.techwave-container .media-container .music-item,
+.techwave-container .music-item {
+    padding: 15px;
+}
+
+.techwave-container .media-container .music-player,
+.techwave-container .music-player {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: rgba(30, 30, 30, 0.9);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    box-shadow: 0 4px 15px rgba(0, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.techwave-container .media-container .music-player:hover,
+.techwave-container .music-player:hover {
+    border-color: rgba(0, 255, 255, 0.4);
+    box-shadow: 0 8px 25px rgba(0, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.techwave-container .music-platform-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: #64ffda;
+    background: rgba(17, 34, 64, 0.8);
+    border: 1px solid rgba(100, 255, 218, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.techwave-container .music-info {
+    flex: 1;
+}
+
+.techwave-container .music-title {
+    color: #ccd6f6;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+    font-family: 'Space Grotesk', monospace;
+}
+
+.techwave-container .music-artist {
+    color: #8892b0;
+    font-size: 0.85rem;
+    margin: 0;
+    font-family: 'Space Grotesk', monospace;
+}
+
+.techwave-container .play-button {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: rgba(17, 34, 64, 0.8);
+    border: 1px solid rgba(100, 255, 218, 0.2);
+    color: #64ffda;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.techwave-container .play-button:hover {
+    background: rgba(100, 255, 218, 0.1);
+    transform: scale(1.1);
+    border-color: rgba(100, 255, 218, 0.4);
+}
+
+/* Media Info */
+.techwave-container .media-info {
+    padding: 12px 15px;
+}
+
+.techwave-container .media-title {
+    color: #ccd6f6;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 0 0 6px 0;
+    font-family: 'Space Grotesk', monospace;
+}
+
+.techwave-container .media-description {
+    color: #8892b0;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    margin: 0;
+    font-family: 'Space Grotesk', monospace;
+}

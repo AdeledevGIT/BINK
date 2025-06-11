@@ -21,7 +21,14 @@ window.BINK.templates.getPlatformIcon = function(platform) {
         'telegram': 'fab fa-telegram',
         'medium': 'fab fa-medium',
         'spotify': 'fab fa-spotify',
+        'apple-music': 'fab fa-apple',
+        'youtube-music': 'fab fa-youtube',
+        'audiomack': 'fas fa-music',
         'soundcloud': 'fab fa-soundcloud',
+        'bandcamp': 'fab fa-bandcamp',
+        'tidal': 'fas fa-music',
+        'deezer': 'fas fa-music',
+        'amazon-music': 'fab fa-amazon',
         'behance': 'fab fa-behance',
         'dribbble': 'fab fa-dribbble',
         'website': 'fas fa-globe',
@@ -46,6 +53,232 @@ window.BINK.templates.renderSocialLinks = function(socialLinks) {
         if (!url) return '';
         return `<a href="${url}" target="_blank"><i class="${window.BINK.templates.getPlatformIcon(platform)}"></i></a>`;
     }).join('');
+};
+
+// Helper to render media content
+window.BINK.templates.renderMediaContent = function(media) {
+    if (!media || typeof media !== 'object') return '';
+
+    // Check if media is empty and provide sample data for preview
+    const hasAnyMedia = (media.youtube && media.youtube.length > 0) ||
+                       (media.images && media.images.length > 0) ||
+                       (media.music && media.music.length > 0);
+
+    if (!hasAnyMedia) {
+        // Provide sample media data for preview
+        media = {
+            youtube: [{
+                id: 'sample-1',
+                title: 'Sample Video',
+                url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+                description: 'This is a sample video to showcase the media feature'
+            }],
+            images: [{
+                id: 'sample-2',
+                title: 'Sample Image',
+                url: 'https://via.placeholder.com/400x300/6366f1/ffffff?text=Sample+Image',
+                description: 'This is a sample image to showcase the gallery feature'
+            }],
+            music: [
+                {
+                    id: 'sample-3',
+                    title: 'Sample Song',
+                    artist: 'Sample Artist',
+                    platform: 'spotify',
+                    url: '#'
+                },
+                {
+                    id: 'sample-4',
+                    title: 'Another Track',
+                    artist: 'Demo Artist',
+                    platform: 'apple-music',
+                    url: '#'
+                },
+                {
+                    id: 'sample-5',
+                    title: 'AudioMack Demo',
+                    artist: 'AudioMack Artist',
+                    platform: 'audiomack',
+                    url: '#'
+                }
+            ]
+        };
+    }
+
+    let mediaHTML = '';
+
+    // YouTube Videos
+    if (media.youtube && media.youtube.length > 0) {
+        mediaHTML += `
+            <div class="media-section">
+                <h3 class="media-section-title">
+                    <i class="fab fa-youtube"></i> Videos
+                </h3>
+                <div class="media-grid youtube-grid">
+                    ${media.youtube.map(video => `
+                        <div class="media-item youtube-item">
+                            <div class="youtube-embed-container">
+                                <iframe
+                                    src="https://www.youtube.com/embed/${window.BINK.templates.getYouTubeVideoId(video.url)}"
+                                    frameborder="0"
+                                    allowfullscreen
+                                    loading="lazy">
+                                </iframe>
+                            </div>
+                            <div class="media-info">
+                                <h4 class="media-title">${video.title}</h4>
+                                ${video.description ? `<p class="media-description">${video.description}</p>` : ''}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+
+    // Images
+    if (media.images && media.images.length > 0) {
+        mediaHTML += `
+            <div class="media-section">
+                <h3 class="media-section-title">
+                    <i class="fas fa-images"></i> Gallery
+                </h3>
+                <div class="media-grid images-grid">
+                    ${media.images.map(image => `
+                        <div class="media-item image-item">
+                            <div class="image-container">
+                                <img src="${image.url}" alt="${image.title}" loading="lazy" onclick="window.BINK.templates.openImageModal('${image.url}', '${image.title}')">
+                            </div>
+                            <div class="media-info">
+                                <h4 class="media-title">${image.title}</h4>
+                                ${image.description ? `<p class="media-description">${image.description}</p>` : ''}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+
+    // Music
+    if (media.music && media.music.length > 0) {
+        mediaHTML += `
+            <div class="media-section">
+                <h3 class="media-section-title">
+                    <i class="fas fa-music"></i> Music
+                </h3>
+                <div class="media-grid music-grid">
+                    ${media.music.map(music => `
+                        <div class="media-item music-item">
+                            <div class="music-player" onclick="window.BINK.templates.playMusicPreview('${music.platform}', '${music.url}', '${music.title}')">
+                                <div class="music-platform-icon ${music.platform}">
+                                    <i class="${window.BINK.templates.getMusicPlatformIcon(music.platform)}"></i>
+                                </div>
+                                <div class="music-info">
+                                    <h4 class="music-title">${music.title}</h4>
+                                    ${music.artist ? `<p class="music-artist">by ${music.artist}</p>` : ''}
+                                    <p class="music-platform">${window.BINK.templates.getPlatformDisplayName(music.platform)}</p>
+                                </div>
+                                <div class="play-button">
+                                    <i class="fas fa-play"></i>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+
+    return mediaHTML ? `<div class="media-container">${mediaHTML}</div>` : '';
+};
+
+// Helper functions for media
+window.BINK.templates.getYouTubeVideoId = function(url) {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+};
+
+window.BINK.templates.getMusicPlatformIcon = function(platform) {
+    const icons = {
+        'spotify': 'fab fa-spotify',
+        'apple-music': 'fab fa-apple',
+        'youtube-music': 'fab fa-youtube',
+        'audiomack': 'fas fa-music',
+        'soundcloud': 'fab fa-soundcloud',
+        'bandcamp': 'fab fa-bandcamp',
+        'tidal': 'fas fa-music',
+        'deezer': 'fas fa-music',
+        'amazon-music': 'fab fa-amazon',
+        'other': 'fas fa-music'
+    };
+    return icons[platform] || icons.other;
+};
+
+window.BINK.templates.getPlatformDisplayName = function(platform) {
+    const names = {
+        'spotify': 'Spotify',
+        'apple-music': 'Apple Music',
+        'youtube-music': 'YouTube Music',
+        'audiomack': 'AudioMack',
+        'soundcloud': 'SoundCloud',
+        'bandcamp': 'Bandcamp',
+        'tidal': 'Tidal',
+        'deezer': 'Deezer',
+        'amazon-music': 'Amazon Music',
+        'other': 'Music'
+    };
+    return names[platform] || 'Music';
+};
+
+// Global functions for media interactions
+window.BINK.templates.openImageModal = function(imageUrl, imageTitle) {
+    // Create and show image modal
+    const modal = document.createElement('div');
+    modal.className = 'image-modal';
+    modal.innerHTML = `
+        <div class="image-modal-content">
+            <span class="image-modal-close">&times;</span>
+            <img src="${imageUrl}" alt="${imageTitle}">
+            <div class="image-modal-title">${imageTitle}</div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+    modal.style.display = 'block';
+
+    // Close modal events
+    modal.querySelector('.image-modal-close').onclick = () => {
+        document.body.removeChild(modal);
+    };
+
+    modal.onclick = (e) => {
+        if (e.target === modal) {
+            document.body.removeChild(modal);
+        }
+    };
+};
+
+window.BINK.templates.playMusicPreview = function(platform, url, title) {
+    // Show a brief preview/loading animation
+    const playButtons = document.querySelectorAll('.play-button');
+    playButtons.forEach(btn => {
+        const icon = btn.querySelector('i');
+        if (icon) {
+            icon.className = 'fas fa-play';
+        }
+    });
+
+    // Find the clicked button and show loading
+    event.currentTarget.querySelector('.play-button i').className = 'fas fa-spinner fa-spin';
+
+    // Brief delay to show loading, then open the music platform
+    setTimeout(() => {
+        window.open(url, '_blank');
+        // Reset the icon
+        event.currentTarget.querySelector('.play-button i').className = 'fas fa-external-link-alt';
+    }, 500);
 };
 
 // Classic Template (fallback, no extra CSS)
@@ -91,6 +324,7 @@ window.BINK.templates.templates['classic'] = {
                         </div>
                     `).join('')}
                 </div>
+                ${window.BINK.templates.renderMediaContent(data.media || {})}
                 <div class="social-icons">
                     ${Object.entries(data.socialLinks || {}).map(([platform, url]) => `
                         <a class="social-icon" href="${url}" target="_blank"><i class="${window.BINK.templates.getPlatformIcon(platform)}"></i></a>
@@ -148,6 +382,8 @@ window.BINK.templates.templates['neoncard'] = {
                         </div>
                     `).join('')}
                 </div>
+                ${window.BINK.templates.renderMediaContent(data.media || {})}
+
                 <div class="neoncard-socials">
                     ${Object.entries(data.socialLinks || {}).map(([platform, url]) => `
                         <a href="${url}" target="_blank"><i class="${window.BINK.templates.getPlatformIcon(platform)}"></i></a>
@@ -202,6 +438,8 @@ window.BINK.templates.templates['glassmorphism'] = {
                         </div>
                     `).join('')}
                 </div>
+                ${window.BINK.templates.renderMediaContent(data.media || {})}
+
                 <div class="glass-socials">
                     ${Object.entries(data.socialLinks || {}).map(([platform, url]) => `
                         <a href="${url}" target="_blank"><i class="${window.BINK.templates.getPlatformIcon(platform)}"></i></a>
@@ -256,6 +494,8 @@ window.BINK.templates.templates['purplecard'] = {
                         </div>
                     `).join('')}
                 </div>
+                ${window.BINK.templates.renderMediaContent(data.media || {})}
+
                 <div class="purplecard-socials">
                     ${Object.entries(data.socialLinks || {}).map(([platform, url]) => `
                         <a href="${url}" target="_blank"><i class="${window.BINK.templates.getPlatformIcon(platform)}"></i></a>
@@ -316,6 +556,7 @@ window.BINK.templates.templates['landingprofile'] = {
                         </div>
                     `).join('')}
                 </div>
+                ${window.BINK.templates.renderMediaContent(data.media || {})}
                 <div class="landing-footer">
                     Powered by <a href="index.html" target="_blank">BINK</a>
                 </div>
@@ -732,6 +973,7 @@ window.BINK.templates.templates['blacklanding'] = {
                         </div>
                     `).join('')}
                 </div>
+                ${window.BINK.templates.renderMediaContent(data.media || {})}
                 <div class="blacklanding-footer">
                     Powered by <a href="index.html" target="_blank">BINK</a>
                 </div>
@@ -784,6 +1026,7 @@ window.BINK.templates.templates['gradientflow'] = {
                             </div>
                         `).join('')}
                     </div>
+                    ${window.BINK.templates.renderMediaContent(data.media || {})}
                     <div class="gradientflow-socials">
                         ${Object.entries(data.socialLinks || {}).map(([platform, url]) => `
                             <a href="${url}" target="_blank"><i class="${window.BINK.templates.getPlatformIcon(platform)}"></i></a>
@@ -842,6 +1085,7 @@ window.BINK.templates.templates['darkelegance'] = {
                             </div>
                         `).join('')}
                     </div>
+                    ${window.BINK.templates.renderMediaContent(data.media || {})}
                     <div class="darkelegance-socials">
                         ${Object.entries(data.socialLinks || {}).map(([platform, url]) => `
                             <a href="${url}" target="_blank"><i class="${window.BINK.templates.getPlatformIcon(platform)}"></i></a>
@@ -902,6 +1146,7 @@ window.BINK.templates.templates['neonglow'] = {
                             </div>
                         `).join('')}
                     </div>
+                    ${window.BINK.templates.renderMediaContent(data.media || {})}
                     <div class="neonglow-socials">
                         ${Object.entries(data.socialLinks || {}).map(([platform, url]) => `
                             <a href="${url}" target="_blank"><i class="${window.BINK.templates.getPlatformIcon(platform)}"></i></a>
@@ -960,6 +1205,7 @@ window.BINK.templates.templates['minimalzen'] = {
                             </div>
                         `).join('')}
                     </div>
+                    ${window.BINK.templates.renderMediaContent(data.media || {})}
                     <div class="minimalzen-socials">
                         ${Object.entries(data.socialLinks || {}).map(([platform, url]) => `
                             <a href="${url}" target="_blank"><i class="${window.BINK.templates.getPlatformIcon(platform)}"></i></a>
@@ -1020,6 +1266,7 @@ window.BINK.templates.templates['techwave'] = {
                             </div>
                         `).join('')}
                     </div>
+                    ${window.BINK.templates.renderMediaContent(data.media || {})}
                     <div class="techwave-socials">
                         ${Object.entries(data.socialLinks || {}).map(([platform, url]) => `
                             <a href="${url}" target="_blank"><i class="${window.BINK.templates.getPlatformIcon(platform)}"></i></a>
@@ -1086,6 +1333,7 @@ window.BINK.templates.templates['splitscreen'] = {
                             </div>
                         `).join('')}
                     </div>
+                    ${window.BINK.templates.renderMediaContent(data.media || {})}
                     <div class="splitscreen-footer">
                         Powered by <a href="index.html" target="_blank">BINK</a>
                     </div>
@@ -1161,6 +1409,8 @@ window.BINK.templates.templates['magazine'] = {
                     </div>
                 </div>
 
+                ${window.BINK.templates.renderMediaContent(data.media || {})}
+
                 <div class="magazine-footer">
                     Powered by <a href="index.html" target="_blank">BINK</a>
                 </div>
@@ -1215,6 +1465,7 @@ window.BINK.templates.templates['retrowave'] = {
                             </div>
                         `).join('')}
                     </div>
+                    ${window.BINK.templates.renderMediaContent(data.media || {})}
                     <div class="retrowave-socials">
                         ${Object.entries(data.socialLinks || {}).map(([platform, url]) => `
                             <a href="${url}" target="_blank"><i class="${window.BINK.templates.getPlatformIcon(platform)}"></i></a>
@@ -1273,6 +1524,7 @@ window.BINK.templates.templates['nature'] = {
                             </div>
                         `).join('')}
                     </div>
+                    ${window.BINK.templates.renderMediaContent(data.media || {})}
                     <div class="nature-socials">
                         ${Object.entries(data.socialLinks || {}).map(([platform, url]) => `
                             <a href="${url}" target="_blank"><i class="${window.BINK.templates.getPlatformIcon(platform)}"></i></a>
@@ -1346,6 +1598,8 @@ window.BINK.templates.templates['portfolio'] = {
                     </div>
                 </div>
 
+                ${window.BINK.templates.renderMediaContent(data.media || {})}
+
                 <div class="portfolio-footer">
                     Powered by <a href="index.html" target="_blank">BINK</a>
                 </div>
@@ -1361,7 +1615,8 @@ window.BINK.templates.templates['corporate'] = {
     name: 'Corporate Professional',
     description: 'Clean, professional template perfect for business professionals and executives.',
     css: 'templates/corporate.css',
-    isPremium: false,
+    isPremium: true,
+    tokenPrice: 150,
     render: function(data) {
         return `
         <div class="corporate-bio-page">
@@ -1399,6 +1654,8 @@ window.BINK.templates.templates['corporate'] = {
                             </div>
                         `).join('')}
                     </div>
+
+                    ${window.BINK.templates.renderMediaContent(data.media || {})}
 
                     <div class="corporate-socials">
                         ${Object.entries(data.socialLinks || {}).map(([platform, url]) => `
@@ -1462,6 +1719,8 @@ window.BINK.templates.templates['creative'] = {
                         `).join('')}
                     </div>
 
+                    ${window.BINK.templates.renderMediaContent(data.media || {})}
+
                     <div class="creative-socials">
                         ${Object.entries(data.socialLinks || {}).map(([platform, url]) => `
                             <a href="${url}" target="_blank"><i class="${window.BINK.templates.getPlatformIcon(platform)}"></i></a>
@@ -1521,6 +1780,8 @@ window.BINK.templates.templates['gradientcard'] = {
                     `).join('')}
                 </div>
 
+                ${window.BINK.templates.renderMediaContent(data.media || {})}
+
                 <div class="gradientcard-socials">
                     ${window.BINK.templates.renderSocialLinks(data.socialLinks)}
                 </div>
@@ -1577,6 +1838,8 @@ window.BINK.templates.templates['neonminimal'] = {
                     `).join('')}
                 </div>
 
+                ${window.BINK.templates.renderMediaContent(data.media || {})}
+
                 <div class="neonminimal-socials">
                     ${window.BINK.templates.renderSocialLinks(data.socialLinks)}
                 </div>
@@ -1632,6 +1895,8 @@ window.BINK.templates.templates['softpastel'] = {
                         </div>
                     `).join('')}
                 </div>
+
+                ${window.BINK.templates.renderMediaContent(data.media || {})}
 
                 <div class="softpastel-socials">
                     ${window.BINK.templates.renderSocialLinks(data.socialLinks)}
@@ -1690,6 +1955,8 @@ window.BINK.templates.templates['coverstory'] = {
                         `).join('')}
                     </div>
 
+                    ${window.BINK.templates.renderMediaContent(data.media || {})}
+
                     <div class="coverstory-socials">
                         ${window.BINK.templates.renderSocialLinks(data.socialLinks)}
                     </div>
@@ -1747,6 +2014,8 @@ window.BINK.templates.templates['auroraglow'] = {
                     `).join('')}
                 </div>
 
+                ${window.BINK.templates.renderMediaContent(data.media || {})}
+
                 <div class="auroraglow-socials">
                     ${window.BINK.templates.renderSocialLinks(data.socialLinks)}
                 </div>
@@ -1802,6 +2071,8 @@ window.BINK.templates.templates['herobanner'] = {
                             </div>
                         `).join('')}
                     </div>
+
+                    ${window.BINK.templates.renderMediaContent(data.media || {})}
 
                     <div class="herobanner-socials">
                         ${window.BINK.templates.renderSocialLinks(data.socialLinks)}

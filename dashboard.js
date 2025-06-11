@@ -842,7 +842,14 @@ function getPlatformIcon(platform) {
         telegram: 'fab fa-telegram',
         medium: 'fab fa-medium',
         spotify: 'fab fa-spotify',
+        'apple-music': 'fab fa-apple',
+        'youtube-music': 'fab fa-youtube',
+        audiomack: 'fas fa-music',
         soundcloud: 'fab fa-soundcloud',
+        bandcamp: 'fab fa-bandcamp',
+        tidal: 'fas fa-music',
+        deezer: 'fas fa-music',
+        'amazon-music': 'fab fa-amazon',
         behance: 'fab fa-behance',
         dribbble: 'fab fa-dribbble'
     };
@@ -870,7 +877,14 @@ function getPlatformColor(platform) {
         telegram: '#0088cc',
         medium: '#00ab6c',
         spotify: '#1db954',
+        'apple-music': '#fa243c',
+        'youtube-music': '#ff0000',
+        audiomack: '#ff6600',
         soundcloud: '#ff7700',
+        bandcamp: '#629aa0',
+        tidal: '#000000',
+        deezer: '#feaa2d',
+        'amazon-music': '#ff9900',
         behance: '#1769ff',
         dribbble: '#ea4c89'
     };

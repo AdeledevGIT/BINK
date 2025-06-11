@@ -326,3 +326,311 @@ body::before {
         font-size: 1rem;
     }
 }
+
+/* Soft Pastel Media Styles */
+.softpastel-container .media-section {
+    margin: 25px 0;
+    padding: 20px 0;
+    border-top: 1px solid rgba(255, 193, 227, 0.3);
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    border: 2px solid rgba(255, 193, 227, 0.2);
+    position: relative;
+    z-index: 2;
+}
+
+.softpastel-container .media-section:first-child {
+    border-top: none;
+    margin-top: 0;
+}
+
+.softpastel-container .media-section-title {
+    background: linear-gradient(135deg, #d946ef, #8b5cf6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+    justify-content: center;
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.softpastel-container .media-section-title i {
+    color: #ffc1e3;
+    font-size: 1rem;
+}
+
+.softpastel-container .media-grid {
+    display: grid;
+    gap: 15px;
+}
+
+.softpastel-container .videos-grid {
+    grid-template-columns: 1fr;
+}
+
+.softpastel-container .images-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+
+.softpastel-container .music-grid {
+    grid-template-columns: 1fr;
+}
+
+.softpastel-container .media-item {
+    background: rgba(255, 255, 255, 0.8);
+    border: 2px solid rgba(255, 193, 227, 0.3);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(255, 193, 227, 0.2);
+}
+
+.softpastel-container .media-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 193, 227, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.softpastel-container .media-item:hover::before {
+    left: 100%;
+}
+
+.softpastel-container .media-item:hover {
+    border-color: #ffc1e3;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 193, 227, 0.3);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+/* Video Items */
+.softpastel-container .video-item {
+    padding: 15px;
+}
+
+.softpastel-container .video-thumbnail {
+    width: 100%;
+    height: 180px;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 12px;
+}
+
+.softpastel-container .video-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.softpastel-container .video-play-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #ffc1e3, #c1a3ff);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 193, 227, 0.3);
+}
+
+.softpastel-container .video-play-overlay:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+    box-shadow: 0 8px 25px rgba(255, 193, 227, 0.4);
+}
+
+/* Image Items */
+.softpastel-container .image-item {
+    aspect-ratio: 1;
+}
+
+.softpastel-container .image-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.softpastel-container .image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.softpastel-container .image-container:hover img {
+    transform: scale(1.05);
+}
+
+/* Music Items */
+.softpastel-container .media-container .music-item,
+.softpastel-container .music-item {
+    padding: 15px;
+}
+
+.softpastel-container .media-container .music-player,
+.softpastel-container .music-player {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255, 193, 227, 0.3);
+    box-shadow: 0 4px 15px rgba(255, 193, 227, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.softpastel-container .media-container .music-player::before,
+.softpastel-container .music-player::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 193, 227, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.softpastel-container .media-container .music-player:hover::before,
+.softpastel-container .music-player:hover::before {
+    left: 100%;
+}
+
+.softpastel-container .media-container .music-player:hover,
+.softpastel-container .music-player:hover {
+    border-color: rgba(255, 193, 227, 0.6);
+    box-shadow: 0 8px 25px rgba(255, 193, 227, 0.4);
+    transform: translateY(-2px);
+}
+
+.softpastel-container .media-container .music-platform-icon,
+.softpastel-container .music-platform-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: white;
+    background: linear-gradient(135deg, #ffc1e3, #c1a3ff);
+    box-shadow: 0 4px 15px rgba(255, 193, 227, 0.3);
+    flex-shrink: 0;
+}
+
+.softpastel-container .music-platform-icon.spotify { background: #1db954; }
+.softpastel-container .music-platform-icon.apple-music { background: #fa243c; }
+.softpastel-container .music-platform-icon.youtube-music { background: #ff0000; }
+.softpastel-container .music-platform-icon.audiomack { background: #ff6600; }
+.softpastel-container .music-platform-icon.soundcloud { background: #ff7700; }
+.softpastel-container .music-platform-icon.bandcamp { background: #629aa0; }
+.softpastel-container .music-platform-icon.tidal { background: #000000; }
+.softpastel-container .music-platform-icon.deezer { background: #feaa2d; }
+.softpastel-container .music-platform-icon.amazon-music { background: #ff9900; }
+.softpastel-container .music-platform-icon.other { background: #666666; }
+
+.softpastel-container .media-container .music-info,
+.softpastel-container .music-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.softpastel-container .media-container .music-title,
+.softpastel-container .music-title {
+    color: #6b46c1;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.softpastel-container .media-container .music-artist,
+.softpastel-container .music-artist {
+    color: #8b5cf6;
+    font-size: 0.85rem;
+    margin: 0 0 3px 0;
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.softpastel-container .media-container .music-platform,
+.softpastel-container .music-platform {
+    color: #c1a3ff;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin: 0;
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.softpastel-container .media-container .play-button,
+.softpastel-container .play-button {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ffc1e3, #c1a3ff);
+    border: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 193, 227, 0.3);
+    flex-shrink: 0;
+}
+
+.softpastel-container .play-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 25px rgba(255, 193, 227, 0.4);
+}
+
+/* Media Info */
+.softpastel-container .media-info {
+    padding: 12px 15px;
+}
+
+.softpastel-container .media-title {
+    color: #6b46c1;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 0 0 6px 0;
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.softpastel-container .media-description {
+    color: #8b5cf6;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    margin: 0;
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}

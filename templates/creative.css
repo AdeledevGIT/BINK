@@ -392,3 +392,325 @@
         height: 110px;
     }
 }
+
+/* Creative Media Styles */
+.creative-container .media-section {
+    margin: 25px 0;
+    padding: 20px 0;
+    border-top: 1px solid rgba(255, 107, 107, 0.2);
+    background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(78, 205, 196, 0.1) 100%);
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.creative-container .media-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+    animation: rainbow-flow 3s linear infinite;
+}
+
+.creative-container .media-section:first-child {
+    border-top: none;
+    margin-top: 0;
+}
+
+.creative-container .media-section-title {
+    background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+    justify-content: center;
+    font-family: 'Poppins', Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.creative-container .media-section-title i {
+    color: #ff6b6b;
+    font-size: 1.1rem;
+}
+
+.creative-container .media-grid {
+    display: grid;
+    gap: 15px;
+}
+
+.creative-container .videos-grid {
+    grid-template-columns: 1fr;
+}
+
+.creative-container .images-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+
+.creative-container .music-grid {
+    grid-template-columns: 1fr;
+}
+
+.creative-container .media-item {
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid transparent;
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.creative-container .media-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+    z-index: -1;
+    border-radius: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.creative-container .media-item:hover::before {
+    opacity: 1;
+}
+
+.creative-container .media-item:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 40px rgba(255, 107, 107, 0.3);
+}
+
+/* Video Items */
+.creative-container .video-item {
+    padding: 15px;
+}
+
+.creative-container .video-thumbnail {
+    width: 100%;
+    height: 180px;
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 12px;
+}
+
+.creative-container .video-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.creative-container .video-play-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+}
+
+.creative-container .video-play-overlay:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+    box-shadow: 0 12px 35px rgba(255, 107, 107, 0.5);
+}
+
+/* Image Items */
+.creative-container .image-item {
+    aspect-ratio: 1;
+}
+
+.creative-container .image-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.creative-container .image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.creative-container .image-container:hover img {
+    transform: scale(1.05);
+}
+
+/* Music Items */
+.creative-container .media-container .music-item,
+.creative-container .music-item {
+    padding: 15px;
+}
+
+.creative-container .media-container .music-player,
+.creative-container .music-player {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.creative-container .media-container .music-player::before,
+.creative-container .music-player::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255, 107, 107, 0.1), rgba(78, 205, 196, 0.1));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.creative-container .media-container .music-player:hover::before,
+.creative-container .music-player:hover::before {
+    opacity: 1;
+}
+
+.creative-container .media-container .music-player:hover,
+.creative-container .music-player:hover {
+    border-color: #ff6b6b;
+    box-shadow: 0 12px 35px rgba(255, 107, 107, 0.2);
+    transform: translateY(-3px);
+}
+
+.creative-container .media-container .music-platform-icon,
+.creative-container .music-platform-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: white;
+    background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+    flex-shrink: 0;
+}
+
+.creative-container .music-platform-icon.spotify { background: #1db954; }
+.creative-container .music-platform-icon.apple-music { background: #fa243c; }
+.creative-container .music-platform-icon.youtube-music { background: #ff0000; }
+.creative-container .music-platform-icon.audiomack { background: #ff6600; }
+.creative-container .music-platform-icon.soundcloud { background: #ff7700; }
+.creative-container .music-platform-icon.bandcamp { background: #629aa0; }
+.creative-container .music-platform-icon.tidal { background: #000000; }
+.creative-container .music-platform-icon.deezer { background: #feaa2d; }
+.creative-container .music-platform-icon.amazon-music { background: #ff9900; }
+.creative-container .music-platform-icon.other { background: #666666; }
+
+.creative-container .media-container .music-info,
+.creative-container .music-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.creative-container .media-container .music-title,
+.creative-container .music-title {
+    color: #2c3e50;
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 0 0 4px 0;
+    font-family: 'Poppins', Arial, sans-serif;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.creative-container .media-container .music-artist,
+.creative-container .music-artist {
+    color: #7f8c8d;
+    font-size: 0.85rem;
+    margin: 0 0 3px 0;
+    font-family: 'Poppins', Arial, sans-serif;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.creative-container .media-container .music-platform,
+.creative-container .music-platform {
+    color: #4ecdc4;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin: 0;
+    font-family: 'Poppins', Arial, sans-serif;
+}
+
+.creative-container .media-container .play-button,
+.creative-container .play-button {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+    border: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+    flex-shrink: 0;
+}
+
+.creative-container .play-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+}
+
+/* Media Info */
+.creative-container .media-info {
+    padding: 12px 15px;
+}
+
+.creative-container .media-title {
+    color: #2c3e50;
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin: 0 0 6px 0;
+    font-family: 'Poppins', Arial, sans-serif;
+}
+
+.creative-container .media-description {
+    color: #7f8c8d;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    margin: 0;
+    font-family: 'Poppins', Arial, sans-serif;
+}

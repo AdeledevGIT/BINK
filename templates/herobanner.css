@@ -243,39 +243,368 @@ body {
     text-decoration: underline;
 }
 
+/* Hero Banner Media Styles */
+.herobanner-content .media-container .media-section,
+.herobanner-content .media-section {
+    margin: 30px 0;
+    padding: 25px 0;
+    border-top: 1px solid #e5e7eb;
+    background: #f8fafc;
+    border-radius: 16px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.herobanner-content .media-section:first-child {
+    border-top: none;
+    margin-top: 0;
+}
+
+.herobanner-content .media-section-title {
+    color: #1f2937;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+    justify-content: center;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+    position: relative;
+}
+
+.herobanner-content .media-section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 3px;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+    border-radius: 2px;
+}
+
+.herobanner-content .media-section-title i {
+    color: #3b82f6;
+    font-size: 1.1rem;
+}
+
+.herobanner-content .media-grid {
+    display: grid;
+    gap: 20px;
+}
+
+.herobanner-content .videos-grid {
+    grid-template-columns: 1fr;
+}
+
+.herobanner-content .images-grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+.herobanner-content .music-grid {
+    grid-template-columns: 1fr;
+}
+
+.herobanner-content .media-item {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.herobanner-content .media-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.herobanner-content .media-item:hover::before {
+    left: 100%;
+}
+
+.herobanner-content .media-item:hover {
+    transform: translateY(-3px);
+    border-color: #3b82f6;
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+}
+
+/* Video Items */
+.herobanner-content .video-item {
+    padding: 15px;
+}
+
+.herobanner-content .video-thumbnail {
+    width: 100%;
+    height: 180px;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 12px;
+}
+
+.herobanner-content .video-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.herobanner-content .youtube-embed-container {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+.herobanner-content .youtube-embed-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Image Items */
+.herobanner-content .image-item {
+    position: relative;
+}
+
+.herobanner-content .image-container {
+    width: 100%;
+    height: 140px;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 8px;
+}
+
+.herobanner-content .image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.herobanner-content .image-container img:hover {
+    transform: scale(1.05);
+}
+
+/* Music Items */
+.herobanner-content .media-container .music-item,
+.herobanner-content .music-item {
+    padding: 15px;
+}
+
+.herobanner-content .media-container .music-player,
+.herobanner-content .music-player {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: #f8fafc;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+}
+
+.herobanner-content .media-container .music-player::before,
+.herobanner-content .music-player::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.herobanner-content .media-container .music-player:hover::before,
+.herobanner-content .music-player:hover::before {
+    left: 100%;
+}
+
+.herobanner-content .media-container .music-player:hover,
+.herobanner-content .music-player:hover {
+    background: #ffffff;
+    border-color: #3b82f6;
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+    transform: translateY(-2px);
+}
+
+.herobanner-content .media-container .music-platform-icon,
+.herobanner-content .music-platform-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    color: white;
+    flex-shrink: 0;
+    border: 2px solid #e5e7eb;
+}
+
+.herobanner-content .music-platform-icon.spotify { background: #1db954; border-color: #1db954; }
+.herobanner-content .music-platform-icon.apple-music { background: #fa243c; border-color: #fa243c; }
+.herobanner-content .music-platform-icon.youtube-music { background: #ff0000; border-color: #ff0000; }
+.herobanner-content .music-platform-icon.audiomack { background: #ff6600; border-color: #ff6600; }
+.herobanner-content .music-platform-icon.soundcloud { background: #ff7700; border-color: #ff7700; }
+.herobanner-content .music-platform-icon.bandcamp { background: #629aa0; border-color: #629aa0; }
+.herobanner-content .music-platform-icon.tidal { background: #000000; border-color: #000000; }
+.herobanner-content .music-platform-icon.deezer { background: #feaa2d; border-color: #feaa2d; }
+.herobanner-content .music-platform-icon.amazon-music { background: #ff9900; border-color: #ff9900; }
+.herobanner-content .music-platform-icon.other { background: #666666; border-color: #666666; }
+
+.herobanner-content .media-container .music-info,
+.herobanner-content .music-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.herobanner-content .media-container .music-title,
+.herobanner-content .music-title {
+    color: #1f2937;
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.herobanner-content .media-container .music-artist,
+.herobanner-content .music-artist {
+    color: #6b7280;
+    font-size: 0.9rem;
+    margin: 0 0 3px 0;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.herobanner-content .media-container .music-platform,
+.herobanner-content .music-platform {
+    color: #3b82f6;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin: 0;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.herobanner-content .media-container .play-button,
+.herobanner-content .play-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #3b82f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    border: none;
+}
+
+.herobanner-content .media-container .play-button:hover,
+.herobanner-content .play-button:hover {
+    background: #2563eb;
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+
+/* Media Info */
+.herobanner-content .media-container .media-info,
+.herobanner-content .media-info {
+    padding: 15px 20px;
+}
+
+.herobanner-content .media-container .media-title,
+.herobanner-content .media-title {
+    color: #1f2937;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0 0 6px 0;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.herobanner-content .media-container .media-description,
+.herobanner-content .media-description {
+    color: #6b7280;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin: 0;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
 /* Mobile Responsive */
 @media (max-width: 480px) {
     .herobanner-container {
         margin: 10px;
         border-radius: 20px;
     }
-    
+
     .herobanner-header {
         height: 180px;
         padding: 16px;
     }
-    
+
     .herobanner-username {
         font-size: 1.5rem;
     }
-    
+
     .herobanner-bio {
         font-size: 0.9rem;
     }
-    
+
     .herobanner-content {
         padding: 24px 20px 20px;
     }
-    
+
     .herobanner-link {
         padding: 14px 16px;
         border-radius: 14px;
     }
-    
+
     .herobanner-socials a {
         width: 40px;
         height: 40px;
         font-size: 1rem;
+    }
+
+    .herobanner-content .images-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    }
+
+    .herobanner-content .image-container {
+        height: 120px;
+    }
+
+    .herobanner-content .video-thumbnail {
+        height: 150px;
     }
 }
 

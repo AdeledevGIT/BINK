@@ -39,7 +39,14 @@ const socialMediaIcons = {
     'telegram': 'fab fa-telegram',
     'medium': 'fab fa-medium',
     'spotify': 'fab fa-spotify',
+    'apple-music': 'fab fa-apple',
+    'youtube-music': 'fab fa-youtube',
+    'audiomack': 'fas fa-music',
     'soundcloud': 'fab fa-soundcloud',
+    'bandcamp': 'fab fa-bandcamp',
+    'tidal': 'fas fa-music',
+    'deezer': 'fas fa-music',
+    'amazon-music': 'fab fa-amazon',
     'behance': 'fab fa-behance',
     'dribbble': 'fab fa-dribbble',
     'website': 'fas fa-globe',
@@ -215,11 +222,13 @@ function renderTemplate(userData) {
         bio: userData.bio,
         profilePicUrl: userData.profilePicUrl,
         links: [], // will be filled after loadUserLinks
-        socialLinks: userData.socialLinks || {}
+        socialLinks: userData.socialLinks || {},
+        media: {} // will be filled after loadUserMedia
     });
 
     // After links are loaded, update the template
     loadUserLinks(userData.id, templateObj, userData);
+    loadUserMedia(userData.id, templateObj, userData);
 }
 
 // Function to render the classic template (fallback)
@@ -237,6 +246,7 @@ function renderClassicTemplate(userData) {
                     </div>
                 </div>
                 <div class="links-container" id="links-container"></div>
+                <div class="media-container" id="media-container"></div>
                 <div class="social-icons" id="social-icons"></div>
                 <footer class="bio-footer">
                     <p>Powered by <a href="index.html" target="_blank">BINK</a></p>
@@ -246,6 +256,7 @@ function renderClassicTemplate(userData) {
     `;
     // After links are loaded, update the classic template
     loadUserLinks(userData.id, null, userData);
+    loadUserMedia(userData.id, null, userData);
 }
 
 // Function to load user links
@@ -260,14 +271,15 @@ async function loadUserLinks(userId, templateObj = null, userData = null) {
         });
 
         if (templateObj && userData) {
-            // Re-render the template with links
+            // Re-render the template with links and media
             bioRoot.innerHTML = templateObj.render({
                 displayName: userData.displayName || userData.username,
                 username: userData.username,
                 bio: userData.bio,
                 profilePicUrl: userData.profilePicUrl,
                 links: links,
-                socialLinks: userData.socialLinks || {}
+                socialLinks: userData.socialLinks || {},
+                media: userData.media || {}
             });
         } else {
             // Classic fallback
@@ -324,6 +336,287 @@ async function loadUserLinks(userId, templateObj = null, userData = null) {
         }
     }
 }
+
+// Function to load user media
+async function loadUserMedia(userId, templateObj = null, userData = null) {
+    try {
+        const mediaRef = db.collection('users').doc(userId).collection('media');
+        const querySnapshot = await mediaRef.get();
+
+        const media = {
+            youtube: [],
+            images: [],
+            music: []
+        };
+
+        querySnapshot.forEach((doc) => {
+            const mediaData = { ...doc.data(), id: doc.id };
+            const type = mediaData.type;
+            if (media[type]) {
+                media[type].push(mediaData);
+            }
+        });
+
+        if (templateObj && userData) {
+            // For templates, add media to userData and re-render
+            userData.media = media;
+
+            // Get current links to include in re-render
+            const linksRef = db.collection('users').doc(userId).collection('links');
+            const linksSnapshot = await linksRef.orderBy('order').get();
+            const links = [];
+            linksSnapshot.forEach((doc) => {
+                links.push({ ...doc.data(), id: doc.id });
+            });
+
+            // Re-render template with media data
+            bioRoot.innerHTML = templateObj.render({
+                displayName: userData.displayName || userData.username,
+                username: userData.username,
+                bio: userData.bio,
+                profilePicUrl: userData.profilePicUrl,
+                links: links,
+                socialLinks: userData.socialLinks || {},
+                media: media
+            });
+        } else {
+            // Classic template - render media in media container
+            const mediaContainer = document.getElementById('media-container');
+            if (mediaContainer) {
+                renderMediaContent(media, mediaContainer);
+            }
+        }
+    } catch (error) {
+        console.error("Error loading media:", error);
+        const mediaContainer = document.getElementById('media-container');
+        if (mediaContainer) {
+            mediaContainer.innerHTML = '<div class="media-error">Error loading media content</div>';
+        }
+    }
+}
+
+function renderMediaContent(media, container) {
+    // Check if media is empty and provide sample data for preview
+    const hasAnyMedia = (media.youtube && media.youtube.length > 0) ||
+                       (media.images && media.images.length > 0) ||
+                       (media.music && media.music.length > 0);
+
+    if (!hasAnyMedia) {
+        // Provide sample media data for preview
+        media = {
+            youtube: [{
+                id: 'sample-1',
+                title: 'Sample Video',
+                url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+                description: 'This is a sample video to showcase the media feature'
+            }],
+            images: [{
+                id: 'sample-2',
+                title: 'Sample Image',
+                url: 'https://via.placeholder.com/400x300/6366f1/ffffff?text=Sample+Image',
+                description: 'This is a sample image to showcase the gallery feature'
+            }],
+            music: [
+                {
+                    id: 'sample-3',
+                    title: 'Sample Song',
+                    artist: 'Sample Artist',
+                    platform: 'spotify',
+                    url: '#'
+                },
+                {
+                    id: 'sample-4',
+                    title: 'Another Track',
+                    artist: 'Demo Artist',
+                    platform: 'apple-music',
+                    url: '#'
+                },
+                {
+                    id: 'sample-5',
+                    title: 'AudioMack Demo',
+                    artist: 'AudioMack Artist',
+                    platform: 'audiomack',
+                    url: '#'
+                }
+            ]
+        };
+    }
+
+    let mediaHTML = '';
+
+    // YouTube Videos
+    if (media.youtube && media.youtube.length > 0) {
+        mediaHTML += `
+            <div class="media-section">
+                <h3 class="media-section-title">
+                    <i class="fab fa-youtube"></i> Videos
+                </h3>
+                <div class="media-grid youtube-grid">
+                    ${media.youtube.map(video => `
+                        <div class="media-item youtube-item">
+                            <div class="youtube-embed-container">
+                                <iframe
+                                    src="https://www.youtube.com/embed/${getYouTubeVideoId(video.url)}"
+                                    frameborder="0"
+                                    allowfullscreen
+                                    loading="lazy">
+                                </iframe>
+                            </div>
+                            <div class="media-info">
+                                <h4 class="media-title">${video.title}</h4>
+                                ${video.description ? `<p class="media-description">${video.description}</p>` : ''}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+
+    // Images
+    if (media.images && media.images.length > 0) {
+        mediaHTML += `
+            <div class="media-section">
+                <h3 class="media-section-title">
+                    <i class="fas fa-images"></i> Gallery
+                </h3>
+                <div class="media-grid images-grid">
+                    ${media.images.map(image => `
+                        <div class="media-item image-item">
+                            <div class="image-container">
+                                <img src="${image.url}" alt="${image.title}" loading="lazy" onclick="openImageModal('${image.url}', '${image.title}')">
+                            </div>
+                            <div class="media-info">
+                                <h4 class="media-title">${image.title}</h4>
+                                ${image.description ? `<p class="media-description">${image.description}</p>` : ''}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+
+    // Music
+    if (media.music && media.music.length > 0) {
+        mediaHTML += `
+            <div class="media-section">
+                <h3 class="media-section-title">
+                    <i class="fas fa-music"></i> Music
+                </h3>
+                <div class="media-grid music-grid">
+                    ${media.music.map(music => `
+                        <div class="media-item music-item">
+                            <div class="music-player" onclick="playMusicPreview('${music.platform}', '${music.url}', '${music.title}')">
+                                <div class="music-platform-icon ${music.platform}">
+                                    <i class="${getMusicPlatformIcon(music.platform)}"></i>
+                                </div>
+                                <div class="music-info">
+                                    <h4 class="music-title">${music.title}</h4>
+                                    ${music.artist ? `<p class="music-artist">by ${music.artist}</p>` : ''}
+                                    <p class="music-platform">${getPlatformDisplayName(music.platform)}</p>
+                                </div>
+                                <div class="play-button">
+                                    <i class="fas fa-play"></i>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+
+    container.innerHTML = mediaHTML;
+}
+
+// Helper functions
+function getYouTubeVideoId(url) {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+}
+
+function getMusicPlatformIcon(platform) {
+    const icons = {
+        'spotify': 'fab fa-spotify',
+        'apple-music': 'fab fa-apple',
+        'youtube-music': 'fab fa-youtube',
+        'audiomack': 'fas fa-music',
+        'soundcloud': 'fab fa-soundcloud',
+        'bandcamp': 'fab fa-bandcamp',
+        'tidal': 'fas fa-music',
+        'deezer': 'fas fa-music',
+        'amazon-music': 'fab fa-amazon',
+        'other': 'fas fa-music'
+    };
+    return icons[platform] || icons.other;
+}
+
+function getPlatformDisplayName(platform) {
+    const names = {
+        'spotify': 'Spotify',
+        'apple-music': 'Apple Music',
+        'youtube-music': 'YouTube Music',
+        'audiomack': 'AudioMack',
+        'soundcloud': 'SoundCloud',
+        'bandcamp': 'Bandcamp',
+        'tidal': 'Tidal',
+        'deezer': 'Deezer',
+        'amazon-music': 'Amazon Music',
+        'other': 'Music'
+    };
+    return names[platform] || 'Music';
+}
+
+// Global functions for media interactions
+window.openImageModal = function(imageUrl, imageTitle) {
+    // Create and show image modal
+    const modal = document.createElement('div');
+    modal.className = 'image-modal';
+    modal.innerHTML = `
+        <div class="image-modal-content">
+            <span class="image-modal-close">&times;</span>
+            <img src="${imageUrl}" alt="${imageTitle}">
+            <div class="image-modal-title">${imageTitle}</div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+    modal.style.display = 'block';
+
+    // Close modal events
+    modal.querySelector('.image-modal-close').onclick = () => {
+        document.body.removeChild(modal);
+    };
+
+    modal.onclick = (e) => {
+        if (e.target === modal) {
+            document.body.removeChild(modal);
+        }
+    };
+};
+
+window.playMusicPreview = function(platform, url, title) {
+    // Show a brief preview/loading animation
+    const playButtons = document.querySelectorAll('.play-button');
+    playButtons.forEach(btn => {
+        const icon = btn.querySelector('i');
+        if (icon) {
+            icon.className = 'fas fa-play';
+        }
+    });
+
+    // Find the clicked button and show loading
+    event.currentTarget.querySelector('.play-button i').className = 'fas fa-spinner fa-spin';
+
+    // Brief delay to show loading, then open the music platform
+    setTimeout(() => {
+        window.open(url, '_blank');
+        // Reset the icon
+        event.currentTarget.querySelector('.play-button i').className = 'fas fa-external-link-alt';
+    }, 500);
+};
 
 // Function to display error message
 function displayError(message) {

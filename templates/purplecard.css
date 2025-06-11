@@ -414,3 +414,218 @@
     color: #6d28d9;
     box-shadow: 0 8px 24px #a78bfa99;
 }
+
+/* Purple Card Media Styles */
+.purplecard-bio-main .media-section {
+    margin: 25px 0;
+    padding: 20px 0;
+    border-top: 1px solid rgba(124, 58, 237, 0.2);
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, rgba(167, 139, 250, 0.1) 100%);
+    border-radius: 16px;
+}
+
+.purplecard-bio-main .media-section:first-child {
+    border-top: none;
+    margin-top: 0;
+}
+
+.purplecard-bio-main .media-section-title {
+    color: #7c3aed;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+    justify-content: center;
+    font-family: 'Poppins', Arial, sans-serif;
+}
+
+.purplecard-bio-main .media-section-title i {
+    color: #a78bfa;
+    font-size: 1rem;
+}
+
+.purplecard-bio-main .media-grid {
+    display: grid;
+    gap: 15px;
+}
+
+.purplecard-bio-main .videos-grid {
+    grid-template-columns: 1fr;
+}
+
+.purplecard-bio-main .images-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+
+.purplecard-bio-main .music-grid {
+    grid-template-columns: 1fr;
+}
+
+.purplecard-bio-main .media-item {
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid #a78bfa;
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(167, 139, 250, 0.3);
+}
+
+.purplecard-bio-main .media-item:hover {
+    transform: translateY(-3px);
+    border-color: #7c3aed;
+    box-shadow: 0 8px 24px rgba(124, 58, 237, 0.4);
+}
+
+/* Video Items */
+.purplecard-bio-main .video-item {
+    padding: 15px;
+}
+
+.purplecard-bio-main .video-thumbnail {
+    width: 100%;
+    height: 180px;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 12px;
+}
+
+.purplecard-bio-main .video-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.purplecard-bio-main .video-play-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    background: #7c3aed;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(124, 58, 237, 0.3);
+}
+
+.purplecard-bio-main .video-play-overlay:hover {
+    background: #a78bfa;
+    transform: translate(-50%, -50%) scale(1.1);
+    box-shadow: 0 8px 24px rgba(167, 139, 250, 0.4);
+}
+
+/* Image Items */
+.purplecard-bio-main .image-item {
+    aspect-ratio: 1;
+}
+
+.purplecard-bio-main .image-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.purplecard-bio-main .image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.purplecard-bio-main .image-container:hover img {
+    transform: scale(1.05);
+}
+
+/* Music Items */
+.purplecard-bio-main .music-item {
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    cursor: pointer;
+}
+
+.purplecard-bio-main .music-platform-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: white;
+    background: #7c3aed;
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.2);
+}
+
+.purplecard-bio-main .music-info {
+    flex: 1;
+}
+
+.purplecard-bio-main .music-title {
+    color: #7c3aed;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+    font-family: 'Poppins', Arial, sans-serif;
+}
+
+.purplecard-bio-main .music-artist {
+    color: #6b7280;
+    font-size: 0.85rem;
+    margin: 0;
+    font-family: 'Poppins', Arial, sans-serif;
+}
+
+.purplecard-bio-main .play-button {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: #7c3aed;
+    border: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.2);
+}
+
+.purplecard-bio-main .play-button:hover {
+    background: #a78bfa;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(167, 139, 250, 0.3);
+}
+
+/* Media Info */
+.purplecard-bio-main .media-info {
+    padding: 12px 15px;
+}
+
+.purplecard-bio-main .media-title {
+    color: #7c3aed;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 0 0 6px 0;
+    font-family: 'Poppins', Arial, sans-serif;
+}
+
+.purplecard-bio-main .media-description {
+    color: #6b7280;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    margin: 0;
+    font-family: 'Poppins', Arial, sans-serif;
+}
