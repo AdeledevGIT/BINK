@@ -130,7 +130,6 @@ if (auth) {
             initializeMobileEnhancements();
             updatePreviewFrame(user.uid);
             initializeProfilePictureUpload();
-            initializePreviewControls();
 
             // Template highlighting code removed
         } else {
@@ -2256,28 +2255,7 @@ function initializeProfilePictureUpload() {
     }
 }
 
-// Enhanced Preview Controls
-function initializePreviewControls() {
-    const previewControls = document.querySelectorAll('.preview-control');
-    const previewFrameContainer = document.querySelector('.preview-frame-container');
 
-    previewControls.forEach(control => {
-        control.addEventListener('click', () => {
-            const device = control.getAttribute('data-device');
-
-            // Remove active class from all controls
-            previewControls.forEach(c => c.classList.remove('active'));
-            control.classList.add('active');
-
-            // Adjust preview frame container appearance
-            if (device === 'mobile') {
-                previewFrameContainer.classList.add('mobile-view');
-            } else {
-                previewFrameContainer.classList.remove('mobile-view');
-            }
-        });
-    });
-}
 
 // Template selection buttons (now just for preview)
 const templateButtons = document.querySelectorAll('.template-select-btn');
