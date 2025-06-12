@@ -52,6 +52,10 @@
                     <div class="step-number">5</div>
                     <div class="step-label">Template</div>
                 </div>
+                <div class="step" data-step="6">
+                    <div class="step-number">6</div>
+                    <div class="step-label">Preview</div>
+                </div>
             </div>
         </div>
 
@@ -203,6 +207,49 @@
                     <div class="templates-grid">
                         <div class="templates-scroll" id="templates-container">
                             <!-- Templates will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 6: Preview -->
+            <div class="step-content" id="step-6">
+                <div class="step-header">
+                    <h2>🎉 Your Bio Page is Ready!</h2>
+                    <p>Here's a preview of your new bio page</p>
+                </div>
+                <div class="preview-setup">
+                    <div class="preview-container">
+                        <div class="preview-frame-container">
+                            <iframe id="bio-preview-frame" class="bio-preview-frame" src="about:blank"></iframe>
+                        </div>
+                        <div class="preview-info">
+                            <div class="preview-stats">
+                                <div class="stat-item">
+                                    <div class="stat-number" id="links-count">0</div>
+                                    <div class="stat-label">Links Added</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-number" id="social-count">0</div>
+                                    <div class="stat-label">Social Accounts</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-number" id="media-count">0</div>
+                                    <div class="stat-label">Media Items</div>
+                                </div>
+                            </div>
+                            <div class="preview-actions">
+                                <button id="copy-bio-link" class="action-btn outline-btn">
+                                    <i class="fas fa-copy"></i> Copy Bio Link
+                                </button>
+                                <button id="share-bio-link" class="action-btn primary-btn">
+                                    <i class="fas fa-share"></i> Share Bio Link
+                                </button>
+                            </div>
+                            <div class="completion-message">
+                                <h3>🚀 You're all set!</h3>
+                                <p>Your bio page is live and ready to share. You can always edit it later from your dashboard.</p>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -2,7 +2,7 @@
 let currentUser = null;
 let currentUserData = null;
 let currentStep = 1;
-const totalSteps = 5;
+const totalSteps = 6;
 
 // DOM Elements
 const progressFill = document.getElementById('progressFill');
@@ -38,6 +38,7 @@ const mediaToggleBtn = document.getElementById('media-toggle-btn');
 const catalogToggleBtn = document.getElementById('catalog-toggle-btn');
 const mediaContentSection = document.getElementById('media-content-section');
 const catalogContentSection = document.getElementById('catalog-content-section');
+const mediaTypeButtons = document.querySelectorAll('.media-type-btn');
 
 // Template elements
 const templatesContainer = document.getElementById('templates-container');
@@ -143,7 +144,15 @@ function setupEventListeners() {
     // Media/Catalog toggle
     mediaToggleBtn.addEventListener('click', () => toggleMediaCatalog('media'));
     catalogToggleBtn.addEventListener('click', () => toggleMediaCatalog('catalog'));
-    
+
+    // Media type buttons
+    document.querySelectorAll('.media-type-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const mediaType = btn.getAttribute('data-type');
+            switchMediaType(mediaType);
+        });
+    });
+
     // Close modal when clicking outside
     window.addEventListener('click', (e) => {
         if (e.target === linkModal) {
@@ -214,15 +223,26 @@ function updateStepDisplay() {
     
     // Update navigation buttons
     prevButton.style.display = currentStep > 1 ? 'flex' : 'none';
-    
+
     if (currentStep === totalSteps) {
         nextButton.style.display = 'none';
         finishButton.style.display = 'flex';
-        skipButton.textContent = 'Skip & Finish';
+        skipButton.style.display = 'none'; // Hide skip on preview step
+        finishButton.textContent = 'Go to Dashboard';
+    } else if (currentStep === totalSteps - 1) {
+        nextButton.textContent = 'Preview & Finish';
+        skipButton.textContent = 'Skip & Preview';
     } else {
         nextButton.style.display = 'flex';
         finishButton.style.display = 'none';
+        skipButton.style.display = 'flex';
+        nextButton.textContent = 'Next';
         skipButton.textContent = 'Skip';
+    }
+
+    // Load preview if on preview step
+    if (currentStep === totalSteps) {
+        loadPreview();
     }
 }
 
@@ -240,6 +260,7 @@ function validateCurrentStep() {
         case 3: // Social - optional
         case 4: // Media - optional
         case 5: // Template - optional
+        case 6: // Preview - no validation needed
             return true;
         default:
             return true;
@@ -264,6 +285,9 @@ async function saveCurrentStepData() {
                 break;
             case 5: // Template
                 await saveTemplateSelection();
+                break;
+            case 6: // Preview
+                // No data to save on preview step
                 break;
         }
     } catch (error) {
@@ -487,6 +511,82 @@ function toggleMediaCatalog(section) {
     }
 }
 
+function switchMediaType(mediaType) {
+    // Update buttons
+    document.querySelectorAll('.media-type-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('data-type') === mediaType) {
+            btn.classList.add('active');
+        }
+    });
+
+    // Show appropriate content based on media type
+    const mediaPlaceholder = document.querySelector('.media-placeholder');
+    if (mediaPlaceholder) {
+        let icon, title, description;
+
+        switch(mediaType) {
+            case 'youtube':
+                icon = 'fas fa-play-circle';
+                title = 'No YouTube videos yet';
+                description = 'Add YouTube videos to showcase your content';
+                break;
+            case 'images':
+                icon = 'fas fa-images';
+                title = 'No pictures yet';
+                description = 'Upload pictures to create a gallery';
+                break;
+            case 'music':
+                icon = 'fas fa-music';
+                title = 'No music links yet';
+                description = 'Add music from Spotify, Apple Music, or other platforms';
+                break;
+        }
+
+        mediaPlaceholder.innerHTML = `
+            <i class="${icon}"></i>
+            <h4>${title}</h4>
+            <p>${description}</p>
+            <button class="action-btn primary-btn" onclick="addMediaContent('${mediaType}')">
+                <i class="fas fa-plus"></i> Add ${mediaType === 'youtube' ? 'Video' : mediaType === 'images' ? 'Picture' : 'Music'}
+            </button>
+        `;
+    }
+}
+
+// Add media content function
+function addMediaContent(type) {
+    // For now, show a simple prompt - in a full implementation, this would open appropriate modals
+    let content;
+
+    switch(type) {
+        case 'youtube':
+            content = prompt('Enter YouTube video URL:');
+            if (content && content.includes('youtube.com')) {
+                alert('YouTube video would be added here. (Demo mode)');
+            }
+            break;
+        case 'images':
+            // Trigger file input
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'image/*';
+            fileInput.onchange = () => {
+                if (fileInput.files[0]) {
+                    alert('Image would be uploaded here. (Demo mode)');
+                }
+            };
+            fileInput.click();
+            break;
+        case 'music':
+            content = prompt('Enter music platform URL (Spotify, Apple Music, etc.):');
+            if (content && (content.includes('spotify.com') || content.includes('music.apple.com') || content.includes('soundcloud.com'))) {
+                alert('Music link would be added here. (Demo mode)');
+            }
+            break;
+    }
+}
+
 // Template functions
 function loadTemplates() {
     const templates = [
@@ -562,21 +662,102 @@ async function saveTemplateSelection() {
     });
 }
 
+// Preview functionality
+async function loadPreview() {
+    try {
+        // Update stats
+        updatePreviewStats();
+
+        // Load bio page preview
+        const bioPreviewFrame = document.getElementById('bio-preview-frame');
+        if (bioPreviewFrame && currentUserData) {
+            const bioUrl = `bio.html?user=${currentUserData.username}`;
+            bioPreviewFrame.src = bioUrl;
+        }
+
+        // Setup preview action buttons
+        setupPreviewActions();
+
+    } catch (error) {
+        console.error('Error loading preview:', error);
+    }
+}
+
+function updatePreviewStats() {
+    // Count links
+    const linksCount = document.getElementById('links-count');
+    if (linksCount) {
+        linksCount.textContent = userLinks.length;
+    }
+
+    // Count social accounts
+    const socialCount = document.getElementById('social-count');
+    if (socialCount) {
+        const socialLinksCount = Object.keys(userSocialLinks).filter(key => userSocialLinks[key]).length;
+        socialCount.textContent = socialLinksCount;
+    }
+
+    // Count media items (placeholder for now)
+    const mediaCount = document.getElementById('media-count');
+    if (mediaCount) {
+        mediaCount.textContent = '0'; // Will be updated when media functionality is fully implemented
+    }
+}
+
+function setupPreviewActions() {
+    const copyBioLink = document.getElementById('copy-bio-link');
+    const shareBioLink = document.getElementById('share-bio-link');
+
+    if (copyBioLink) {
+        copyBioLink.addEventListener('click', () => {
+            const bioUrl = `${window.location.origin}/bio.html?user=${currentUserData.username}`;
+            navigator.clipboard.writeText(bioUrl).then(() => {
+                copyBioLink.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                setTimeout(() => {
+                    copyBioLink.innerHTML = '<i class="fas fa-copy"></i> Copy Bio Link';
+                }, 2000);
+            }).catch(() => {
+                alert('Failed to copy link to clipboard');
+            });
+        });
+    }
+
+    if (shareBioLink) {
+        shareBioLink.addEventListener('click', () => {
+            const bioUrl = `${window.location.origin}/bio.html?user=${currentUserData.username}`;
+            if (navigator.share) {
+                navigator.share({
+                    title: `${currentUserData.displayName || currentUserData.username}'s Bio`,
+                    text: 'Check out my bio page!',
+                    url: bioUrl
+                });
+            } else {
+                // Fallback to copying
+                navigator.clipboard.writeText(bioUrl).then(() => {
+                    alert('Bio link copied to clipboard!');
+                }).catch(() => {
+                    alert('Bio link: ' + bioUrl);
+                });
+            }
+        });
+    }
+}
+
 // Complete onboarding
 async function completeOnboarding() {
     try {
         // Save any remaining data
         await saveCurrentStepData();
-        
+
         // Mark onboarding as completed
         await db.collection('users').doc(currentUser.uid).update({
             onboardingCompleted: true,
             onboardingCompletedAt: firebase.firestore.FieldValue.serverTimestamp()
         });
-        
+
         // Redirect to dashboard
         window.location.href = 'dashboard.html';
-        
+
     } catch (error) {
         console.error('Error completing onboarding:', error);
         alert('Error completing setup. Please try again.');
