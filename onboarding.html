@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to BINK - Setup Your Profile</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/logo1.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/logo1.png">
+    <link rel="shortcut icon" href="/logo1.png">
+    <link rel="apple-touch-icon" href="/logo1.png">
+    <link rel="icon" type="image/png" href="https://adeledevgit.github.io/bink/logo1.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="onboarding.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="page-header">
+        <div class="logo-container-header">
+            <a href="dashboard.html">
+                <img src="./logo.png" alt="BINK Logo">
+            </a>
+        </div>
+        <div class="header-user-info">
+            <span id="welcome-message">Welcome to BINK!</span>
+        </div>
+    </header>
+
+    <div class="onboarding-container">
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-steps">
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Profile</div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Links</div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Social</div>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-number">4</div>
+                    <div class="step-label">Media</div>
+                </div>
+                <div class="step" data-step="5">
+                    <div class="step-number">5</div>
+                    <div class="step-label">Template</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step Content -->
+        <div class="step-content-container">
+            <!-- Step 1: Profile -->
+            <div class="step-content active" id="step-1">
+                <div class="step-header">
+                    <h2>Set Up Your Profile</h2>
+                    <p>Let's start with your basic profile information</p>
+                </div>
+                <div class="profile-setup">
+                    <div class="profile-image-section">
+                        <div class="profile-pic-container">
+                            <div class="profile-pic-preview" id="profilePicPreview">
+                                <img src="profile.png" alt="Profile" id="profilePicImage">
+                                <div class="profile-pic-overlay">
+                                    <i class="fas fa-camera"></i>
+                                    <span>Add Photo</span>
+                                </div>
+                            </div>
+                            <input type="file" id="profilePicUpload" accept="image/*" style="display: none;">
+                        </div>
+                    </div>
+                    <form id="profile-form" class="onboarding-form">
+                        <div class="form-group">
+                            <label for="displayName">Display Name *</label>
+                            <input type="text" id="displayName" name="displayName" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="bio">Bio</label>
+                            <textarea id="bio" name="bio" placeholder="Tell visitors about yourself..." rows="3"></textarea>
+                            <div class="char-counter">
+                                <span id="bio-char-count">0</span>/500 characters
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Your Unique Link</label>
+                            <div class="link-preview">
+                                <span class="link-prefix">bink.com/u/</span>
+                                <span id="username-display" class="username-value">username</span>
+                            </div>
+                        </div>
+                        <input type="hidden" id="profilePicUrl" name="profilePicUrl">
+                    </form>
+                </div>
+            </div>
+
+            <!-- Step 2: Links -->
+            <div class="step-content" id="step-2">
+                <div class="step-header">
+                    <h2>Add Your Important Links</h2>
+                    <p>Add links to your website, portfolio, or other important pages</p>
+                </div>
+                <div class="links-setup">
+                    <button id="add-link-button" class="action-btn primary-btn">
+                        <i class="fas fa-plus"></i> Add Your First Link
+                    </button>
+                    <div id="links-container" class="links-grid">
+                        <div class="links-placeholder">
+                            <i class="fas fa-link"></i>
+                            <h4>No links yet</h4>
+                            <p>Add your first link to get started</p>
+                        </div>
+                    </div>
+                    <div class="skip-note">
+                        <p><i class="fas fa-info-circle"></i> You can skip this step and add links later</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Social -->
+            <div class="step-content" id="step-3">
+                <div class="step-header">
+                    <h2>Connect Your Social Media</h2>
+                    <p>Link your social media accounts to your bio page</p>
+                </div>
+                <div class="social-setup">
+                    <div id="social-links-form" class="social-grid">
+                        <!-- Social media inputs will be generated here -->
+                    </div>
+                    <div class="skip-note">
+                        <p><i class="fas fa-info-circle"></i> You can skip this step and add social links later</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: Media & Catalog -->
+            <div class="step-content" id="step-4">
+                <div class="step-header">
+                    <h2>Add Media Content</h2>
+                    <p>Showcase your videos, pictures, music, or products</p>
+                </div>
+                <div class="media-setup">
+                    <div class="media-catalog-toggle">
+                        <button class="toggle-btn active" id="media-toggle-btn" data-section="media">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Media Content</span>
+                        </button>
+                        <button class="toggle-btn" id="catalog-toggle-btn" data-section="catalog">
+                            <i class="fas fa-store"></i>
+                            <span>Catalog</span>
+                        </button>
+                    </div>
+                    
+                    <div class="media-content-section" id="media-content-section">
+                        <div class="media-type-selector">
+                            <button class="media-type-btn active" data-type="youtube">
+                                <i class="fab fa-youtube"></i>
+                                <span>YouTube</span>
+                            </button>
+                            <button class="media-type-btn" data-type="images">
+                                <i class="fas fa-images"></i>
+                                <span>Pictures</span>
+                            </button>
+                            <button class="media-type-btn" data-type="music">
+                                <i class="fas fa-music"></i>
+                                <span>Music</span>
+                            </button>
+                        </div>
+                        <div class="media-placeholder">
+                            <i class="fas fa-play-circle"></i>
+                            <h4>No media content yet</h4>
+                            <p>Add videos, pictures, or music to showcase your content</p>
+                        </div>
+                    </div>
+
+                    <div class="catalog-content-section" id="catalog-content-section" style="display: none;">
+                        <div class="catalog-placeholder">
+                            <i class="fas fa-store"></i>
+                            <h4>No products yet</h4>
+                            <p>Add products to create your catalog</p>
+                        </div>
+                    </div>
+
+                    <div class="skip-note">
+                        <p><i class="fas fa-info-circle"></i> You can skip this step and add media content later</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5: Template -->
+            <div class="step-content" id="step-5">
+                <div class="step-header">
+                    <h2>Choose Your Template</h2>
+                    <p>Select a template that best represents your style</p>
+                </div>
+                <div class="template-setup">
+                    <div class="templates-grid">
+                        <div class="templates-scroll" id="templates-container">
+                            <!-- Templates will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="navigation-buttons">
+            <div class="nav-left">
+                <button id="prev-button" class="nav-btn secondary-btn" style="display: none;">
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+            </div>
+            <div class="nav-center">
+                <button id="skip-all-button" class="nav-btn outline-btn">
+                    <i class="fas fa-forward"></i> Skip All & Finish
+                </button>
+            </div>
+            <div class="nav-right">
+                <button id="skip-button" class="nav-btn outline-btn">
+                    Skip
+                </button>
+                <button id="next-button" class="nav-btn primary-btn">
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+                <button id="finish-button" class="nav-btn primary-btn" style="display: none;">
+                    Complete Setup <i class="fas fa-check"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Link Modal (reused from bio-editor) -->
+    <div id="link-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Add New Link</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <form id="link-form">
+                <div class="form-group">
+                    <label for="link-title">Link Title *</label>
+                    <input type="text" id="link-title" name="title" required placeholder="e.g., My Website">
+                </div>
+                <div class="form-group">
+                    <label for="link-url">URL *</label>
+                    <input type="url" id="link-url" name="url" required placeholder="https://example.com">
+                </div>
+                <div class="form-group">
+                    <label for="link-description">Description</label>
+                    <input type="text" id="link-description" name="description" placeholder="Brief description (optional)">
+                </div>
+                <div class="form-group">
+                    <label for="link-platform">Platform</label>
+                    <select id="link-platform" name="platform">
+                        <option value="website">Website</option>
+                        <option value="youtube">YouTube</option>
+                        <option value="instagram">Instagram</option>
+                        <option value="twitter">Twitter</option>
+                        <option value="linkedin">LinkedIn</option>
+                        <option value="github">GitHub</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" id="cancel-link-button">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="save-link-button">Save Link</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>
+
+    <script src="firebase-config.js"></script>
+    <script src="onboarding.js"></script>
+</body>
+</html>

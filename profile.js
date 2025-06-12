@@ -66,6 +66,13 @@ function loadUserProfile(userId) {
         if (doc.exists) {
             currentUserData = doc.data();
             console.log("Loaded user data:", currentUserData);
+
+            // Check if user has completed onboarding
+            if (!currentUserData.onboardingCompleted) {
+                window.location.href = 'onboarding.html';
+                return;
+            }
+
             // Populate the form
             usernameInput.value = currentUserData.username || '';
             usernameDisplay.textContent = currentUserData.username || '...';

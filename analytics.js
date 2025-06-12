@@ -90,6 +90,26 @@ if (auth) {
 
 // Load analytics data
 function loadAnalyticsData(userId) {
+    // First check if user has completed onboarding
+    db.collection('users').doc(userId).get().then((doc) => {
+        if (doc.exists) {
+            const userData = doc.data();
+            if (!userData.onboardingCompleted) {
+                window.location.href = 'onboarding.html';
+                return;
+            }
+            // Continue with analytics loading
+            loadAnalyticsDataInternal(userId);
+        } else {
+            showError("User data not found.");
+        }
+    }).catch((error) => {
+        console.error("Error checking user data:", error);
+        showError("Error loading user data.");
+    });
+}
+
+function loadAnalyticsDataInternal(userId) {
     // Show loading state
     showLoading();
 

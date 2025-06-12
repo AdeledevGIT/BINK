@@ -21,11 +21,23 @@ if (loginForm) {
         // --- Firebase Login ---
         if (auth) {
              auth.signInWithEmailAndPassword(email, password)
-                .then((userCredential) => {
+                .then(async (userCredential) => {
                     // Signed in
                     const user = userCredential.user;
                     console.log('Login successful:', user.uid);
-                    window.location.href = 'dashboard.html'; // Redirect to dashboard
+
+                    // Check if user has completed onboarding
+                    try {
+                        const userDoc = await db.collection('users').doc(user.uid).get();
+                        if (userDoc.exists && userDoc.data().onboardingCompleted) {
+                            window.location.href = 'dashboard.html';
+                        } else {
+                            window.location.href = 'onboarding.html';
+                        }
+                    } catch (error) {
+                        console.error('Error checking onboarding status:', error);
+                        window.location.href = 'dashboard.html'; // Fallback to dashboard
+                    }
                 })
                 .catch((error) => {
                     const errorCode = error.code;
@@ -134,11 +146,12 @@ if (signupForm) {
                                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                                     subscriptionTier: 'free', // Default tier
                                     uniqueLinkSlug: username, // Use username as initial slug
+                                    onboardingCompleted: false, // New users need to complete onboarding
                                     // Add other default fields if needed
                                 })
                                 .then(() => {
                                     console.log("User document created in Firestore");
-                                    window.location.href = 'dashboard.html'; // Redirect to dashboard
+                                    window.location.href = 'onboarding.html'; // Redirect to onboarding for new users
                                 })
                                 .catch((error) => {
                                     console.error("Error creating user document: ", error);

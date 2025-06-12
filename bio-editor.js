@@ -152,6 +152,12 @@ function loadUserProfile(userId) {
             window.currentUserData = currentUserData;
             console.log("Loaded user data:", currentUserData);
 
+            // Check if user has completed onboarding
+            if (!currentUserData.onboardingCompleted) {
+                window.location.href = 'onboarding.html';
+                return;
+            }
+
             // Populate the form
             usernameDisplay.textContent = currentUserData.username || '';
             displayNameInput.value = currentUserData.displayName || '';

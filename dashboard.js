@@ -72,6 +72,12 @@ async function initDashboard() {
             const userData = doc.data();
             userProfile = userData;
 
+            // Check if user has completed onboarding
+            if (!userData.onboardingCompleted) {
+                window.location.href = 'onboarding.html';
+                return;
+            }
+
             // Update welcome message
             if (welcomeMessage) {
                 welcomeMessage.textContent = `Welcome, ${userData.username || currentUser.email}!`;
