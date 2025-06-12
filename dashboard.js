@@ -1148,7 +1148,69 @@ function setupEventListeners() {
         }
     }
 
-    // Copy bio link
+    // Show custom share modal
+    function showShareModal(url, title) {
+        const modal = document.getElementById('shareModal');
+        const shareUrl = document.getElementById('shareUrl');
+        const shareTitle = document.getElementById('shareTitle');
+
+        shareUrl.textContent = url;
+        shareTitle.textContent = title;
+
+        modal.style.display = 'flex';
+
+        // Set up share buttons
+        setupShareButtons(url, title);
+    }
+
+    // Setup share buttons functionality
+    function setupShareButtons(url, title) {
+        const encodedUrl = encodeURIComponent(url);
+        const encodedTitle = encodeURIComponent(title);
+        const encodedText = encodeURIComponent('Check out my bio page!');
+
+        // Social media share URLs
+        const shareUrls = {
+            twitter: `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`,
+            facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+            linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
+            whatsapp: `https://wa.me/?text=${encodedText}%20${encodedUrl}`,
+            telegram: `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`,
+            email: `mailto:?subject=${encodedTitle}&body=${encodedText}%20${encodedUrl}`
+        };
+
+        // Add click handlers to share buttons
+        Object.keys(shareUrls).forEach(platform => {
+            const button = document.getElementById(`share-${platform}`);
+            if (button) {
+                button.onclick = () => {
+                    window.open(shareUrls[platform], '_blank', 'width=600,height=400');
+                    document.getElementById('shareModal').style.display = 'none';
+                };
+            }
+        });
+
+        // Copy link button
+        const copyButton = document.getElementById('share-copy');
+        if (copyButton) {
+            copyButton.onclick = () => {
+                copyTextToClipboard(url)
+                    .then(() => {
+                        copyButton.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                        setTimeout(() => {
+                            copyButton.innerHTML = '<i class="fas fa-copy"></i> Copy Link';
+                        }, 2000);
+                        showNotification('success', 'Link copied to clipboard!');
+                    })
+                    .catch(err => {
+                        console.error('Could not copy text: ', err);
+                        showNotification('error', 'Could not copy link. Please try again.');
+                    });
+            };
+        }
+    }
+
+    // Share bio link
     copyBioLinkBtn.addEventListener('click', async () => {
         try {
             // Get the user's data to access username
@@ -1162,46 +1224,63 @@ function setupEventListeners() {
             // Create URL without template parameter
             // This way the link will always show the user's current template
             const bioUrl = new URL(`bio.html?u=${userData.username}`, window.location.href).href;
-            console.log("Copying URL:", bioUrl); // Debug log
+            console.log("Sharing URL:", bioUrl); // Debug log
 
-            // Use the enhanced copy function
-            copyTextToClipboard(bioUrl)
-                .then(() => {
-                    // Show success message with visual feedback
-                    copyBioLinkBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+            // Try to use native Web Share API first
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: `${userData.displayName || userData.username}'s Bio`,
+                        text: `Check out my bio page!`,
+                        url: bioUrl
+                    });
+
+                    // Show success message
+                    copyBioLinkBtn.innerHTML = '<i class="fas fa-check"></i> Shared!';
                     setTimeout(() => {
-                        copyBioLinkBtn.innerHTML = '<i class="fas fa-copy"></i> Copy Bio Link';
+                        copyBioLinkBtn.innerHTML = '<i class="fas fa-share"></i> Share Bio Link';
                     }, 2000);
 
-                    // Use the improved notification system
-                    showNotification('success', 'Bio link copied to clipboard!');
-                })
-                .catch(err => {
-                    console.error('Could not copy text: ', err);
-                    showNotification('error', 'Could not copy text. Please try again.');
-                });
+                    showNotification('success', 'Bio link shared successfully!');
+                    return;
+                } catch (shareError) {
+                    console.log('Native share cancelled or failed:', shareError);
+                    // Fall through to custom share options
+                }
+            }
+
+            // Fallback: Show custom share modal
+            showShareModal(bioUrl, userData.displayName || userData.username);
+
         } catch (error) {
             console.error('Error getting user data:', error);
             // Fallback to ID-based URL
             const bioLink = new URL(`bio.html?id=${currentUser.uid}`, window.location.href).href;
             console.log("Fallback URL:", bioLink); // Debug log
 
-            // Use the enhanced copy function for the fallback URL too
-            copyTextToClipboard(bioLink)
-                .then(() => {
-                    // Show success message with visual feedback
-                    copyBioLinkBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+            // Try native share with fallback URL
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: 'My Bio Page',
+                        text: 'Check out my bio page!',
+                        url: bioLink
+                    });
+
+                    copyBioLinkBtn.innerHTML = '<i class="fas fa-check"></i> Shared!';
                     setTimeout(() => {
-                        copyBioLinkBtn.innerHTML = '<i class="fas fa-copy"></i> Copy Bio Link';
+                        copyBioLinkBtn.innerHTML = '<i class="fas fa-share"></i> Share Bio Link';
                     }, 2000);
 
-                    // Use the improved notification system
-                    showNotification('success', 'Bio link copied to clipboard!');
-                })
-                .catch(err => {
-                    console.error('Could not copy fallback text: ', err);
-                    showNotification('error', 'Could not copy text. Please try again.');
-                });
+                    showNotification('success', 'Bio link shared successfully!');
+                    return;
+                } catch (shareError) {
+                    console.log('Native share cancelled or failed:', shareError);
+                }
+            }
+
+            // Fallback: Show custom share modal with fallback URL
+            showShareModal(bioLink, 'My Bio Page');
         }
     });
 

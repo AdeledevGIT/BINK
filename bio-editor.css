@@ -2601,17 +2601,25 @@
 
     .nav-tab {
         min-width: 80px;
-        padding: 10px 8px;
-        font-size: 0.8rem;
+        padding: 8px 6px;
+        font-size: 0.75rem;
         flex-shrink: 0;
+        flex-direction: column;
+        gap: 4px;
+        min-height: 55px;
+        justify-content: center;
     }
 
     .nav-tab span {
-        display: none;
+        display: block;
+        font-size: 0.7rem;
+        line-height: 1.1;
+        text-align: center;
     }
 
     .nav-tab i {
         font-size: 1.2rem;
+        margin-bottom: 2px;
     }
 
     /* Media-Catalog Toggle for tablets */
@@ -2622,17 +2630,24 @@
     }
 
     .toggle-btn {
-        padding: 10px 15px;
-        font-size: 0.85rem;
-        gap: 6px;
+        padding: 8px 12px;
+        font-size: 0.75rem;
+        gap: 4px;
+        flex-direction: column;
+        min-height: 55px;
+        justify-content: center;
     }
 
     .toggle-btn span {
-        display: none;
+        display: block;
+        font-size: 0.7rem;
+        line-height: 1.1;
+        text-align: center;
     }
 
     .toggle-btn i {
         font-size: 1.1rem;
+        margin-bottom: 2px;
     }
 
     /* Form improvements */
@@ -2692,12 +2707,24 @@
 
     .nav-tab {
         min-width: 60px;
-        padding: 8px 4px;
-        font-size: 0.75rem;
+        padding: 6px 3px;
+        font-size: 0.7rem;
+        flex-direction: column;
+        gap: 3px;
+        min-height: 50px;
+        justify-content: center;
+    }
+
+    .nav-tab span {
+        display: block;
+        font-size: 0.65rem;
+        line-height: 1;
+        text-align: center;
     }
 
     .nav-tab i {
         font-size: 1rem;
+        margin-bottom: 1px;
     }
 
     /* Media-Catalog Toggle for mobile */
@@ -2708,14 +2735,25 @@
     }
 
     .toggle-btn {
-        padding: 8px 10px;
-        font-size: 0.8rem;
-        gap: 4px;
+        padding: 6px 8px;
+        font-size: 0.7rem;
+        gap: 3px;
         border-radius: 6px;
+        flex-direction: column;
+        min-height: 50px;
+        justify-content: center;
+    }
+
+    .toggle-btn span {
+        display: block;
+        font-size: 0.65rem;
+        line-height: 1;
+        text-align: center;
     }
 
     .toggle-btn i {
         font-size: 1rem;
+        margin-bottom: 1px;
     }
 
     /* Tab headers */
@@ -2796,11 +2834,23 @@
 
     .nav-tab {
         min-width: 50px;
-        padding: 6px 2px;
+        padding: 5px 2px;
+        flex-direction: column;
+        gap: 2px;
+        min-height: 45px;
+        justify-content: center;
+    }
+
+    .nav-tab span {
+        display: block;
+        font-size: 0.6rem;
+        line-height: 1;
+        text-align: center;
     }
 
     .nav-tab i {
         font-size: 0.9rem;
+        margin-bottom: 1px;
     }
 
     /* Ultra-compact toggle buttons */
@@ -2811,14 +2861,25 @@
     }
 
     .toggle-btn {
-        padding: 6px 8px;
-        font-size: 0.75rem;
-        gap: 3px;
+        padding: 5px 6px;
+        font-size: 0.65rem;
+        gap: 2px;
         border-radius: 5px;
+        flex-direction: column;
+        min-height: 45px;
+        justify-content: center;
+    }
+
+    .toggle-btn span {
+        display: block;
+        font-size: 0.6rem;
+        line-height: 1;
+        text-align: center;
     }
 
     .toggle-btn i {
         font-size: 0.9rem;
+        margin-bottom: 1px;
     }
 
     /* Compact forms */
