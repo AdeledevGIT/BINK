@@ -182,44 +182,8 @@ window.BINK.templates.renderMediaContent = function(media) {
                        (media.music && media.music.length > 0);
 
     if (!hasAnyMedia) {
-        // Provide sample media data for preview
-        media = {
-            youtube: [{
-                id: 'sample-1',
-                title: 'Sample Video',
-                url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-                description: 'This is a sample video to showcase the media feature'
-            }],
-            images: [{
-                id: 'sample-2',
-                title: 'Sample Image',
-                url: 'https://via.placeholder.com/400x300/6366f1/ffffff?text=Sample+Image',
-                description: 'This is a sample image to showcase the gallery feature'
-            }],
-            music: [
-                {
-                    id: 'sample-3',
-                    title: 'Sample Song',
-                    artist: 'Sample Artist',
-                    platform: 'spotify',
-                    url: '#'
-                },
-                {
-                    id: 'sample-4',
-                    title: 'Another Track',
-                    artist: 'Demo Artist',
-                    platform: 'apple-music',
-                    url: '#'
-                },
-                {
-                    id: 'sample-5',
-                    title: 'AudioMack Demo',
-                    artist: 'AudioMack Artist',
-                    platform: 'audiomack',
-                    url: '#'
-                }
-            ]
-        };
+        // Don't show any media sections if user hasn't added content
+        return '';
     }
 
     let mediaHTML = '';
@@ -378,24 +342,13 @@ window.BINK.templates.openImageModal = function(imageUrl, imageTitle) {
 };
 
 window.BINK.templates.playMusicPreview = function(platform, url, title) {
-    // Show a brief preview/loading animation
-    const playButtons = document.querySelectorAll('.play-button');
-    playButtons.forEach(btn => {
-        const icon = btn.querySelector('i');
-        if (icon) {
-            icon.className = 'fas fa-play';
-        }
-    });
-
-    // Find the clicked button and show loading
-    event.currentTarget.querySelector('.play-button i').className = 'fas fa-spinner fa-spin';
-
-    // Brief delay to show loading, then open the music platform
-    setTimeout(() => {
+    // Use the same embedded music player functionality from bio.js
+    if (window.playMusicPreview) {
+        window.playMusicPreview(platform, url, title);
+    } else {
+        // Fallback to opening external link if embedded player not available
         window.open(url, '_blank');
-        // Reset the icon
-        event.currentTarget.querySelector('.play-button i').className = 'fas fa-external-link-alt';
-    }, 500);
+    }
 };
 
 // Classic Template (fallback, no extra CSS)

@@ -126,6 +126,8 @@ if (auth) {
             loadUserCatalog(user.uid);
             initializeMediaTab();
             initializeCatalogTab();
+            initializeMediaCatalogToggle();
+            initializeMobileEnhancements();
             updatePreviewFrame(user.uid);
             initializeProfilePictureUpload();
             initializePreviewControls();
@@ -2840,7 +2842,207 @@ function deleteProductFromFirebase(productId) {
     });
 }
 
+// Initialize Media-Catalog Toggle Functionality
+function initializeMediaCatalogToggle() {
+    const mediaToggleBtn = document.getElementById('media-toggle-btn');
+    const catalogToggleBtn = document.getElementById('catalog-toggle-btn');
+    const mediaContentSection = document.getElementById('media-content-section');
+    const catalogContentSection = document.getElementById('catalog-content-section');
+    const mediaHeaderContent = document.getElementById('media-header-content');
+    const catalogHeaderContent = document.getElementById('catalog-header-content');
 
+    if (!mediaToggleBtn || !catalogToggleBtn || !mediaContentSection || !catalogContentSection) {
+        console.error('Media-Catalog toggle elements not found');
+        return;
+    }
+
+    // Media toggle button click handler
+    mediaToggleBtn.addEventListener('click', () => {
+        // Update button states
+        mediaToggleBtn.classList.add('active');
+        catalogToggleBtn.classList.remove('active');
+
+        // Show/hide content sections
+        mediaContentSection.style.display = 'block';
+        catalogContentSection.style.display = 'none';
+
+        // Show/hide header content
+        if (mediaHeaderContent) mediaHeaderContent.style.display = 'block';
+        if (catalogHeaderContent) catalogHeaderContent.style.display = 'none';
+    });
+
+    // Catalog toggle button click handler
+    catalogToggleBtn.addEventListener('click', () => {
+        // Update button states
+        catalogToggleBtn.classList.add('active');
+        mediaToggleBtn.classList.remove('active');
+
+        // Show/hide content sections
+        catalogContentSection.style.display = 'block';
+        mediaContentSection.style.display = 'none';
+
+        // Show/hide header content
+        if (catalogHeaderContent) catalogHeaderContent.style.display = 'block';
+        if (mediaHeaderContent) mediaHeaderContent.style.display = 'none';
+    });
+}
+
+// Initialize Mobile Enhancements
+function initializeMobileEnhancements() {
+    // Add touch-friendly interactions
+    addTouchSupport();
+
+    // Improve navigation for mobile
+    improveMobileNavigation();
+
+    // Add mobile-specific event listeners
+    addMobileEventListeners();
+}
+
+// Add touch support for better mobile interaction
+function addTouchSupport() {
+    // Add touch class to body for CSS targeting
+    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+        document.body.classList.add('touch-device');
+    }
+
+    // Improve button tap targets
+    const buttons = document.querySelectorAll('button, .nav-tab, .toggle-btn');
+    buttons.forEach(button => {
+        button.style.minHeight = '44px'; // iOS recommended minimum
+        button.style.minWidth = '44px';
+    });
+}
+
+// Improve mobile navigation
+function improveMobileNavigation() {
+    const navTabs = document.querySelector('.nav-tabs');
+    if (!navTabs) return;
+
+    // Add scroll indicators for mobile nav
+    const scrollIndicator = document.createElement('div');
+    scrollIndicator.className = 'nav-scroll-indicator';
+    scrollIndicator.innerHTML = '<i class="fas fa-chevron-right"></i>';
+    navTabs.parentNode.appendChild(scrollIndicator);
+
+    // Show/hide scroll indicator based on scroll position
+    navTabs.addEventListener('scroll', () => {
+        const isScrollable = navTabs.scrollWidth > navTabs.clientWidth;
+        const isAtEnd = navTabs.scrollLeft >= (navTabs.scrollWidth - navTabs.clientWidth - 10);
+
+        if (isScrollable && !isAtEnd) {
+            scrollIndicator.style.display = 'block';
+        } else {
+            scrollIndicator.style.display = 'none';
+        }
+    });
+
+    // Initial check
+    setTimeout(() => {
+        navTabs.dispatchEvent(new Event('scroll'));
+    }, 100);
+}
+
+// Add mobile-specific event listeners
+function addMobileEventListeners() {
+    // Prevent zoom on double tap for form inputs
+    const inputs = document.querySelectorAll('input, select, textarea');
+    inputs.forEach(input => {
+        input.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            input.focus();
+        });
+    });
+
+    // Add swipe support for toggle buttons
+    addSwipeSupport();
+
+    // Improve modal handling on mobile
+    improveMobileModals();
+}
+
+// Add swipe support for media-catalog toggle
+function addSwipeSupport() {
+    const mediaContentSection = document.getElementById('media-content-section');
+    const catalogContentSection = document.getElementById('catalog-content-section');
+
+    if (!mediaContentSection || !catalogContentSection) return;
+
+    let startX = 0;
+    let startY = 0;
+
+    const handleTouchStart = (e) => {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+    };
+
+    const handleTouchEnd = (e) => {
+        if (!startX || !startY) return;
+
+        const endX = e.changedTouches[0].clientX;
+        const endY = e.changedTouches[0].clientY;
+
+        const deltaX = endX - startX;
+        const deltaY = endY - startY;
+
+        // Only trigger if horizontal swipe is more significant than vertical
+        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+            const mediaToggleBtn = document.getElementById('media-toggle-btn');
+            const catalogToggleBtn = document.getElementById('catalog-toggle-btn');
+
+            if (deltaX > 0) {
+                // Swipe right - go to media
+                if (mediaToggleBtn && !mediaToggleBtn.classList.contains('active')) {
+                    mediaToggleBtn.click();
+                }
+            } else {
+                // Swipe left - go to catalog
+                if (catalogToggleBtn && !catalogToggleBtn.classList.contains('active')) {
+                    catalogToggleBtn.click();
+                }
+            }
+        }
+
+        startX = 0;
+        startY = 0;
+    };
+
+    // Add touch events to both sections
+    [mediaContentSection, catalogContentSection].forEach(section => {
+        section.addEventListener('touchstart', handleTouchStart, { passive: true });
+        section.addEventListener('touchend', handleTouchEnd, { passive: true });
+    });
+}
+
+// Improve modal handling on mobile
+function improveMobileModals() {
+    const modals = document.querySelectorAll('.modal');
+
+    modals.forEach(modal => {
+        // Prevent background scroll when modal is open
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.attributeName === 'style') {
+                    const isVisible = modal.style.display === 'block';
+                    if (isVisible) {
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        document.body.style.overflow = '';
+                    }
+                }
+            });
+        });
+
+        observer.observe(modal, { attributes: true });
+
+        // Close modal on background tap (mobile-friendly)
+        modal.addEventListener('touchstart', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    });
+}
 
 
 

@@ -54,11 +54,7 @@
                     </button>
                     <button class="nav-tab" data-tab="media">
                         <i class="fas fa-photo-video"></i>
-                        <span>Media</span>
-                    </button>
-                    <button class="nav-tab" data-tab="catalog">
-                        <i class="fas fa-shopping-bag"></i>
-                        <span>Catalog</span>
+                        <span>Media & Catalog</span>
                     </button>
                 </div>
             </div>
@@ -414,26 +410,47 @@
                 <!-- Media Tab -->
                 <div class="tab-content" id="media">
                     <div class="tab-header">
-                        <h3>Media Content</h3>
-                        <p>Add YouTube videos, pictures, and music from all platforms</p>
-                    </div>
-
-                    <div class="media-manager">
-                        <!-- Media Type Selector -->
-                        <div class="media-type-selector">
-                            <button class="media-type-btn active" data-type="youtube">
-                                <i class="fab fa-youtube"></i>
-                                <span>YouTube Videos</span>
+                        <div class="media-catalog-toggle">
+                            <button class="toggle-btn active" id="media-toggle-btn" data-section="media">
+                                <i class="fas fa-photo-video"></i>
+                                <span>Media Content</span>
                             </button>
-                            <button class="media-type-btn" data-type="images">
-                                <i class="fas fa-images"></i>
-                                <span>Pictures</span>
-                            </button>
-                            <button class="media-type-btn" data-type="music">
-                                <i class="fas fa-music"></i>
-                                <span>Music</span>
+                            <button class="toggle-btn" id="catalog-toggle-btn" data-section="catalog">
+                                <i class="fas fa-shopping-bag"></i>
+                                <span>Catalog</span>
                             </button>
                         </div>
+                        <div id="media-header-content">
+                            <h3>Media Content</h3>
+                            <p>Add YouTube videos, pictures, and music from all platforms</p>
+                        </div>
+                        <div id="catalog-header-content" style="display: none;">
+                            <h3>Product Catalog</h3>
+                            <p>Showcase your products with buy buttons that link to your store</p>
+                            <button id="add-product-button" class="action-btn primary-btn">
+                                <i class="fas fa-plus"></i> Add New Product
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Media Content Section -->
+                    <div class="media-content-section" id="media-content-section">
+                        <div class="media-manager">
+                            <!-- Media Type Selector -->
+                            <div class="media-type-selector">
+                                <button class="media-type-btn active" data-type="youtube">
+                                    <i class="fab fa-youtube"></i>
+                                    <span>YouTube Videos</span>
+                                </button>
+                                <button class="media-type-btn" data-type="images">
+                                    <i class="fas fa-images"></i>
+                                    <span>Pictures</span>
+                                </button>
+                                <button class="media-type-btn" data-type="music">
+                                    <i class="fas fa-music"></i>
+                                    <span>Music</span>
+                                </button>
+                            </div>
 
                         <!-- YouTube Videos Section -->
                         <div class="media-section active" id="youtube-section">
@@ -486,39 +503,32 @@
                             </div>
                         </div>
 
-                        <div class="media-actions">
-                            <button type="button" id="save-media-button" class="action-btn primary-btn">
-                                <i class="fas fa-save"></i> Save Media Content
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Catalog Tab -->
-                <div class="tab-content" id="catalog">
-                    <div class="tab-header">
-                        <h3>Product Catalog</h3>
-                        <p>Showcase your products with buy buttons that link to your store</p>
-                        <button id="add-product-button" class="action-btn primary-btn">
-                            <i class="fas fa-plus"></i> Add New Product
-                        </button>
-                    </div>
-                    <div class="catalog-manager">
-                        <div id="products-container" class="products-grid">
-                            <div class="products-placeholder">
-                                <i class="fas fa-shopping-bag"></i>
-                                <h4>No products yet</h4>
-                                <p>Add your first product to get started</p>
+                            <div class="media-actions">
+                                <button type="button" id="save-media-button" class="action-btn primary-btn">
+                                    <i class="fas fa-save"></i> Save Media Content
+                                </button>
                             </div>
                         </div>
-                        <div class="catalog-actions">
-                            <button type="button" id="save-catalog-button" class="action-btn primary-btn">
-                                <i class="fas fa-save"></i> Save Catalog
-                            </button>
+                    </div>
+
+                    <!-- Catalog Content Section -->
+                    <div class="catalog-content-section" id="catalog-content-section" style="display: none;">
+                        <div class="catalog-manager">
+                            <div id="products-container" class="products-grid">
+                                <div class="products-placeholder">
+                                    <i class="fas fa-shopping-bag"></i>
+                                    <h4>No products yet</h4>
+                                    <p>Add your first product to get started</p>
+                                </div>
+                            </div>
+                            <div class="catalog-actions">
+                                <button type="button" id="save-catalog-button" class="action-btn primary-btn">
+                                    <i class="fas fa-save"></i> Save Catalog
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-
 
             </div>
 
@@ -754,16 +764,23 @@
                     <textarea id="product-description" name="product-description" placeholder="Brief description of your product..." rows="3"></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="product-price">Price</label>
-                    <div class="price-input-container">
-                        <select id="product-currency" name="product-currency" class="currency-select">
-                            <option value="$">$</option>
-                            <option value="₦">₦</option>
-                            <option value="€">€</option>
-                            <option value="£">£</option>
-                        </select>
-                        <input type="text" id="product-price" name="product-price" placeholder="e.g., 29.99 or Free">
-                    </div>
+                    <label for="product-currency">Currency</label>
+                    <select id="product-currency" name="product-currency">
+                        <option value="$">$ - US Dollar</option>
+                        <option value="₦">₦ - Nigerian Naira</option>
+                        <option value="€">€ - Euro</option>
+                        <option value="£">£ - British Pound</option>
+                        <option value="¥">¥ - Japanese Yen</option>
+                        <option value="₹">₹ - Indian Rupee</option>
+                        <option value="₽">₽ - Russian Ruble</option>
+                        <option value="¢">¢ - Cent</option>
+                        <option value="₩">₩ - South Korean Won</option>
+                        <option value="₪">₪ - Israeli Shekel</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="product-price">Price Amount</label>
+                    <input type="text" id="product-price" name="product-price" placeholder="e.g., 29.99 or Free">
                 </div>
                 <div class="form-group">
                     <label for="product-image-upload">Product Image</label>

@@ -587,44 +587,9 @@ function renderMediaContent(media, container) {
                        (media.music && media.music.length > 0);
 
     if (!hasAnyMedia) {
-        // Provide sample media data for preview
-        media = {
-            youtube: [{
-                id: 'sample-1',
-                title: 'Sample Video',
-                url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-                description: 'This is a sample video to showcase the media feature'
-            }],
-            images: [{
-                id: 'sample-2',
-                title: 'Sample Image',
-                url: 'https://via.placeholder.com/400x300/6366f1/ffffff?text=Sample+Image',
-                description: 'This is a sample image to showcase the gallery feature'
-            }],
-            music: [
-                {
-                    id: 'sample-3',
-                    title: 'Sample Song',
-                    artist: 'Sample Artist',
-                    platform: 'spotify',
-                    url: '#'
-                },
-                {
-                    id: 'sample-4',
-                    title: 'Another Track',
-                    artist: 'Demo Artist',
-                    platform: 'apple-music',
-                    url: '#'
-                },
-                {
-                    id: 'sample-5',
-                    title: 'AudioMack Demo',
-                    artist: 'AudioMack Artist',
-                    platform: 'audiomack',
-                    url: '#'
-                }
-            ]
-        };
+        // Don't show any media sections if user hasn't added content
+        container.innerHTML = '';
+        return;
     }
 
     let mediaHTML = '';
@@ -783,24 +748,187 @@ window.openImageModal = function(imageUrl, imageTitle) {
 };
 
 window.playMusicPreview = function(platform, url, title) {
-    // Show a brief preview/loading animation
-    const playButtons = document.querySelectorAll('.play-button');
-    playButtons.forEach(btn => {
-        const icon = btn.querySelector('i');
-        if (icon) {
-            icon.className = 'fas fa-play';
+    // Create embedded music player instead of opening external link
+    createEmbeddedMusicPlayer(platform, url, title, event.currentTarget);
+};
+
+function createEmbeddedMusicPlayer(platform, url, title, clickedElement) {
+    // Close any existing music player
+    closeExistingMusicPlayer();
+
+    // Show loading state
+    const playButton = clickedElement.querySelector('.play-button i');
+    const originalIcon = playButton.className;
+    playButton.className = 'fas fa-spinner fa-spin';
+
+    // Get embed URL based on platform
+    const embedUrl = getEmbedUrl(platform, url);
+
+    if (!embedUrl) {
+        // If no embed URL available, fall back to opening external link
+        setTimeout(() => {
+            window.open(url, '_blank');
+            playButton.className = 'fas fa-external-link-alt';
+        }, 500);
+        return;
+    }
+
+    // Create music player modal
+    const playerModal = document.createElement('div');
+    playerModal.className = 'music-player-modal';
+    playerModal.innerHTML = `
+        <div class="music-player-content">
+            <div class="music-player-header">
+                <h3>${title}</h3>
+                <button class="close-music-player" onclick="closeMusicPlayer()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="music-player-body">
+                <div class="music-loading" id="music-loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Loading music player...</p>
+                </div>
+                <iframe
+                    src="${embedUrl}"
+                    width="100%"
+                    height="152"
+                    frameborder="0"
+                    allowtransparency="true"
+                    allow="encrypted-media"
+                    onload="hideMusicLoading()"
+                    onerror="showMusicError()">
+                </iframe>
+            </div>
+            <div class="music-player-footer">
+                <button class="open-external-btn" onclick="window.open('${url}', '_blank')">
+                    <i class="fas fa-external-link-alt"></i>
+                    Open in ${getPlatformDisplayName(platform)}
+                </button>
+            </div>
+        </div>
+    `;
+
+    // Add to page
+    document.body.appendChild(playerModal);
+
+    // Reset play button icon
+    setTimeout(() => {
+        playButton.className = 'fas fa-pause';
+    }, 500);
+
+    // Add click outside to close
+    playerModal.addEventListener('click', (e) => {
+        if (e.target === playerModal) {
+            closeMusicPlayer();
         }
     });
+}
 
-    // Find the clicked button and show loading
-    event.currentTarget.querySelector('.play-button i').className = 'fas fa-spinner fa-spin';
+function getEmbedUrl(platform, url) {
+    switch (platform) {
+        case 'spotify':
+            // Convert Spotify URL to embed URL
+            if (url.includes('spotify.com/track/')) {
+                const trackId = url.split('/track/')[1].split('?')[0];
+                return `https://open.spotify.com/embed/track/${trackId}`;
+            } else if (url.includes('spotify.com/album/')) {
+                const albumId = url.split('/album/')[1].split('?')[0];
+                return `https://open.spotify.com/embed/album/${albumId}`;
+            } else if (url.includes('spotify.com/playlist/')) {
+                const playlistId = url.split('/playlist/')[1].split('?')[0];
+                return `https://open.spotify.com/embed/playlist/${playlistId}`;
+            }
+            break;
 
-    // Brief delay to show loading, then open the music platform
-    setTimeout(() => {
-        window.open(url, '_blank');
-        // Reset the icon
-        event.currentTarget.querySelector('.play-button i').className = 'fas fa-external-link-alt';
-    }, 500);
+        case 'soundcloud':
+            // SoundCloud embed
+            return `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true`;
+
+        case 'youtube-music':
+        case 'youtube':
+            // YouTube embed
+            const videoId = getYouTubeVideoId(url);
+            if (videoId) {
+                return `https://www.youtube.com/embed/${videoId}`;
+            }
+            break;
+
+        case 'bandcamp':
+            // Bandcamp embed (requires specific embed URL from Bandcamp)
+            if (url.includes('/track/')) {
+                return `${url.replace('/track/', '/EmbeddedPlayer/track=')}`;
+            } else if (url.includes('/album/')) {
+                return `${url.replace('/album/', '/EmbeddedPlayer/album=')}`;
+            }
+            break;
+
+        case 'apple-music':
+            // Apple Music embed (limited support)
+            if (url.includes('music.apple.com')) {
+                return url.replace('music.apple.com', 'embed.music.apple.com');
+            }
+            break;
+
+        case 'audiomack':
+            // AudioMack embed
+            if (url.includes('audiomack.com/song/')) {
+                return url.replace('audiomack.com/song/', 'audiomack.com/embed/song/');
+            }
+            break;
+
+        case 'tidal':
+            // Tidal embed (limited support)
+            if (url.includes('tidal.com/track/')) {
+                const trackId = url.split('/track/')[1].split('?')[0];
+                return `https://embed.tidal.com/tracks/${trackId}`;
+            }
+            break;
+
+        default:
+            // For other platforms, return null to fall back to external link
+            return null;
+    }
+
+    return null;
+}
+
+function closeExistingMusicPlayer() {
+    const existingPlayer = document.querySelector('.music-player-modal');
+    if (existingPlayer) {
+        existingPlayer.remove();
+    }
+
+    // Reset all play buttons
+    const playButtons = document.querySelectorAll('.play-button i');
+    playButtons.forEach(btn => {
+        if (btn.className.includes('pause') || btn.className.includes('spinner')) {
+            btn.className = 'fas fa-play';
+        }
+    });
+}
+
+window.closeMusicPlayer = function() {
+    closeExistingMusicPlayer();
+};
+
+// Helper functions for music player loading states
+window.hideMusicLoading = function() {
+    const loadingElement = document.getElementById('music-loading');
+    if (loadingElement) {
+        loadingElement.style.display = 'none';
+    }
+};
+
+window.showMusicError = function() {
+    const loadingElement = document.getElementById('music-loading');
+    if (loadingElement) {
+        loadingElement.innerHTML = `
+            <i class="fas fa-exclamation-triangle"></i>
+            <p>Unable to load music player</p>
+            <small>Try opening in the external app instead</small>
+        `;
+    }
 };
 
 // Function to display error message

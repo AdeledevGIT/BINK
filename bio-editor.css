@@ -2371,6 +2371,7 @@
 
 .product-price {
     font-size: 0.9rem;
+    width: 30px;
     font-weight: 700;
     color: var(--primary-color);
     margin: 0 0 8px 0;
@@ -2450,40 +2451,554 @@
 /* Price Input Container */
 .price-input-container {
     display: flex;
-    gap: 10px;
-    width: 70px;
+    gap: 8px;
     align-items: center;
-}
-
-.currency-select {
-    padding: 12px 8px;
-    border: 2px solid var(--border-color);
-    border-radius: 8px;
-    background: var(--card-background);
-    color: var(--text-color);
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-    width: 10px;
-    flex-shrink: 0;
-}
-
-.currency-select:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.1);
 }
 
 .price-input-container input {
     flex: 1;
     margin: 0;
+    min-width: 0;
 }
 
-/* Responsive Design for Catalog */
+/* Price Input Wrapper - Integrated Currency Design */
+.price-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--card-background);
+    transition: all 0.3s ease;
+}
+
+.price-input-wrapper:focus-within {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.1);
+}
+
+.currency-prefix {
+    padding: 8px 8px;
+    border: none;
+    background: transparent;
+    color: var(--text-color);
+    font-size: 0.9rem;
+    font-weight: 500;
+    outline: none;
+    cursor: pointer;
+    border-right: 1px solid var(--border-color);
+    margin-right: 8px;
+}
+
+.price-input-with-currency {
+    flex: 1;
+    padding: 8px 12px 8px 0;
+    border: none;
+    background: transparent;
+    color: var(--text-color);
+    font-size: 0.9rem;
+    outline: none;
+    margin: 0;
+}
+
+.price-input-with-currency::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+/* Media-Catalog Toggle Buttons */
+.media-catalog-toggle {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 4px;
+    background: var(--card-background);
+    border-radius: 12px;
+    border: 2px solid var(--border-color);
+}
+
+.toggle-btn {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.toggle-btn:hover {
+    background: var(--hover-color);
+    color: var(--text-color);
+}
+
+.toggle-btn.active {
+    background: var(--primary-color);
+    color: white;
+    box-shadow: 0 2px 8px rgba(var(--primary-color-rgb), 0.3);
+}
+
+.toggle-btn i {
+    font-size: 1rem;
+}
+
+/* Enhanced Mobile Responsive Design */
+
+/* Tablet and smaller desktop */
+@media (max-width: 1024px) {
+    .dashboard-container {
+        padding: 10px;
+    }
+
+    .dashboard-main {
+        padding: 15px;
+    }
+
+    .tab-content-container {
+        gap: 15px;
+    }
+
+    .preview-sidebar {
+        min-width: 280px;
+    }
+}
+
+/* Mobile landscape and tablet portrait */
 @media (max-width: 768px) {
+    .page-header {
+        padding: 10px 15px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .logo-container-header img {
+        height: 35px;
+    }
+
+    .header-user-info {
+        font-size: 0.85rem;
+    }
+
+    .nav-tabs {
+        gap: 5px;
+        padding: 0 5px;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .nav-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .nav-tab {
+        min-width: 80px;
+        padding: 10px 8px;
+        font-size: 0.8rem;
+        flex-shrink: 0;
+    }
+
+    .nav-tab span {
+        display: none;
+    }
+
+    .nav-tab i {
+        font-size: 1.2rem;
+    }
+
+    /* Media-Catalog Toggle for tablets */
+    .media-catalog-toggle {
+        gap: 8px;
+        padding: 3px;
+        margin-bottom: 15px;
+    }
+
+    .toggle-btn {
+        padding: 10px 15px;
+        font-size: 0.85rem;
+        gap: 6px;
+    }
+
+    .toggle-btn span {
+        display: none;
+    }
+
+    .toggle-btn i {
+        font-size: 1.1rem;
+    }
+
+    /* Form improvements */
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        font-size: 0.9rem;
+        margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        font-size: 0.9rem;
+        padding: 10px 12px;
+    }
+
+    /* Products grid for tablets */
     .products-grid {
         grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
         gap: 10px;
     }
+
+    /* Modal improvements */
+    .modal-content {
+        margin: 5% auto;
+        width: 90%;
+        max-width: 500px;
+        padding: 20px;
+    }
+}
+
+/* Mobile portrait */
+@media (max-width: 480px) {
+    .dashboard-main {
+        padding: 10px;
+    }
+
+    .page-header {
+        padding: 8px 10px;
+    }
+
+    .logo-container-header img {
+        height: 30px;
+    }
+
+    .header-user-info {
+        font-size: 0.8rem;
+    }
+
+    .nav-tabs {
+        gap: 3px;
+        padding: 0 3px;
+    }
+
+    .nav-tab {
+        min-width: 60px;
+        padding: 8px 4px;
+        font-size: 0.75rem;
+    }
+
+    .nav-tab i {
+        font-size: 1rem;
+    }
+
+    /* Media-Catalog Toggle for mobile */
+    .media-catalog-toggle {
+        gap: 5px;
+        padding: 2px;
+        margin-bottom: 12px;
+    }
+
+    .toggle-btn {
+        padding: 8px 10px;
+        font-size: 0.8rem;
+        gap: 4px;
+        border-radius: 6px;
+    }
+
+    .toggle-btn i {
+        font-size: 1rem;
+    }
+
+    /* Tab headers */
+    .tab-header h3 {
+        font-size: 1.3rem;
+        margin-bottom: 8px;
+    }
+
+    .tab-header p {
+        font-size: 0.85rem;
+        margin-bottom: 15px;
+    }
+
+    /* Form improvements for mobile */
+    .form-group {
+        margin-bottom: 12px;
+    }
+
+    .form-group label {
+        font-size: 0.85rem;
+        margin-bottom: 5px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        font-size: 0.85rem;
+        padding: 8px 10px;
+    }
+
+    /* Action buttons */
+    .action-btn {
+        padding: 10px 15px;
+        font-size: 0.85rem;
+    }
+
+    /* Products grid for mobile */
+    .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 8px;
+    }
+
+    /* Modal improvements for mobile */
+    .modal-content {
+        margin: 2% auto;
+        width: 95%;
+        max-width: none;
+        padding: 15px;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    .modal-content h3 {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+
+    /* Preview sidebar adjustments */
+    .preview-sidebar {
+        min-width: 250px;
+    }
+
+    .preview-frame-container {
+        max-width: 240px;
+        height: 400px;
+    }
+}
+
+/* Very small mobile screens */
+@media (max-width: 360px) {
+    .dashboard-main {
+        padding: 8px;
+    }
+
+    .page-header {
+        padding: 6px 8px;
+    }
+
+    .nav-tab {
+        min-width: 50px;
+        padding: 6px 2px;
+    }
+
+    .nav-tab i {
+        font-size: 0.9rem;
+    }
+
+    /* Ultra-compact toggle buttons */
+    .media-catalog-toggle {
+        gap: 3px;
+        padding: 1px;
+        margin-bottom: 10px;
+    }
+
+    .toggle-btn {
+        padding: 6px 8px;
+        font-size: 0.75rem;
+        gap: 3px;
+        border-radius: 5px;
+    }
+
+    .toggle-btn i {
+        font-size: 0.9rem;
+    }
+
+    /* Compact forms */
+    .form-group {
+        margin-bottom: 10px;
+    }
+
+    .form-group label {
+        font-size: 0.8rem;
+        margin-bottom: 4px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        font-size: 0.8rem;
+        padding: 6px 8px;
+    }
+
+    /* Compact action buttons */
+    .action-btn {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+
+    /* Single column products grid */
+    .products-grid {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+
+    /* Full-screen modals on tiny screens */
+    .modal-content {
+        margin: 0;
+        width: 100%;
+        height: 100vh;
+        max-height: 100vh;
+        border-radius: 0;
+        padding: 10px;
+    }
+
+    /* Hide preview on very small screens */
+    .preview-sidebar {
+        display: none;
+    }
+
+    .tab-content-container {
+        flex-direction: column;
+    }
+}
+
+/* Landscape orientation improvements */
+@media (max-height: 500px) and (orientation: landscape) {
+    .modal-content {
+        max-height: 95vh;
+        overflow-y: auto;
+    }
+
+    .preview-frame-container {
+        height: 300px;
+    }
+
+    .tab-header {
+        margin-bottom: 10px;
+    }
+
+    .tab-header h3 {
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+    }
+
+    .tab-header p {
+        font-size: 0.8rem;
+        margin-bottom: 10px;
+    }
+}
+
+/* Touch device optimizations */
+.touch-device button,
+.touch-device .nav-tab,
+.touch-device .toggle-btn {
+    min-height: 44px !important;
+    min-width: 44px !important;
+}
+
+/* Navigation scroll indicator */
+.nav-scroll-indicator {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--primary-color);
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    z-index: 10;
+    animation: pulse 2s infinite;
+    pointer-events: none;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* Mobile-specific improvements */
+@media (max-width: 768px) {
+    /* Improve tap targets */
+    .link-item .link-actions button,
+    .product-item .product-actions button,
+    .media-item .media-actions button {
+        min-width: 40px;
+        min-height: 40px;
+        padding: 8px;
+    }
+
+    /* Better spacing for mobile */
+    .form-group {
+        margin-bottom: 16px;
+    }
+
+    /* Improve readability */
+    body {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    /* Better button spacing */
+    .form-actions {
+        gap: 12px;
+        margin-top: 20px;
+    }
+
+    /* Improve modal close button */
+    .close-modal {
+        font-size: 1.5rem;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+/* Swipe indicators for toggle sections */
+.media-content-section,
+.catalog-content-section {
+    position: relative;
+    touch-action: pan-x;
+}
+
+@media (max-width: 480px) {
+    .media-content-section::before,
+    .catalog-content-section::before {
+        content: '← Swipe to switch →';
+        position: absolute;
+        top: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.7rem;
+        color: var(--text-secondary);
+        opacity: 0.7;
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    .media-content-section.active::before {
+        content: '← Swipe for Catalog';
+    }
+
+    .catalog-content-section.active::before {
+        content: 'Swipe for Media →';
+    }
+}
 
     .product-item {
         margin-bottom: 10px;
