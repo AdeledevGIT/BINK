@@ -460,14 +460,16 @@ body::before {
 
 /* Image Items */
 .softpastel-container .image-item {
-    aspect-ratio: 1;
+    /* Removed aspect-ratio to allow space for titles/descriptions */
 }
 
 .softpastel-container .image-container {
     width: 100%;
-    height: 100%;
+    height: 200px;
     position: relative;
     overflow: hidden;
+    margin-bottom: 15px;
+    border-radius: 12px;
 }
 
 .softpastel-container .image-container img {
@@ -621,15 +623,15 @@ body::before {
 
 .softpastel-container .media-title {
     color: #6b46c1;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     font-weight: 600;
-    margin: 0 0 6px 0;
+    margin: 0 0 8px 0;
     font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .softpastel-container .media-description {
-    color: #8b5cf6;
-    font-size: 0.8rem;
+    color: #7c3aed;
+    font-size: 0.9rem;
     line-height: 1.4;
     margin: 0;
     font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;

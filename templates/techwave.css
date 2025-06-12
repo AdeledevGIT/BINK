@@ -620,14 +620,16 @@
 
 /* Image Items */
 .techwave-container .image-item {
-    aspect-ratio: 1;
+    /* Removed aspect-ratio to allow space for titles/descriptions */
 }
 
 .techwave-container .image-container {
     width: 100%;
-    height: 100%;
+    height: 200px;
     position: relative;
     overflow: hidden;
+    margin-bottom: 15px;
+    border-radius: 12px;
 }
 
 .techwave-container .image-container img {
@@ -732,15 +734,15 @@
 
 .techwave-container .media-title {
     color: #ccd6f6;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     font-weight: 600;
-    margin: 0 0 6px 0;
+    margin: 0 0 8px 0;
     font-family: 'Space Grotesk', monospace;
 }
 
 .techwave-container .media-description {
-    color: #8892b0;
-    font-size: 0.8rem;
+    color: #a8b2d1;
+    font-size: 0.9rem;
     line-height: 1.4;
     margin: 0;
     font-family: 'Space Grotesk', monospace;

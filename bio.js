@@ -223,12 +223,14 @@ function renderTemplate(userData) {
         profilePicUrl: userData.profilePicUrl,
         links: [], // will be filled after loadUserLinks
         socialLinks: userData.socialLinks || {},
-        media: {} // will be filled after loadUserMedia
+        media: {}, // will be filled after loadUserMedia
+        catalog: [] // will be filled after loadUserCatalog
     });
 
     // After links are loaded, update the template
     loadUserLinks(userData.id, templateObj, userData);
     loadUserMedia(userData.id, templateObj, userData);
+    loadUserCatalog(userData.id, templateObj, userData);
 }
 
 // Function to render the classic template (fallback)
@@ -246,6 +248,7 @@ function renderClassicTemplate(userData) {
                     </div>
                 </div>
                 <div class="links-container" id="links-container"></div>
+                <div class="catalog-container" id="catalog-container"></div>
                 <div class="media-container" id="media-container"></div>
                 <div class="social-icons" id="social-icons"></div>
                 <footer class="bio-footer">
@@ -257,6 +260,7 @@ function renderClassicTemplate(userData) {
     // After links are loaded, update the classic template
     loadUserLinks(userData.id, null, userData);
     loadUserMedia(userData.id, null, userData);
+    loadUserCatalog(userData.id, null, userData);
 }
 
 // Function to load user links
@@ -377,7 +381,8 @@ async function loadUserMedia(userId, templateObj = null, userData = null) {
                 profilePicUrl: userData.profilePicUrl,
                 links: links,
                 socialLinks: userData.socialLinks || {},
-                media: media
+                media: media,
+                catalog: userData.catalog || []
             });
         } else {
             // Classic template - render media in media container
@@ -393,6 +398,186 @@ async function loadUserMedia(userId, templateObj = null, userData = null) {
             mediaContainer.innerHTML = '<div class="media-error">Error loading media content</div>';
         }
     }
+}
+
+// Function to load user catalog
+async function loadUserCatalog(userId, templateObj = null, userData = null) {
+    try {
+        const catalogRef = db.collection('users').doc(userId).collection('catalog');
+        const querySnapshot = await catalogRef.orderBy('createdAt', 'desc').get();
+
+        const catalog = [];
+        querySnapshot.forEach((doc) => {
+            catalog.push({ ...doc.data(), id: doc.id });
+        });
+
+        if (templateObj && userData) {
+            // For templates, add catalog to userData and re-render
+            userData.catalog = catalog;
+
+            // Get current links and media to include in re-render
+            const linksRef = db.collection('users').doc(userId).collection('links');
+            const linksSnapshot = await linksRef.orderBy('order').get();
+            const links = [];
+            linksSnapshot.forEach((doc) => {
+                links.push({ ...doc.data(), id: doc.id });
+            });
+
+            const mediaRef = db.collection('users').doc(userId).collection('media');
+            const mediaSnapshot = await mediaRef.get();
+            const media = {
+                youtube: [],
+                images: [],
+                music: []
+            };
+            mediaSnapshot.forEach((doc) => {
+                const mediaData = { ...doc.data(), id: doc.id };
+                const type = mediaData.type;
+                if (media[type]) {
+                    media[type].push(mediaData);
+                }
+            });
+
+            // Re-render template with catalog data
+            bioRoot.innerHTML = templateObj.render({
+                displayName: userData.displayName || userData.username,
+                username: userData.username,
+                bio: userData.bio,
+                profilePicUrl: userData.profilePicUrl,
+                links: links,
+                socialLinks: userData.socialLinks || {},
+                media: media,
+                catalog: catalog
+            });
+        } else {
+            // Classic template - render catalog in catalog container
+            const catalogContainer = document.getElementById('catalog-container');
+            if (catalogContainer) {
+                renderCatalogContent(catalog, catalogContainer);
+            }
+        }
+    } catch (error) {
+        console.error("Error loading catalog:", error);
+        const catalogContainer = document.getElementById('catalog-container');
+        if (catalogContainer) {
+            catalogContainer.innerHTML = '<div class="catalog-error">Error loading catalog content</div>';
+        }
+    }
+}
+
+function renderCatalogContent(catalog, container) {
+    if (!catalog || catalog.length === 0) {
+        container.innerHTML = '';
+        return;
+    }
+
+    let catalogHTML = `
+        <div class="catalog-section">
+            <h3 class="catalog-title">Products</h3>
+            <div class="catalog-grid" id="catalog-grid-${Date.now()}">
+                ${catalog.map(product => {
+                    // Display price with currency if available
+                    let displayPrice = '';
+                    if (product.price) {
+                        displayPrice = product.price;
+                    } else if (product.priceAmount) {
+                        // For backward compatibility, construct price from separate fields
+                        if (product.currency && product.priceAmount.toLowerCase() !== 'free') {
+                            displayPrice = product.currency + product.priceAmount;
+                        } else {
+                            displayPrice = product.priceAmount;
+                        }
+                    }
+
+                    return `
+                        <div class="catalog-item">
+                            ${product.imageUrl ? `<img src="${product.imageUrl}" alt="${product.title}" class="catalog-item-image">` : ''}
+                            <div class="catalog-item-content">
+                                <h4 class="catalog-item-title">${product.title}</h4>
+                                ${product.description ? `<p class="catalog-item-description">${product.description}</p>` : ''}
+                                ${displayPrice ? `<div class="catalog-item-price">${displayPrice}</div>` : ''}
+                                <a href="${product.buyLink}" target="_blank" class="catalog-buy-btn">
+                                    <i class="fas fa-shopping-cart"></i> Buy Now
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        </div>
+    `;
+
+    container.innerHTML = catalogHTML;
+
+    // Initialize auto-scroll for the catalog
+    setTimeout(() => {
+        initializeCatalogAutoScroll(container.querySelector('.catalog-grid'));
+    }, 100);
+}
+
+// Auto-scroll functionality for catalog
+function initializeCatalogAutoScroll(catalogGrid) {
+    if (!catalogGrid || catalogGrid.children.length <= 1) return;
+
+    let scrollPosition = 0;
+    let isScrolling = true;
+    let scrollDirection = 1; // 1 for right, -1 for left
+
+    const scrollSpeed = 0.5; // pixels per frame
+    const pauseDuration = 2000; // pause at ends in milliseconds
+
+    function autoScroll() {
+        if (!isScrolling) return;
+
+        const maxScroll = catalogGrid.scrollWidth - catalogGrid.clientWidth;
+
+        if (maxScroll <= 0) return; // No need to scroll if content fits
+
+        scrollPosition += scrollSpeed * scrollDirection;
+
+        // Check boundaries and reverse direction
+        if (scrollPosition >= maxScroll) {
+            scrollPosition = maxScroll;
+            scrollDirection = -1;
+            pauseScrolling();
+        } else if (scrollPosition <= 0) {
+            scrollPosition = 0;
+            scrollDirection = 1;
+            pauseScrolling();
+        }
+
+        catalogGrid.scrollLeft = scrollPosition;
+
+        if (isScrolling) {
+            requestAnimationFrame(autoScroll);
+        }
+    }
+
+    function pauseScrolling() {
+        isScrolling = false;
+        setTimeout(() => {
+            isScrolling = true;
+            requestAnimationFrame(autoScroll);
+        }, pauseDuration);
+    }
+
+    // Start auto-scroll
+    requestAnimationFrame(autoScroll);
+
+    // Pause on hover
+    catalogGrid.addEventListener('mouseenter', () => {
+        isScrolling = false;
+    });
+
+    catalogGrid.addEventListener('mouseleave', () => {
+        isScrolling = true;
+        requestAnimationFrame(autoScroll);
+    });
+
+    // Handle manual scrolling
+    catalogGrid.addEventListener('scroll', () => {
+        scrollPosition = catalogGrid.scrollLeft;
+    });
 }
 
 function renderMediaContent(media, container) {

@@ -594,14 +594,16 @@
 
 /* Image Items */
 .glass-bio-card .image-item {
-    aspect-ratio: 1;
+    /* Removed aspect-ratio to allow space for titles/descriptions */
 }
 
 .glass-bio-card .image-container {
     width: 100%;
-    height: 100%;
+    height: 200px;
     position: relative;
     overflow: hidden;
+    margin-bottom: 15px;
+    border-radius: 12px;
 }
 
 .glass-bio-card .image-container img {
@@ -704,14 +706,14 @@
 
 .glass-bio-card .media-title {
     color: #4a5568;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     font-weight: 600;
-    margin: 0 0 6px 0;
+    margin: 0 0 8px 0;
 }
 
 .glass-bio-card .media-description {
-    color: #718096;
-    font-size: 0.8rem;
+    color: #5a6c7d;
+    font-size: 0.9rem;
     line-height: 1.4;
     margin: 0;
 }

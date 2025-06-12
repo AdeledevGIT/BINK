@@ -56,6 +56,10 @@
                         <i class="fas fa-photo-video"></i>
                         <span>Media</span>
                     </button>
+                    <button class="nav-tab" data-tab="catalog">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span>Catalog</span>
+                    </button>
                 </div>
             </div>
 
@@ -490,6 +494,31 @@
                     </div>
                 </div>
 
+                <!-- Catalog Tab -->
+                <div class="tab-content" id="catalog">
+                    <div class="tab-header">
+                        <h3>Product Catalog</h3>
+                        <p>Showcase your products with buy buttons that link to your store</p>
+                        <button id="add-product-button" class="action-btn primary-btn">
+                            <i class="fas fa-plus"></i> Add New Product
+                        </button>
+                    </div>
+                    <div class="catalog-manager">
+                        <div id="products-container" class="products-grid">
+                            <div class="products-placeholder">
+                                <i class="fas fa-shopping-bag"></i>
+                                <h4>No products yet</h4>
+                                <p>Add your first product to get started</p>
+                            </div>
+                        </div>
+                        <div class="catalog-actions">
+                            <button type="button" id="save-catalog-button" class="action-btn primary-btn">
+                                <i class="fas fa-save"></i> Save Catalog
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
 
             </div>
 
@@ -704,6 +733,79 @@
                 <div class="form-actions">
                     <button type="submit" id="save-music-button" class="auth-button">Save Music Link</button>
                     <button type="button" id="delete-music-button" class="delete-button" style="display: none;">Delete Music Link</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Product Editor Modal -->
+    <div id="product-editor-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 id="product-modal-title">Add New Product</h3>
+            <form id="product-form">
+                <input type="hidden" id="product-id" name="product-id">
+                <div class="form-group">
+                    <label for="product-title">Product Name</label>
+                    <input type="text" id="product-title" name="product-title" required placeholder="e.g., My Amazing Product">
+                </div>
+                <div class="form-group">
+                    <label for="product-description">Description</label>
+                    <textarea id="product-description" name="product-description" placeholder="Brief description of your product..." rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="product-price">Price</label>
+                    <div class="price-input-container">
+                        <select id="product-currency" name="product-currency" class="currency-select">
+                            <option value="$">$</option>
+                            <option value="₦">₦</option>
+                            <option value="€">€</option>
+                            <option value="£">£</option>
+                        </select>
+                        <input type="text" id="product-price" name="product-price" placeholder="e.g., 29.99 or Free">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="product-image-upload">Product Image</label>
+                    <input type="file" id="product-image-upload" name="product-image-upload" accept="image/*">
+                    <small>Upload an image of your product (Max 5MB)</small>
+                </div>
+                <div class="form-group">
+                    <label for="product-image-url">Or Image URL</label>
+                    <input type="url" id="product-image-url" name="product-image-url" placeholder="https://example.com/image.jpg">
+                    <small>Alternatively, provide a direct link to your product image</small>
+                </div>
+                <div class="form-group">
+                    <label for="product-buy-link">Buy Link</label>
+                    <input type="url" id="product-buy-link" name="product-buy-link" required placeholder="https://your-store.com/product">
+                    <small>Link where customers can purchase this product</small>
+                </div>
+                <div class="form-group">
+                    <label for="product-category">Category</label>
+                    <select id="product-category" name="product-category">
+                        <option value="other">Other</option>
+                        <option value="clothing">Clothing</option>
+                        <option value="accessories">Accessories</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="books">Books</option>
+                        <option value="art">Art</option>
+                        <option value="music">Music</option>
+                        <option value="software">Software</option>
+                        <option value="courses">Courses</option>
+                        <option value="services">Services</option>
+                        <option value="food">Food & Beverages</option>
+                        <option value="health">Health & Beauty</option>
+                        <option value="home">Home & Garden</option>
+                        <option value="sports">Sports & Outdoors</option>
+                        <option value="toys">Toys & Games</option>
+                    </select>
+                </div>
+                <div class="product-preview-container" id="product-preview-container" style="display: none;">
+                    <img id="product-preview" src="" alt="Product Preview">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" id="save-product-button" class="auth-button">Save Product</button>
+                    <button type="button" id="delete-product-button" class="delete-button" style="display: none;">Delete Product</button>
                 </div>
             </form>
         </div>

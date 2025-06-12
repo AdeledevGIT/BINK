@@ -451,14 +451,16 @@
 
 /* Image Items */
 .corporate-container .image-item {
-    aspect-ratio: 1;
+    /* Removed aspect-ratio to allow space for titles/descriptions */
 }
 
 .corporate-container .image-container {
     width: 100%;
-    height: 100%;
+    height: 200px;
     position: relative;
     overflow: hidden;
+    margin-bottom: 15px;
+    border-radius: 12px;
 }
 
 .corporate-container .image-container img {
@@ -590,14 +592,14 @@
 
 .corporate-container .media-title {
     color: #1e293b;
-    font-size: 0.95rem;
+    font-size: 1.1rem;
     font-weight: 600;
-    margin: 0 0 6px 0;
+    margin: 0 0 8px 0;
 }
 
 .corporate-container .media-description {
-    color: #64748b;
-    font-size: 0.85rem;
+    color: #475569;
+    font-size: 0.9rem;
     line-height: 1.4;
     margin: 0;
 }

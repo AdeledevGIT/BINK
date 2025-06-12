@@ -627,16 +627,18 @@
 
 /* Image Items */
 .neoncard-container .image-item {
-    aspect-ratio: 1;
+    /* Removed aspect-ratio to allow space for titles/descriptions */
     position: relative;
     z-index: 2;
 }
 
 .neoncard-container .image-container {
     width: 100%;
-    height: 100%;
+    height: 200px;
     position: relative;
     overflow: hidden;
+    margin-bottom: 15px;
+    border-radius: 12px;
 }
 
 .neoncard-container .image-container img {
@@ -761,16 +763,16 @@
 
 .neoncard-container .media-title {
     color: #fff;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     font-weight: 600;
-    margin: 0 0 6px 0;
+    margin: 0 0 8px 0;
     text-shadow: 0 0 8px rgba(0, 255, 247, 0.3);
     font-family: 'Poppins', Arial, sans-serif;
 }
 
 .neoncard-container .media-description {
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
     line-height: 1.4;
     margin: 0;
     font-family: 'Poppins', Arial, sans-serif;

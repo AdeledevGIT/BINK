@@ -57,6 +57,13 @@ const youtubeForm = document.getElementById('youtube-form');
 const imageForm = document.getElementById('image-form');
 const musicForm = document.getElementById('music-form');
 
+// Catalog Tab DOM Elements
+const productsContainer = document.getElementById('products-container');
+const addProductButton = document.getElementById('add-product-button');
+const saveCatalogButton = document.getElementById('save-catalog-button');
+const productEditorModal = document.getElementById('product-editor-modal');
+const productForm = document.getElementById('product-form');
+
 // Global variables
 let currentUser = null;
 let currentUserData = null;
@@ -69,6 +76,8 @@ let userMedia = {
 };
 let currentMediaType = 'youtube';
 let editingMediaId = null;
+let userCatalog = [];
+let editingProductId = null;
 
 // Social media platforms for the form
 const socialPlatforms = [
@@ -114,7 +123,9 @@ if (auth) {
             loadUserLinks(user.uid);
             generateSocialLinksForm();
             loadUserMedia(user.uid);
+            loadUserCatalog(user.uid);
             initializeMediaTab();
+            initializeCatalogTab();
             updatePreviewFrame(user.uid);
             initializeProfilePictureUpload();
             initializePreviewControls();
@@ -2450,6 +2461,383 @@ function selectTemplate(templateId) {
 
     // Save the template selection to database
     saveTemplateSelection(templateId);
+}
+
+// Catalog Tab Functions
+function initializeCatalogTab() {
+    // Initialize add product button
+    if (addProductButton) {
+        addProductButton.addEventListener('click', () => openProductEditor());
+    }
+    if (saveCatalogButton) {
+        saveCatalogButton.addEventListener('click', handleCatalogSave);
+    }
+
+    // Initialize product form
+    if (productForm) {
+        productForm.addEventListener('submit', handleProductSubmit);
+    }
+
+    // Initialize modal close functionality
+    const productModalCloseBtn = productEditorModal?.querySelector('.close-modal');
+    if (productModalCloseBtn) {
+        productModalCloseBtn.addEventListener('click', closeProductEditor);
+    }
+
+    // Initialize image preview for product form
+    const productImageUpload = document.getElementById('product-image-upload');
+    const productImageUrl = document.getElementById('product-image-url');
+    const productPreview = document.getElementById('product-preview');
+    const productPreviewContainer = document.getElementById('product-preview-container');
+
+    if (productImageUpload) {
+        productImageUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    productPreview.src = e.target.result;
+                    productPreviewContainer.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    if (productImageUrl) {
+        productImageUrl.addEventListener('input', (e) => {
+            const url = e.target.value.trim();
+            if (url) {
+                productPreview.src = url;
+                productPreviewContainer.style.display = 'block';
+            } else {
+                productPreviewContainer.style.display = 'none';
+            }
+        });
+    }
+}
+
+function loadUserCatalog(userId) {
+    if (!userId) return;
+
+    const catalogRef = db.collection('users').doc(userId).collection('catalog');
+    catalogRef.orderBy('createdAt', 'desc').get().then((querySnapshot) => {
+        userCatalog = [];
+
+        querySnapshot.forEach((doc) => {
+            const productData = { id: doc.id, ...doc.data() };
+            userCatalog.push(productData);
+        });
+
+        // Update UI
+        updateCatalogUI();
+    }).catch((error) => {
+        console.error("Error loading catalog:", error);
+        showMessage("Error loading catalog content.", true);
+    });
+}
+
+function updateCatalogUI() {
+    if (!productsContainer) return;
+
+    if (userCatalog.length === 0) {
+        productsContainer.innerHTML = `
+            <div class="products-placeholder">
+                <i class="fas fa-shopping-bag"></i>
+                <h4>No products yet</h4>
+                <p>Add your first product to get started</p>
+            </div>
+        `;
+        return;
+    }
+
+    productsContainer.innerHTML = userCatalog.map(product => {
+        // Display price with currency if available
+        let displayPrice = '';
+        if (product.price) {
+            displayPrice = product.price;
+        } else if (product.priceAmount) {
+            // For backward compatibility, construct price from separate fields
+            if (product.currency && product.priceAmount.toLowerCase() !== 'free') {
+                displayPrice = product.currency + product.priceAmount;
+            } else {
+                displayPrice = product.priceAmount;
+            }
+        }
+
+        return `
+            <div class="product-item" data-id="${product.id}">
+                ${product.imageUrl ? `<img src="${product.imageUrl}" alt="${product.title}" class="product-image">` : ''}
+                <div class="product-details">
+                    <h4 class="product-title">${product.title}</h4>
+                    ${product.description ? `<p class="product-description">${product.description}</p>` : ''}
+                    ${displayPrice ? `<div class="product-price">${displayPrice}</div>` : ''}
+                    <div class="product-category">${product.category || 'Other'}</div>
+                </div>
+                <div class="product-actions">
+                    <button class="edit-button" onclick="editProduct('${product.id}')" title="Edit Product">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="delete-button" onclick="deleteProduct('${product.id}', '${product.title}')" title="Delete Product">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function openProductEditor(productId = null) {
+    // Reset form
+    if (productForm) productForm.reset();
+
+    const modalTitle = productEditorModal?.querySelector('#product-modal-title');
+    const deleteButton = document.getElementById('delete-product-button');
+
+    if (productId) {
+        // Edit existing product
+        const product = userCatalog.find(p => p.id === productId);
+        if (product) {
+            if (modalTitle) modalTitle.textContent = 'Edit Product';
+            document.getElementById('product-id').value = productId;
+            document.getElementById('product-title').value = product.title || '';
+            document.getElementById('product-description').value = product.description || '';
+            document.getElementById('product-price').value = product.priceAmount || '';
+            document.getElementById('product-currency').value = product.currency || '$';
+            document.getElementById('product-image-url').value = product.imageUrl || '';
+            document.getElementById('product-buy-link').value = product.buyLink || '';
+            document.getElementById('product-category').value = product.category || 'other';
+
+            if (deleteButton) deleteButton.style.display = 'block';
+
+            // Show image preview if URL exists
+            if (product.imageUrl) {
+                const productPreview = document.getElementById('product-preview');
+                const productPreviewContainer = document.getElementById('product-preview-container');
+                if (productPreview && productPreviewContainer) {
+                    productPreview.src = product.imageUrl;
+                    productPreviewContainer.style.display = 'block';
+                }
+            }
+        }
+        editingProductId = productId;
+    } else {
+        // Add new product
+        if (modalTitle) modalTitle.textContent = 'Add New Product';
+        if (deleteButton) deleteButton.style.display = 'none';
+        editingProductId = null;
+    }
+
+    // Show modal
+    if (productEditorModal) {
+        productEditorModal.style.display = 'block';
+    }
+}
+
+function closeProductEditor() {
+    if (productEditorModal) {
+        productEditorModal.style.display = 'none';
+    }
+    editingProductId = null;
+}
+
+function handleProductSubmit(e) {
+    e.preventDefault();
+
+    if (!currentUser) {
+        showMessage("Not authenticated. Cannot save.", true);
+        return;
+    }
+
+    const saveButton = document.getElementById('save-product-button');
+    if (saveButton) {
+        saveButton.disabled = true;
+        saveButton.textContent = 'Saving...';
+    }
+
+    const priceAmount = document.getElementById('product-price').value.trim();
+    const currency = document.getElementById('product-currency').value;
+
+    // Combine currency and price amount
+    let displayPrice = '';
+    if (priceAmount) {
+        if (currency && priceAmount.toLowerCase() !== 'free') {
+            displayPrice = currency + priceAmount;
+        } else {
+            displayPrice = priceAmount;
+        }
+    }
+
+    const productData = {
+        title: document.getElementById('product-title').value.trim(),
+        description: document.getElementById('product-description').value.trim(),
+        price: displayPrice,
+        priceAmount: priceAmount,
+        currency: currency,
+        buyLink: document.getElementById('product-buy-link').value.trim(),
+        category: document.getElementById('product-category').value,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    // Validate required fields
+    if (!productData.title || !productData.buyLink) {
+        showMessage("Product name and buy link are required.", true);
+        if (saveButton) {
+            saveButton.disabled = false;
+            saveButton.textContent = 'Save Product';
+        }
+        return;
+    }
+
+    // Validate URL
+    try {
+        new URL(productData.buyLink);
+    } catch (error) {
+        showMessage("Please enter a valid buy link URL including http:// or https://", true);
+        if (saveButton) {
+            saveButton.disabled = false;
+            saveButton.textContent = 'Save Product';
+        }
+        return;
+    }
+
+    // Handle image upload or URL
+    const imageFile = document.getElementById('product-image-upload').files[0];
+    const imageUrl = document.getElementById('product-image-url').value.trim();
+
+    if (imageFile) {
+        // Upload image file
+        handleProductImageUpload(imageFile, productData, saveButton);
+    } else if (imageUrl) {
+        // Use provided URL
+        productData.imageUrl = imageUrl;
+        saveProductData(productData, saveButton);
+    } else {
+        // No image
+        saveProductData(productData, saveButton);
+    }
+}
+
+function handleProductImageUpload(file, productData, saveButton) {
+    if (!storage) {
+        showMessage("Storage not available. Please try again.", true);
+        if (saveButton) {
+            saveButton.disabled = false;
+            saveButton.textContent = 'Save Product';
+        }
+        return;
+    }
+
+    const fileName = `products/${currentUser.uid}/${Date.now()}_${file.name}`;
+    const storageRef = storage.ref().child(fileName);
+    const uploadTask = storageRef.put(file);
+
+    uploadTask.on('state_changed',
+        (snapshot) => {
+            // Progress function
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            if (saveButton) {
+                saveButton.textContent = `Uploading... ${Math.round(progress)}%`;
+            }
+        },
+        (error) => {
+            // Error function
+            console.error("Upload error:", error);
+            showMessage(`Upload failed: ${error.message}`, true);
+            if (saveButton) {
+                saveButton.disabled = false;
+                saveButton.textContent = 'Save Product';
+            }
+        },
+        () => {
+            // Complete function
+            uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                productData.imageUrl = downloadURL;
+                saveProductData(productData, saveButton);
+            });
+        }
+    );
+}
+
+function saveProductData(productData, saveButton) {
+    const catalogRef = db.collection('users').doc(currentUser.uid).collection('catalog');
+
+    let savePromise;
+    if (editingProductId) {
+        // Update existing product
+        savePromise = catalogRef.doc(editingProductId).update(productData);
+    } else {
+        // Add new product
+        productData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+        savePromise = catalogRef.add(productData);
+    }
+
+    savePromise.then((docRef) => {
+        console.log("Product saved successfully");
+        showMessage(`Product ${editingProductId ? 'updated' : 'added'} successfully!`);
+
+        // Update local data
+        if (editingProductId) {
+            const index = userCatalog.findIndex(p => p.id === editingProductId);
+            if (index !== -1) {
+                userCatalog[index] = { id: editingProductId, ...productData };
+            }
+        } else {
+            const newId = docRef ? docRef.id : editingProductId;
+            userCatalog.push({ id: newId, ...productData });
+        }
+
+        // Update UI
+        updateCatalogUI();
+        updatePreviewFrame(currentUser.uid);
+        closeProductEditor();
+    }).catch((error) => {
+        console.error("Error saving product:", error);
+        showMessage(`Error saving product: ${error.message}`, true);
+    }).finally(() => {
+        if (saveButton) {
+            saveButton.disabled = false;
+            saveButton.textContent = 'Save Product';
+        }
+    });
+}
+
+function handleCatalogSave() {
+    // This function can be used for any additional catalog-level operations
+    // For now, individual products are saved automatically
+    showMessage("Catalog is up to date!");
+    updatePreviewFrame(currentUser.uid);
+}
+
+// Global functions for onclick handlers
+window.editProduct = function(productId) {
+    openProductEditor(productId);
+};
+
+window.deleteProduct = function(productId, productTitle) {
+    if (confirm(`Are you sure you want to delete "${productTitle}"?`)) {
+        deleteProductFromFirebase(productId);
+    }
+};
+
+function deleteProductFromFirebase(productId) {
+    if (!currentUser) return;
+
+    const productRef = db.collection('users').doc(currentUser.uid).collection('catalog').doc(productId);
+    productRef.delete().then(() => {
+        console.log("Product deleted successfully");
+        showMessage("Product deleted successfully");
+
+        // Remove from local array
+        userCatalog = userCatalog.filter(p => p.id !== productId);
+
+        // Update UI
+        updateCatalogUI();
+        updatePreviewFrame(currentUser.uid);
+    }).catch((error) => {
+        console.error("Error deleting product:", error);
+        showMessage(`Error deleting product: ${error.message}`, true);
+    });
 }
 
 

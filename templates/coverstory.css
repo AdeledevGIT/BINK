@@ -427,14 +427,16 @@ body {
 
 /* Image Items */
 .coverstory-container .image-item {
-    aspect-ratio: 1;
+    /* Removed aspect-ratio to allow space for titles/descriptions */
 }
 
 .coverstory-container .image-container {
     width: 100%;
-    height: 100%;
+    height: 200px;
     position: relative;
     overflow: hidden;
+    margin-bottom: 15px;
+    border-radius: 12px;
 }
 
 .coverstory-container .image-container img {
@@ -570,15 +572,15 @@ body {
 
 .coverstory-container .media-title {
     color: #2d3748;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     font-weight: 600;
-    margin: 0 0 6px 0;
+    margin: 0 0 8px 0;
     font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .coverstory-container .media-description {
-    color: #6b7280;
-    font-size: 0.8rem;
+    color: #4a5568;
+    font-size: 0.9rem;
     line-height: 1.4;
     margin: 0;
     font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;

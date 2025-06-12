@@ -556,15 +556,17 @@
 
 /* Image Items */
 .retrowave-container .image-item {
-    aspect-ratio: 1;
+    /* Removed aspect-ratio to allow space for titles/descriptions */
     border: 1px solid #00ffff;
 }
 
 .retrowave-container .image-container {
     width: 100%;
-    height: 100%;
+    height: 200px;
     position: relative;
     overflow: hidden;
+    margin-bottom: 15px;
+    border-radius: 12px;
 }
 
 .retrowave-container .image-container img {
@@ -656,16 +658,16 @@
 
 .retrowave-container .media-title {
     color: #fff;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     font-weight: 600;
-    margin: 0 0 6px 0;
+    margin: 0 0 8px 0;
     font-family: 'Orbitron', monospace;
     text-shadow: 0 0 5px #ff00ff;
 }
 
 .retrowave-container .media-description {
     color: #00ffff;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     line-height: 1.4;
     margin: 0;
     font-family: 'Orbitron', monospace;

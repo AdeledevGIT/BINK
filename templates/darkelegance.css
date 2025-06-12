@@ -544,14 +544,16 @@
 
 /* Image Items */
 .darkelegance-container .image-item {
-    aspect-ratio: 1;
+    /* Removed aspect-ratio to allow space for titles/descriptions */
 }
 
 .darkelegance-container .image-container {
     width: 100%;
-    height: 100%;
+    height: 200px;
     position: relative;
     overflow: hidden;
+    margin-bottom: 15px;
+    border-radius: 12px;
 }
 
 .darkelegance-container .image-container img {
@@ -654,15 +656,15 @@
 
 .darkelegance-container .media-title {
     color: #e0e0e0;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     font-weight: 600;
-    margin: 0 0 6px 0;
+    margin: 0 0 8px 0;
     font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
 }
 
 .darkelegance-container .media-description {
-    color: #999;
-    font-size: 0.8rem;
+    color: #bbb;
+    font-size: 0.9rem;
     line-height: 1.4;
     margin: 0;
     font-family: 'Inter', 'Segoe UI', Arial, sans-serif;

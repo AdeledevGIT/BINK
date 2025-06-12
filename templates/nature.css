@@ -530,14 +530,16 @@
 
 /* Image Items */
 .nature-container .image-item {
-    aspect-ratio: 1;
+    /* Removed aspect-ratio to allow space for titles/descriptions */
 }
 
 .nature-container .image-container {
     width: 100%;
-    height: 100%;
+    height: 200px;
     position: relative;
     overflow: hidden;
+    margin-bottom: 15px;
+    border-radius: 12px;
 }
 
 .nature-container .image-container img {
@@ -621,15 +623,15 @@
 
 .nature-container .media-title {
     color: #2c3e50;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     font-weight: 600;
-    margin: 0 0 6px 0;
+    margin: 0 0 8px 0;
     font-family: 'Poppins', Arial, sans-serif;
 }
 
 .nature-container .media-description {
-    color: #7f8c8d;
-    font-size: 0.8rem;
+    color: #5a6c7d;
+    font-size: 0.9rem;
     line-height: 1.4;
     margin: 0;
     font-family: 'Poppins', Arial, sans-serif;

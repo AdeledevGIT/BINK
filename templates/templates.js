@@ -55,6 +55,123 @@ window.BINK.templates.renderSocialLinks = function(socialLinks) {
     }).join('');
 };
 
+// Helper to render catalog content
+window.BINK.templates.renderCatalogContent = function(catalog) {
+    if (!catalog || !Array.isArray(catalog) || catalog.length === 0) return '';
+
+    const catalogId = `catalog-grid-${Date.now()}`;
+    const catalogHTML = `
+    <div class="catalog-section">
+        <h3 class="catalog-title">Products</h3>
+        <div class="catalog-grid" id="${catalogId}">
+            ${catalog.map(product => {
+                // Display price with currency if available
+                let displayPrice = '';
+                if (product.price) {
+                    displayPrice = product.price;
+                } else if (product.priceAmount) {
+                    // For backward compatibility, construct price from separate fields
+                    if (product.currency && product.priceAmount.toLowerCase() !== 'free') {
+                        displayPrice = product.currency + product.priceAmount;
+                    } else {
+                        displayPrice = product.priceAmount;
+                    }
+                }
+
+                return `
+                    <div class="catalog-item">
+                        ${product.imageUrl ? `<img src="${product.imageUrl}" alt="${product.title}" class="catalog-item-image">` : ''}
+                        <div class="catalog-item-content">
+                            <h4 class="catalog-item-title">${product.title}</h4>
+                            ${product.description ? `<p class="catalog-item-description">${product.description}</p>` : ''}
+                            ${displayPrice ? `<div class="catalog-item-price">${displayPrice}</div>` : ''}
+                            <a href="${product.buyLink}" target="_blank" class="catalog-buy-btn">
+                                <i class="fas fa-shopping-cart"></i> Buy Now
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }).join('')}
+        </div>
+    </div>
+    `;
+
+    // Initialize auto-scroll after rendering
+    setTimeout(() => {
+        const catalogGrid = document.getElementById(catalogId);
+        if (catalogGrid) {
+            window.BINK.templates.initializeCatalogAutoScroll(catalogGrid);
+        }
+    }, 100);
+
+    return catalogHTML;
+};
+
+// Auto-scroll functionality for catalog
+window.BINK.templates.initializeCatalogAutoScroll = function(catalogGrid) {
+    if (!catalogGrid || catalogGrid.children.length <= 1) return;
+
+    let scrollPosition = 0;
+    let isScrolling = true;
+    let scrollDirection = 1; // 1 for right, -1 for left
+
+    const scrollSpeed = 0.5; // pixels per frame
+    const pauseDuration = 2000; // pause at ends in milliseconds
+
+    function autoScroll() {
+        if (!isScrolling) return;
+
+        const maxScroll = catalogGrid.scrollWidth - catalogGrid.clientWidth;
+
+        if (maxScroll <= 0) return; // No need to scroll if content fits
+
+        scrollPosition += scrollSpeed * scrollDirection;
+
+        // Check boundaries and reverse direction
+        if (scrollPosition >= maxScroll) {
+            scrollPosition = maxScroll;
+            scrollDirection = -1;
+            pauseScrolling();
+        } else if (scrollPosition <= 0) {
+            scrollPosition = 0;
+            scrollDirection = 1;
+            pauseScrolling();
+        }
+
+        catalogGrid.scrollLeft = scrollPosition;
+
+        if (isScrolling) {
+            requestAnimationFrame(autoScroll);
+        }
+    }
+
+    function pauseScrolling() {
+        isScrolling = false;
+        setTimeout(() => {
+            isScrolling = true;
+            requestAnimationFrame(autoScroll);
+        }, pauseDuration);
+    }
+
+    // Start auto-scroll
+    requestAnimationFrame(autoScroll);
+
+    // Pause on hover
+    catalogGrid.addEventListener('mouseenter', () => {
+        isScrolling = false;
+    });
+
+    catalogGrid.addEventListener('mouseleave', () => {
+        isScrolling = true;
+        requestAnimationFrame(autoScroll);
+    });
+
+    // Handle manual scrolling
+    catalogGrid.addEventListener('scroll', () => {
+        scrollPosition = catalogGrid.scrollLeft;
+    });
+};
+
 // Helper to render media content
 window.BINK.templates.renderMediaContent = function(media) {
     if (!media || typeof media !== 'object') return '';
@@ -324,6 +441,7 @@ window.BINK.templates.templates['classic'] = {
                         </div>
                     `).join('')}
                 </div>
+                ${window.BINK.templates.renderCatalogContent(data.catalog || [])}
                 ${window.BINK.templates.renderMediaContent(data.media || {})}
                 <div class="social-icons">
                     ${Object.entries(data.socialLinks || {}).map(([platform, url]) => `
@@ -382,6 +500,7 @@ window.BINK.templates.templates['neoncard'] = {
                         </div>
                     `).join('')}
                 </div>
+                ${window.BINK.templates.renderCatalogContent(data.catalog || [])}
                 ${window.BINK.templates.renderMediaContent(data.media || {})}
 
                 <div class="neoncard-socials">
@@ -438,6 +557,7 @@ window.BINK.templates.templates['glassmorphism'] = {
                         </div>
                     `).join('')}
                 </div>
+                ${window.BINK.templates.renderCatalogContent(data.catalog || [])}
                 ${window.BINK.templates.renderMediaContent(data.media || {})}
 
                 <div class="glass-socials">
@@ -494,6 +614,7 @@ window.BINK.templates.templates['purplecard'] = {
                         </div>
                     `).join('')}
                 </div>
+                ${window.BINK.templates.renderCatalogContent(data.catalog || [])}
                 ${window.BINK.templates.renderMediaContent(data.media || {})}
 
                 <div class="purplecard-socials">
@@ -556,6 +677,7 @@ window.BINK.templates.templates['landingprofile'] = {
                         </div>
                     `).join('')}
                 </div>
+                ${window.BINK.templates.renderCatalogContent(data.catalog || [])}
                 ${window.BINK.templates.renderMediaContent(data.media || {})}
                 <div class="landing-footer">
                     Powered by <a href="index.html" target="_blank">BINK</a>

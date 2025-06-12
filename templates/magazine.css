@@ -444,14 +444,16 @@
 
 /* Image Items */
 .magazine-container .image-item {
-    aspect-ratio: 1;
+    /* Removed aspect-ratio to allow space for titles/descriptions */
 }
 
 .magazine-container .image-container {
     width: 100%;
-    height: 100%;
+    height: 200px;
     position: relative;
     overflow: hidden;
+    margin-bottom: 15px;
+    border-radius: 12px;
 }
 
 .magazine-container .image-container img {
@@ -570,7 +572,7 @@
     color: #000;
     font-size: 1.2rem;
     font-weight: 700;
-    margin: 0 0 6px 0;
+    margin: 0 0 8px 0;
     font-family: 'Playfair Display', serif;
 }
 

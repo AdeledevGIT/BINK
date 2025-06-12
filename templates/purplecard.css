@@ -525,14 +525,16 @@
 
 /* Image Items */
 .purplecard-bio-main .image-item {
-    aspect-ratio: 1;
+    /* Removed aspect-ratio to allow space for titles/descriptions */
 }
 
 .purplecard-bio-main .image-container {
     width: 100%;
-    height: 100%;
+    height: 200px;
     position: relative;
     overflow: hidden;
+    margin-bottom: 15px;
+    border-radius: 12px;
 }
 
 .purplecard-bio-main .image-container img {
@@ -616,15 +618,15 @@
 
 .purplecard-bio-main .media-title {
     color: #7c3aed;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     font-weight: 600;
-    margin: 0 0 6px 0;
+    margin: 0 0 8px 0;
     font-family: 'Poppins', Arial, sans-serif;
 }
 
 .purplecard-bio-main .media-description {
-    color: #6b7280;
-    font-size: 0.8rem;
+    color: #4a5568;
+    font-size: 0.9rem;
     line-height: 1.4;
     margin: 0;
     font-family: 'Poppins', Arial, sans-serif;
