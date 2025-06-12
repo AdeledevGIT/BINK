@@ -742,6 +742,18 @@
     height: 100%;
     border: none;
     border-radius: 10px;
+    zoom: 0.8;
+}
+
+.preview-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.preview-actions .action-btn {
+    width: 100%;
+    max-width: 300px;
 }
 
 /* Message Container */
