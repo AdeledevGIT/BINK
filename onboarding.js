@@ -590,22 +590,52 @@ function addMediaContent(type) {
 // Template functions
 function loadTemplates() {
     const templates = [
-        { id: 'neoncard', name: 'Neon Card', preview: 'templates/neoncard-preview.html', isPremium: false },
-        { id: 'glassmorphism', name: 'Glassmorphism', preview: 'templates/glassmorphism-preview.html', isPremium: false },
-        { id: 'classic', name: 'Classic', preview: 'templates/classic-preview.html', isPremium: false },
-        { id: 'aurora-glow', name: 'Aurora Glow', preview: 'templates/aurora-glow-preview.html', isPremium: true },
-        { id: 'cover-story', name: 'Cover Story', preview: 'templates/cover-story-preview.html', isPremium: true },
-        { id: 'soft-pastel', name: 'Soft Pastel', preview: 'templates/soft-pastel-preview.html', isPremium: true }
+        // Free Templates
+        { id: 'neoncard', name: 'Neon Card', preview: 'templates/neoncard-preview.html', isPremium: false, description: 'Vibrant neon-themed design with glowing effects' },
+        { id: 'glassmorphism', name: 'Glassmorphism', preview: 'templates/glassmorphism-preview.html', isPremium: false, description: 'Modern glass-like transparency effects' },
+        { id: 'classic', name: 'Classic', preview: 'templates/classic-preview.html', isPremium: false, description: 'Clean and professional layout' },
+
+        // Premium Templates
+        { id: 'auroraglow', name: 'Aurora Glow', preview: 'templates/auroraglow-preview.html', isPremium: true, description: 'Stunning aurora-inspired gradient effects', tokenPrice: 150 },
+        { id: 'coverstory', name: 'Cover Story', preview: 'templates/coverstory-preview.html', isPremium: true, description: 'Magazine-style cover layout', tokenPrice: 130 },
+        { id: 'softpastel', name: 'Soft Pastel', preview: 'templates/softpastel-preview.html', isPremium: true, description: 'Gentle pastel color scheme', tokenPrice: 120 },
+        { id: 'techwave', name: 'Tech Wave', preview: 'templates/techwave-preview.html', isPremium: true, description: 'Futuristic tech-inspired design', tokenPrice: 140 },
+        { id: 'neonglow', name: 'Neon Glow', preview: 'templates/neonglow-preview.html', isPremium: true, description: 'Electric neon glow effects', tokenPrice: 160 },
+        { id: 'herobanner', name: 'Hero Banner', preview: 'templates/herobanner-preview.html', isPremium: true, description: 'Hero-style banner layout', tokenPrice: 135 },
+        { id: 'landingprofile', name: 'Landing Profile', preview: 'templates/landingprofile-preview.html', isPremium: true, description: 'Landing page style profile', tokenPrice: 125 },
+        { id: 'gradientcard', name: 'Gradient Card', preview: 'templates/gradientcard-preview.html', isPremium: true, description: 'Beautiful gradient card design', tokenPrice: 110 },
+        { id: 'darkelegance', name: 'Dark Elegance', preview: 'templates/darkelegance-preview.html', isPremium: true, description: 'Elegant dark theme', tokenPrice: 145 },
+        { id: 'blacklanding', name: 'Black Landing', preview: 'templates/blacklanding-preview.html', isPremium: true, description: 'Sleek black landing page design', tokenPrice: 140 },
+        { id: 'corporate', name: 'Corporate', preview: 'templates/corporate-preview.html', isPremium: true, description: 'Professional corporate layout', tokenPrice: 115 },
+        { id: 'creative', name: 'Creative', preview: 'templates/creative-preview.html', isPremium: true, description: 'Creative and artistic design', tokenPrice: 135 },
+        { id: 'purplecard', name: 'Purple Card', preview: 'templates/purplecard-preview.html', isPremium: true, description: 'Elegant purple-themed card', tokenPrice: 125 },
+        { id: 'retrowave', name: 'Retro Wave', preview: 'templates/retrowave-preview.html', isPremium: true, description: '80s retro wave aesthetic', tokenPrice: 155 }
     ];
 
     templatesContainer.innerHTML = templates.map(template => `
         <div class="template-card ${template.id === selectedTemplate ? 'selected' : ''}" data-template="${template.id}">
-            ${template.isPremium ? '<div class="premium-label">Premium</div>' : ''}
-            <iframe src="${template.preview}" class="template-preview"></iframe>
+            ${template.isPremium ? `<div class="premium-label"><i class="fas fa-crown"></i> Premium</div>` : '<div class="free-label"><i class="fas fa-gift"></i> Free</div>'}
+            <div class="template-preview-container">
+                <iframe src="${template.preview}" class="template-preview" loading="lazy"></iframe>
+                <div class="template-overlay">
+                    <div class="template-overlay-content">
+                        <h4>${template.name}</h4>
+                        <p>${template.description}</p>
+                        ${template.isPremium ? `<div class="token-price"><i class="fas fa-coins"></i> ${template.tokenPrice} tokens</div>` : '<div class="free-badge"><i class="fas fa-gift"></i> Free Template</div>'}
+                        <button class="preview-template-btn" data-template="${template.id}" onclick="openTemplatePreview('${template.preview}')">
+                            <i class="fas fa-eye"></i> View Full Template
+                        </button>
+                    </div>
+                </div>
+            </div>
             <div class="template-info">
-                <div class="template-title">${template.name}</div>
+                <div class="template-details">
+                    <div class="template-title">${template.name}</div>
+                    <div class="template-description">${template.description}</div>
+                    ${template.isPremium ? `<div class="template-price"><i class="fas fa-coins"></i> ${template.tokenPrice} tokens</div>` : '<div class="template-free">Free</div>'}
+                </div>
                 <button class="template-select-btn ${template.id === selectedTemplate ? 'selected' : ''}" data-template="${template.id}">
-                    ${template.id === selectedTemplate ? 'Selected' : 'Select'}
+                    ${template.id === selectedTemplate ? '<i class="fas fa-check"></i> Selected' : '<i class="fas fa-plus"></i> Select'}
                 </button>
             </div>
         </div>
@@ -628,6 +658,103 @@ function loadTemplates() {
             const templateId = button.getAttribute('data-template');
             selectTemplate(templateId);
         });
+    });
+
+    // Setup template view controls
+    setupTemplateViewControls();
+
+    // Enhance template previews
+    enhanceTemplatePreviews();
+}
+
+function enhanceTemplatePreviews() {
+    const templatePreviews = document.querySelectorAll('.template-preview');
+
+    templatePreviews.forEach(iframe => {
+        iframe.addEventListener('load', () => {
+            try {
+                // Ensure iframe content is scrollable
+                if (iframe.contentDocument) {
+                    const body = iframe.contentDocument.body;
+                    if (body) {
+                        body.style.overflow = 'visible';
+                        body.style.height = 'auto';
+                        body.style.minHeight = '100vh';
+                    }
+                }
+            } catch (e) {
+                // Cross-origin restrictions may prevent access
+                console.log('Cannot access iframe content due to cross-origin restrictions');
+            }
+        });
+    });
+}
+
+function setupTemplateViewControls() {
+    const viewToggleBtns = document.querySelectorAll('.view-toggle-btn');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const templatesScroll = document.getElementById('templates-container');
+    const templatesGrid = templatesScroll.parentElement;
+
+    // View toggle functionality
+    viewToggleBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const view = btn.getAttribute('data-view');
+
+            // Update active state
+            viewToggleBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Apply view class
+            if (view === 'grid') {
+                templatesScroll.classList.add('grid-view');
+                templatesGrid.classList.add('grid-view');
+            } else {
+                templatesScroll.classList.remove('grid-view');
+                templatesGrid.classList.remove('grid-view');
+            }
+        });
+    });
+
+    // Filter functionality
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const filter = btn.getAttribute('data-filter');
+
+            // Update active state
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Apply filter
+            filterTemplates(filter);
+        });
+    });
+}
+
+function filterTemplates(filter) {
+    const templateCards = document.querySelectorAll('.template-card');
+
+    templateCards.forEach(card => {
+        const templateId = card.getAttribute('data-template');
+        const isPremium = card.querySelector('.premium-label') !== null;
+
+        let shouldShow = true;
+
+        if (filter === 'free' && isPremium) {
+            shouldShow = false;
+        } else if (filter === 'premium' && !isPremium) {
+            shouldShow = false;
+        }
+
+        if (shouldShow) {
+            card.style.display = 'block';
+            card.style.opacity = '1';
+            card.style.transform = 'scale(1)';
+        } else {
+            card.style.display = 'none';
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.8)';
+        }
     });
 }
 
@@ -668,11 +795,54 @@ async function loadPreview() {
         // Update stats
         updatePreviewStats();
 
-        // Load bio page preview
+        // Load bio page preview with full content
         const bioPreviewFrame = document.getElementById('bio-preview-frame');
         if (bioPreviewFrame && currentUserData) {
-            const bioUrl = `bio.html?user=${currentUserData.username}`;
+            // Include all user data in the preview URL
+            const params = new URLSearchParams({
+                user: currentUserData.username,
+                preview: 'true',
+                template: selectedTemplate,
+                fullContent: 'true'
+            });
+            const bioUrl = `bio.html?${params.toString()}`;
             bioPreviewFrame.src = bioUrl;
+
+            // Ensure iframe can scroll and shows full content
+            bioPreviewFrame.style.overflow = 'auto';
+            bioPreviewFrame.scrolling = 'yes';
+
+            // Add load event to enhance preview
+            bioPreviewFrame.addEventListener('load', () => {
+                try {
+                    // Try to enhance the iframe content
+                    if (bioPreviewFrame.contentDocument) {
+                        const doc = bioPreviewFrame.contentDocument;
+                        const body = doc.body;
+
+                        if (body) {
+                            // Ensure content is fully visible
+                            body.style.overflow = 'visible';
+                            body.style.height = 'auto';
+                            body.style.minHeight = '100vh';
+
+                            // Add scroll indicator if content is long
+                            const contentHeight = body.scrollHeight;
+                            const frameHeight = bioPreviewFrame.clientHeight;
+
+                            if (contentHeight > frameHeight) {
+                                // Content is scrollable, show indicator
+                                const overlay = bioPreviewFrame.parentElement.querySelector('.preview-frame-overlay');
+                                if (overlay) {
+                                    overlay.style.display = 'block';
+                                }
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.log('Cannot access iframe content due to cross-origin restrictions');
+                }
+            });
         }
 
         // Setup preview action buttons
@@ -761,6 +931,46 @@ async function completeOnboarding() {
     } catch (error) {
         console.error('Error completing onboarding:', error);
         alert('Error completing setup. Please try again.');
+    }
+}
+
+// Template preview functionality
+function openTemplatePreview(previewUrl) {
+    // Create modal for full template preview
+    const modal = document.createElement('div');
+    modal.className = 'template-preview-modal';
+    modal.innerHTML = `
+        <div class="template-preview-modal-content">
+            <div class="template-preview-modal-header">
+                <h3>Template Preview</h3>
+                <button class="close-template-preview" onclick="closeTemplatePreview()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="template-preview-modal-body">
+                <iframe src="${previewUrl}" class="full-template-preview"></iframe>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Prevent body scroll
+    document.body.style.overflow = 'hidden';
+
+    // Close on background click
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeTemplatePreview();
+        }
+    });
+}
+
+function closeTemplatePreview() {
+    const modal = document.querySelector('.template-preview-modal');
+    if (modal) {
+        modal.remove();
+        document.body.style.overflow = 'auto';
     }
 }
 

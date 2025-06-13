@@ -204,6 +204,27 @@
                     <p>Select a template that best represents your style</p>
                 </div>
                 <div class="template-setup">
+                    <div class="template-view-controls">
+                        <div class="view-toggle">
+                            <button class="view-toggle-btn active" data-view="scroll">
+                                <i class="fas fa-arrows-alt-h"></i> Scroll View
+                            </button>
+                            <button class="view-toggle-btn" data-view="grid">
+                                <i class="fas fa-th"></i> Gallery View
+                            </button>
+                        </div>
+                        <div class="template-filter">
+                            <button class="filter-btn active" data-filter="all">
+                                <i class="fas fa-layer-group"></i> All Templates
+                            </button>
+                            <button class="filter-btn" data-filter="free">
+                                <i class="fas fa-gift"></i> Free Only
+                            </button>
+                            <button class="filter-btn" data-filter="premium">
+                                <i class="fas fa-crown"></i> Premium Only
+                            </button>
+                        </div>
+                    </div>
                     <div class="templates-grid">
                         <div class="templates-scroll" id="templates-container">
                             <!-- Templates will be loaded here -->
@@ -221,7 +242,13 @@
                 <div class="preview-setup">
                     <div class="preview-container">
                         <div class="preview-frame-container">
-                            <iframe id="bio-preview-frame" class="bio-preview-frame" src="about:blank"></iframe>
+                            <iframe id="bio-preview-frame" class="bio-preview-frame" src="about:blank" scrolling="yes" frameborder="0"></iframe>
+                            <div class="preview-frame-overlay">
+                                <div class="preview-instructions">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span>Scroll to see your complete bio page</span>
+                                </div>
+                            </div>
                         </div>
                         <div class="preview-info">
                             <div class="preview-stats">
